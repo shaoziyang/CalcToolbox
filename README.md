@@ -2,6 +2,16 @@
 
 A small cross platform software for engineer calculation.
 
+
+## Screenshot
+
+![](demo.gif)  
+
+
+Linux screenshot
+
+![](screenshot-linux.png)  
+
 ## feature
 
 - Multiple CRC calculations, with predefined patterns
