@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   ExtCtrls, Buttons, Grids, lclintf, Clipbrd,
-  FastIniFile;
+  IniFiles;
 
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
@@ -37,6 +37,7 @@ type
     edtNumericNum: TEdit;
     GroupBox1: TGroupBox;
     ImageList: TImageList;
+    imgLaz: TImage;
     imgLogo: TImage;
     Label1: TLabel;
     Label2: TLabel;
@@ -149,7 +150,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure imgLogoClick(Sender: TObject);
+    procedure imgLazClick(Sender: TObject);
     procedure rbBigBytesChange(Sender: TObject);
     procedure sgBytesEditingDone(Sender: TObject);
     procedure sgConstantMathClick(Sender: TObject);
@@ -179,7 +180,8 @@ type
 
 var
   FormMain: TFormMain;
-  ini: TFastIniFile;
+  //ini: TFastIniFile;
+  ini:TIniFile;
   writeable: boolean;
   path: string;
 
@@ -195,7 +197,7 @@ uses
 procedure TFormMain.FormCreate(Sender: TObject);
 begin
   path := ExtractFilePath(Application.ExeName);
-  ini  := TFastIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
+  ini  := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
 
   lbVer.Caption := 'ver ' + VERSION;
 
@@ -212,19 +214,24 @@ begin
 
   // load values from ini file
   try
-    BoundsRect := ini.ReadRect('Last', 'Position', BoundsRect);
+    //BoundsRect := ini.ReadRect('Last', 'Position', BoundsRect);
+    Top:=ini.ReadInteger('Last','Top',Top);
+    Left:= ini.ReadInteger('Last','Left',Left);
+    Width:= ini.ReadInteger('Last','Width',Width);
+    Height:= ini.ReadInteger('Last','Height',Height);
+
     pcMain.PageIndex := ini.ReadInteger('Last', 'Page', 0);
 
     // Digit
-    rbBigBytes.Checked      := ini.ReadBoolean('Digit', 'BigBytes', True);
+    rbBigBytes.Checked      := ini.ReadBool('Digit', 'BigBytes', True);
     pcDigit.ActivePageIndex := ini.ReadInteger('Digit', 'Page', 0);
 
     // crc
     edtCrcPolygon.Text   := ini.ReadString('CRC', 'poly', '1021');
     edtCrcInitV.Text     := ini.ReadString('CRC', 'v0', '0');
     edtCrcXOROUT.Text    := ini.ReadString('CRC', 'XOROUT', '0');
-    chkCrcInvIn.Checked  := ini.ReadBoolean('CRC', 'InvIn', False);
-    chkCrcInvOut.Checked := ini.ReadBoolean('CRC', 'InvOut', False);
+    chkCrcInvIn.Checked  := ini.ReadBool('CRC', 'InvIn', False);
+    chkCrcInvOut.Checked := ini.ReadBool('CRC', 'InvOut', False);
     setCrcBit(ini.ReadInteger('CRC', 'bit', 16));
 
   except
@@ -239,19 +246,24 @@ begin
     if writeable then
     begin
       // save value to inifile
-      ini.WriteRect('Last', 'Position', BoundsRect);
+      //ini.WriteRect('Last', 'Position', BoundsRect);
+      ini.WriteInteger('Last','Top',Top);
+      ini.WriteInteger('Last','Left',Left);
+      ini.WriteInteger('Last','Width',Width);
+      ini.WriteInteger('Last','Height',Height);
+
       ini.WriteInteger('Last', 'Page', pcMain.PageIndex);
 
       // Digit
-      ini.WriteBoolean('Digit', 'BigBytes', rbBigBytes.Checked);
+      ini.WriteBool('Digit', 'BigBytes', rbBigBytes.Checked);
       ini.WriteInteger('Digit', 'Page', pcDigit.ActivePageIndex);
 
       // crc
       ini.WriteString('CRC', 'poly', edtCrcPolygon.Text);
       ini.WriteString('CRC', 'v0', edtCrcInitV.Text);
       ini.WriteString('CRC', 'XOROUT', edtCrcXOROUT.Text);
-      ini.WriteBoolean('CRC', 'InvIn', chkCrcInvIn.Checked);
-      ini.WriteBoolean('CRC', 'InvOut', chkCrcInvOut.Checked);
+      ini.WriteBool('CRC', 'InvIn', chkCrcInvIn.Checked);
+      ini.WriteBool('CRC', 'InvOut', chkCrcInvOut.Checked);
       ini.WriteInteger('CRC', 'bit', getCrcBit);
 
       ini.UpdateFile;
@@ -267,7 +279,7 @@ begin
   tmrAlpha.Enabled := True;
 end;
 
-procedure TFormMain.imgLogoClick(Sender: TObject);
+procedure TFormMain.imgLazClick(Sender: TObject);
 begin
   OpenURL('http://www.lazarus-ide.org/');
 end;
