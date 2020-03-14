@@ -6,7 +6,9 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
-  ExtCtrls, Buttons, Grids, lclintf, Clipbrd,
+  ExtCtrls, Buttons, Grids, lclintf, DateUtils,
+  Clipbrd,
+  UBigFloatV3, UBigIntsV3,
   IniFiles;
 
 const
@@ -15,19 +17,20 @@ const
   VERSION = '0.2';
 
 type
-  //TBytes = array of byte;
-  //PBytes = ^TBytes;
   SingleBytes = array[0..3] of byte;
   DoubleBytes = array[0..7] of byte;
 
   { TFormMain }
 
   TFormMain = class(TForm)
+    btnOpenGITEE: TSpeedButton;
+    btnOpenGITHUB: TSpeedButton;
     btnOptionSelectFont: TBitBtn;
     chkCrcInvOut: TCheckBox;
     chkCrcInvIn: TCheckBox;
     ComboBox1: TComboBox;
     Edit1: TEdit;
+    edtBigFloatPrec: TEdit;
     edtBytesNum: TEdit;
     edtCrcXOROUT: TEdit;
     edtCrcResult: TEdit;
@@ -37,14 +40,30 @@ type
     edtNumericNum: TEdit;
     GroupBox1: TGroupBox;
     ImageList: TImageList;
+    ilCalc: TImageList;
     imgLaz: TImage;
     imgLogo: TImage;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     lbVer: TLabel;
+    Memo1: TMemo;
+    Memo2: TMemo;
+    mmoBigFloatA: TMemo;
+    mmoBigFloatB: TMemo;
     mmoCRC: TMemo;
+    mmoBigFloatC: TMemo;
     PageControl1: TPageControl;
+    PageControl2: TPageControl;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    Panel3: TPanel;
+    Panel4: TPanel;
+    Panel5: TPanel;
+    Panel6: TPanel;
+    Panel7: TPanel;
+    Panel8: TPanel;
+    pcCalc: TPageControl;
     pcDigit: TPageControl;
     pcMain: TPageControl;
     rbBigBytes: TRadioButton;
@@ -59,11 +78,36 @@ type
     rbLittleBytes: TRadioButton;
     sgBytes: TStringGrid;
     sgDigit: TStringGrid;
-    btnOpenGITHUB: TSpeedButton;
-    btnOpenGITEE: TSpeedButton;
+    Splitter1: TSplitter;
+    Splitter2: TSplitter;
     StaticText1: TStaticText;
     sgConstantMath: TStringGrid;
+    StaticText2: TStaticText;
+    StaticText3: TStaticText;
+    StaticText4: TStaticText;
     TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    TabSheet3: TTabSheet;
+    tbBigFloat: TToolBar;
+    btnBigFloatReciprocal: TToolButton;
+    btnBigFloatPI: TToolButton;
+    btnBigFloatPower: TToolButton;
+    btnBigFloatLog: TToolButton;
+    btnBigFloatLn: TToolButton;
+    btnBigFloatExp: TToolButton;
+    btnBigFloatLog2: TToolButton;
+    ToolButton19: TToolButton;
+    ToolButton20: TToolButton;
+    btnBigFloatAdd: TToolButton;
+    ToolButton22: TToolButton;
+    btnBigFloatSub: TToolButton;
+    btnBigFloatMul: TToolButton;
+    btnBigFloatDiv: TToolButton;
+    btnBigFloatSqrt: TToolButton;
+    btnBigFloatE: TToolButton;
+    btnBigFloatElapsed: TToolButton;
+    tsBigFloat: TTabSheet;
+    tsCalc: TTabSheet;
     tsBytes: TTabSheet;
     tbByteErr: TToolButton;
     ToolBar3: TToolBar;
@@ -123,6 +167,7 @@ type
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
+    procedure btnBigFloatAddClick(Sender: TObject);
     procedure btnCrc1wireClick(Sender: TObject);
     procedure btnCrcCalcClick(Sender: TObject);
     procedure btnCrc_CRC16_CCITTClick(Sender: TObject);
@@ -144,6 +189,7 @@ type
     procedure btnCrc_CRC8_ROHCClick(Sender: TObject);
     procedure btnOpenGITEEClick(Sender: TObject);
     procedure btnOpenGITHUBClick(Sender: TObject);
+    procedure edtBigFloatPrecEditingDone(Sender: TObject);
     procedure edtBytesNumChange(Sender: TObject);
     procedure edtCrcResultClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -151,6 +197,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure imgLazClick(Sender: TObject);
+    procedure mmoBigFloatCClick(Sender: TObject);
     procedure rbBigBytesChange(Sender: TObject);
     procedure sgBytesEditingDone(Sender: TObject);
     procedure sgConstantMathClick(Sender: TObject);
@@ -163,6 +210,7 @@ type
   private
     function getCrcBit: integer;
     procedure setCrcBit(bit: integer);
+    procedure bfCalc(Sender: TObject);
   public
     function NumToBytes(d: int64; n: integer): string;
     function SingleToBytes(fd: single): string;
@@ -181,9 +229,11 @@ type
 var
   FormMain: TFormMain;
   //ini: TFastIniFile;
-  ini:TIniFile;
+  ini: TIniFile;
   writeable: boolean;
   path: string;
+  bfA, bfB: TBigFloat;
+  bfPrec: integer;
 
 implementation
 
@@ -214,11 +264,10 @@ begin
 
   // load values from ini file
   try
-    //BoundsRect := ini.ReadRect('Last', 'Position', BoundsRect);
-    Top:=ini.ReadInteger('Last','Top',Top);
-    Left:= ini.ReadInteger('Last','Left',Left);
-    Width:= ini.ReadInteger('Last','Width',Width);
-    Height:= ini.ReadInteger('Last','Height',Height);
+    Top    := ini.ReadInteger('Last', 'Top', Top);
+    Left   := ini.ReadInteger('Last', 'Left', Left);
+    Width  := ini.ReadInteger('Last', 'Width', Width);
+    Height := ini.ReadInteger('Last', 'Height', Height);
 
     pcMain.PageIndex := ini.ReadInteger('Last', 'Page', 0);
 
@@ -234,10 +283,22 @@ begin
     chkCrcInvOut.Checked := ini.ReadBool('CRC', 'InvOut', False);
     setCrcBit(ini.ReadInteger('CRC', 'bit', 16));
 
+    // BigFloat
+    edtBigFloatPrec.Text := ini.ReadString('BigFloat', 'prec', '100');
   except
 
   end;
 
+
+  try
+
+    bfA := TBigFloat.Create;
+    bfB := TBigFloat.Create;
+    edtBigFloatPrecEditingDone(Sender);
+
+  except
+    tsBigFloat.TabVisible := False;
+  end;
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
@@ -246,11 +307,10 @@ begin
     if writeable then
     begin
       // save value to inifile
-      //ini.WriteRect('Last', 'Position', BoundsRect);
-      ini.WriteInteger('Last','Top',Top);
-      ini.WriteInteger('Last','Left',Left);
-      ini.WriteInteger('Last','Width',Width);
-      ini.WriteInteger('Last','Height',Height);
+      ini.WriteInteger('Last', 'Top', Top);
+      ini.WriteInteger('Last', 'Left', Left);
+      ini.WriteInteger('Last', 'Width', Width);
+      ini.WriteInteger('Last', 'Height', Height);
 
       ini.WriteInteger('Last', 'Page', pcMain.PageIndex);
 
@@ -265,6 +325,9 @@ begin
       ini.WriteBool('CRC', 'InvIn', chkCrcInvIn.Checked);
       ini.WriteBool('CRC', 'InvOut', chkCrcInvOut.Checked);
       ini.WriteInteger('CRC', 'bit', getCrcBit);
+
+      // BigFloat
+      ini.WriteString('BigFloat', 'prec', edtBigFloatPrec.Text);
 
       ini.UpdateFile;
     end;
@@ -282,6 +345,11 @@ end;
 procedure TFormMain.imgLazClick(Sender: TObject);
 begin
   OpenURL('http://www.lazarus-ide.org/');
+end;
+
+procedure TFormMain.mmoBigFloatCClick(Sender: TObject);
+begin
+  Clipboard.AsText := mmoBigFloatC.Text;
 end;
 
 procedure TFormMain.rbBigBytesChange(Sender: TObject);
@@ -338,6 +406,11 @@ begin
   edtCrcInitV.Text   := '107';
   rbCrc8bits.Checked := True;
   edtCrcInitV.Text   := '0';
+end;
+
+procedure TFormMain.btnBigFloatAddClick(Sender: TObject);
+begin
+  bfCalc(Sender);
 end;
 
 procedure TFormMain.btnCrcCalcClick(Sender: TObject);
@@ -611,6 +684,18 @@ begin
   OpenURL(GITHUB_URL);
 end;
 
+procedure TFormMain.edtBigFloatPrecEditingDone(Sender: TObject);
+
+begin
+  if not TryStrToInt(edtBigFloatPrec.Text, bfPrec) then
+  begin
+    bfPrec := 100;
+    edtBigFloatPrec.Text := '100';
+  end;
+  bfA.Setsigdigits(bfPrec);
+  bfB.Setsigdigits(bfPrec);
+end;
+
 procedure TFormMain.btnCrc_CRC8_MAXIMClick(Sender: TObject);
 begin
   setCrcMode(8, $31, 0, 0, True, True);
@@ -705,6 +790,96 @@ begin
     else
       exit;
   end;
+end;
+
+procedure TFormMain.bfCalc(Sender: TObject);
+var
+  sa, sb: string;
+  T1, T2: TDateTime;
+begin
+  if (Sender is TToolButton) then
+    if TToolButton(Sender).Parent = tbBigFloat then
+    begin
+      Screen.Cursor:=crHourGlass;
+      T1 := Now();
+      sa := Trim(mmoBigFloatA.Text);
+      sb := Trim(mmoBigFloatB.Text);
+      case TToolButton(Sender).Tag of
+        101: // add
+        begin
+          bfA.Assign(sa);
+          bfB.Assign(sb);
+          bfA.Add(bfB);
+        end;
+        102: // sub
+        begin
+          bfA.Assign(sa);
+          bfB.Assign(sb);
+          bfA.Subtract(bfB);
+        end;
+        103: // mul
+        begin
+          bfA.Assign(sa);
+          bfB.Assign(sb);
+          bfA.Mult(bfB);
+        end;
+        104: // div
+        begin
+          bfA.Assign(sa);
+          bfB.Assign(sb);
+          bfA.Divide(bfB, bfPrec);
+        end;
+        105: // sqrt
+        begin
+          bfA.Assign(sa);
+          bfA.Sqrt(bfPrec);
+        end;
+        106: // Reciprocal
+        begin
+          bfA.Assign(sa);
+          bfA.Reciprocal(bfPrec);
+        end;
+        107: // Power
+        begin
+          bfA.Assign(sa);
+          bfB.Assign(sb);
+          bfA.Power(bfB, bfPrec);
+        end;
+        108:// exp
+        begin
+          bfA.Assign(sa);
+          bfA.Exp(bfPrec);
+        end;
+        109: // log
+        begin
+          bfA.Assign(sa);
+          bfA.Log(bfPrec);
+        end;
+        110: // log10
+        begin
+          bfA.Assign(sa);
+          bfA.Log10(bfPrec);
+        end;
+        201: // Pi
+        begin
+          bfA.PiConst(bfPrec);
+        end;
+        202: // e
+        begin
+          bfA.Assign('1');
+          bfA.Exp(bfPrec);
+        end;
+        203: // log2
+        begin
+          bfA.Log2Const(bfPrec);
+        end
+        else
+      end;
+      mmoBigFloatC.Text := bfA.ConverttoString(normal);
+      T2 := Now();
+      Screen.Cursor:=crDefault;
+      btnBigFloatElapsed.Caption := Format('%d ms', [MilliSecondsBetween(T2, T1)]);
+    end;
 end;
 
 

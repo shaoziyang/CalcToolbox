@@ -1,0 +1,22 @@
+object DicForm: TDicForm
+  Left = 326
+  Top = 158
+  Width = 435
+  Height = 300
+  Caption = 'DicForm'
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -14
+  Font.Name = 'MS Sans Serif'
+  Font.Style = []
+  OnCloseQuery = FormCloseQuery
+  PixelsPerInch = 120
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '*.dic'
+    Filter = 'Dictionaries (*.dic)|*.dic|Text files (*.txt)|*.txt|Any file (*.*)|*.*'
+    Title = 'Select a dictionary'
+    Left = 272
+    Top = 16
+  end
+end

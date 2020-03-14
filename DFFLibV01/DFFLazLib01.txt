@@ -1,0 +1,20 @@
+This file contains the source code for units which have been adapted from DFFLibVxx libraries for use with the Lazarus/FPC compiler.
+
+This release, V01, contains 7 of the most wisely used units in the DelphiForFun website.  Most are identical to the DFFLib versions but were placed here to to provide the flexibility of making changes without affecting DFFLib.
+
+The units included in this initial version  are:
+
+	* DFFUtils.pas: Functions and procedure which enhance feature of selected VCL units. E.g. reformatting TMemos, resizing TStingGrid sizes to eliminate scroll bars, 	deblanking strings, etc.
+   
+	* MathsLib.pas: Math functions and routines.
+    
+	* UBigFloatV3.pas:  Class to  provide access to  very large floating point numbers (hundreds of significant digits)
+
+	* UBigIntsV3.pas:  Class to provide access to very large integer (hundred of digits)
+
+	* UComboV2:  Calculates many types of combinations and permutations. 
+
+	* UDict.pas and Udict.lfm:  A dictionary unit to lookup and test of words against several English language dictionaries, the largest with 162,000 words.   
+
+	* UGeometry.pas:  Geometric procedure and functions relating to points, lines, polygons, and circles. 
+	* UTGraphSearch:  Class to search graphs defined by Nodes and Edges including Dijkstra Shortest Path search algorithm
