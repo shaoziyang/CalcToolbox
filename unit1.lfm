@@ -58,21 +58,21 @@ object FormMain: TFormMain
     Height = 480
     Top = 0
     Width = 669
-    ActivePage = tsCalc
+    ActivePage = tsDigit
     Align = alClient
     MultiLine = True
-    TabIndex = 2
+    TabIndex = 1
     TabOrder = 0
     Options = [nboMultiLine]
     object tsCRC: TTabSheet
       Caption = 'CRC'
       ClientHeight = 450
-      ClientWidth = 716
+      ClientWidth = 661
       object ToolBar1: TToolBar
         Left = 0
-        Height = 25
+        Height = 43
         Top = 0
-        Width = 716
+        Width = 661
         AutoSize = True
         Caption = 'ToolBar1'
         EdgeBorders = []
@@ -81,7 +81,7 @@ object FormMain: TFormMain
         Transparent = True
         object ToolButton1: TToolButton
           Left = 185
-          Height = 8
+          Height = 22
           Top = 0
           AutoSize = True
           Caption = ' '
@@ -117,15 +117,15 @@ object FormMain: TFormMain
         end
         object ToolButton4: TToolButton
           Left = 353
-          Height = 8
+          Height = 22
           Top = 0
           Caption = ' '
           Style = tbsSeparator
         end
         object chkCrcInvOut: TCheckBox
-          Left = 607
+          Left = 1
           Height = 21
-          Top = 0
+          Top = 22
           Width = 102
           Caption = 'Invert out'
           TabOrder = 3
@@ -145,7 +145,7 @@ object FormMain: TFormMain
         end
         object ToolButton21: TToolButton
           Left = 505
-          Height = 8
+          Height = 22
           Top = 0
           Caption = 'ToolButton21'
           Style = tbsSeparator
@@ -162,8 +162,8 @@ object FormMain: TFormMain
       object ToolBar2: TToolBar
         Left = 0
         Height = 21
-        Top = 25
-        Width = 716
+        Top = 43
+        Width = 661
         AutoSize = True
         Caption = 'ToolBar2'
         EdgeBorders = []
@@ -240,18 +240,18 @@ object FormMain: TFormMain
       end
       object mmoCRC: TMemo
         Left = 0
-        Height = 309
-        Top = 116
-        Width = 716
+        Height = 269
+        Top = 156
+        Width = 661
         Align = alClient
         ScrollBars = ssAutoVertical
         TabOrder = 3
       end
       object ToolBar4: TToolBar
         Left = 0
-        Height = 70
-        Top = 46
-        Width = 716
+        Height = 92
+        Top = 64
+        Width = 661
         AutoSize = True
         Color = clMenu
         EdgeBorders = [ebLeft, ebTop, ebRight, ebBottom]
@@ -349,93 +349,93 @@ object FormMain: TFormMain
           OnClick = btnCrc_CRC16_MODBUSClick
         end
         object btnCrc_CRC16_CCITT: TToolButton
-          Left = 607
-          Top = 24
+          Left = 3
+          Top = 46
           Caption = 'CRC-16/CCITT'
           OnClick = btnCrc_CRC16_CCITTClick
         end
         object btnCrc_CRC16_CCITT_FALSE: TToolButton
-          Left = 8
+          Left = 112
           Top = 46
           Caption = 'CRC-16/CCITT-FALSE'
           OnClick = btnCrc_CRC16_CCITT_FALSEClick
         end
         object btnCrc_CRC16_X25: TToolButton
-          Left = 160
+          Left = 264
           Top = 46
           Caption = 'CRC-16/X25'
           OnClick = btnCrc_CRC16_X25Click
         end
         object btnCrc_CRC16_XMODEM: TToolButton
-          Left = 253
+          Left = 357
           Top = 46
           Caption = 'CRC-16/XMODEM'
           ImageIndex = 7
           OnClick = btnCrc_CRC16_XMODEMClick
         end
         object btnCrc_CRC16_DNP: TToolButton
-          Left = 388
+          Left = 492
           Top = 46
           Caption = 'CRC-16/DNP'
           OnClick = btnCrc_CRC16_DNPClick
         end
         object btnCrc_CRC32: TToolButton
-          Left = 481
+          Left = 585
           Top = 46
           Caption = 'CRC-32'
           OnClick = btnCrc_CRC32Click
         end
         object btnCrc_CRC32_MPEG2: TToolButton
-          Left = 537
-          Top = 46
+          Left = 3
+          Top = 68
           Caption = 'CRC-32/MPEG-2'
           OnClick = btnCrc_CRC32_MPEG2Click
         end
         object ToolButton9: TToolButton
           Left = 519
-          Height = 5
+          Height = 22
           Top = 2
           Caption = 'ToolButton9'
           Style = tbsDivider
         end
         object ToolButton8: TToolButton
           Left = 187
-          Height = 5
+          Height = 22
           Top = 24
           Caption = 'ToolButton8'
           Style = tbsDivider
         end
         object ToolButton10: TToolButton
-          Left = 476
-          Height = 5
+          Left = 580
+          Height = 22
           Top = 46
           Caption = 'ToolButton10'
           Style = tbsDivider
         end
         object ToolButton11: TToolButton
-          Left = 248
-          Height = 5
+          Left = 352
+          Height = 22
           Top = 46
           Caption = 'ToolButton11'
           Style = tbsDivider
         end
         object ToolButton12: TToolButton
-          Left = 383
-          Height = 5
+          Left = 487
+          Height = 22
           Top = 46
           Caption = 'ToolButton12'
           Style = tbsDivider
         end
         object ToolButton15: TToolButton
           Left = 602
-          Height = 5
+          Height = 22
           Top = 24
           Caption = 'ToolButton15'
           Style = tbsDivider
         end
         object ToolButton16: TToolButton
-          Left = 3
-          Height = 5
+          Left = 107
+          Height = 22
           Top = 46
           Caption = 'ToolButton16'
           Style = tbsDivider
@@ -445,7 +445,7 @@ object FormMain: TFormMain
         Left = 0
         Height = 25
         Top = 425
-        Width = 716
+        Width = 661
         Align = alBottom
         AutoSize = True
         Caption = 'ToolBar5'
@@ -482,25 +482,25 @@ object FormMain: TFormMain
     object tsDigit: TTabSheet
       Caption = 'Digit'
       ClientHeight = 450
-      ClientWidth = 716
+      ClientWidth = 661
       object pcDigit: TPageControl
         Left = 0
         Height = 450
         Top = 0
-        Width = 716
-        ActivePage = tsBytes
+        Width = 661
+        ActivePage = tsBigFloat
         Align = alClient
-        TabIndex = 0
+        TabIndex = 2
         TabOrder = 0
         object tsBytes: TTabSheet
           Caption = 'Bytes'
           ClientHeight = 420
-          ClientWidth = 708
+          ClientWidth = 653
           object ToolBar3: TToolBar
             Left = 0
             Height = 25
             Top = 0
-            Width = 708
+            Width = 653
             AutoSize = True
             Caption = 'ToolBar3'
             EdgeBorders = []
@@ -557,11 +557,11 @@ object FormMain: TFormMain
             Left = 0
             Height = 395
             Top = 25
-            Width = 708
+            Width = 653
             Align = alClient
             AutoFillColumns = True
             ColCount = 2
-            DefaultColWidth = 80
+            DefaultColWidth = 120
             DefaultRowHeight = 24
             Flat = True
             Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goSmoothScroll]
@@ -576,8 +576,8 @@ object FormMain: TFormMain
             OnClick = sgConstantMathClick
             OnEditingDone = sgBytesEditingDone
             ColWidths = (
-              114
-              576
+              159
+              493
             )
             Cells = (
               8
@@ -595,10 +595,10 @@ object FormMain: TFormMain
               'Int 64'
               0
               5
-              'Float 32'
+              'Float 32 (H/L)'
               0
               6
-              'Float 64'
+              'Float 64 (H/L)'
               0
               7
               'String'
@@ -611,12 +611,12 @@ object FormMain: TFormMain
         object tsBase: TTabSheet
           Caption = 'Base'
           ClientHeight = 420
-          ClientWidth = 708
+          ClientWidth = 653
           object sgDigit: TStringGrid
             Left = 0
             Height = 395
             Top = 25
-            Width = 708
+            Width = 653
             Align = alClient
             AutoFillColumns = True
             ColCount = 2
@@ -633,7 +633,7 @@ object FormMain: TFormMain
             OnEditingDone = sgDigitEditingDone
             ColWidths = (
               87
-              603
+              565
             )
             Cells = (
               5
@@ -658,7 +658,7 @@ object FormMain: TFormMain
             Left = 0
             Height = 25
             Top = 0
-            Width = 708
+            Width = 653
             AutoSize = True
             Caption = 'ToolBar6'
             EdgeBorders = []
@@ -699,21 +699,6 @@ object FormMain: TFormMain
             end
           end
         end
-      end
-    end
-    object tsCalc: TTabSheet
-      Caption = 'Calc'
-      ClientHeight = 450
-      ClientWidth = 661
-      object pcCalc: TPageControl
-        Left = 0
-        Height = 450
-        Top = 0
-        Width = 661
-        ActivePage = tsBigFloat
-        Align = alClient
-        TabIndex = 0
-        TabOrder = 0
         object tsBigFloat: TTabSheet
           Caption = 'BigFloat'
           ClientHeight = 420
@@ -730,16 +715,6 @@ object FormMain: TFormMain
             ClientWidth = 653
             Constraints.MinHeight = 120
             TabOrder = 0
-            object StaticText2: TStaticText
-              Left = 0
-              Height = 120
-              Top = 0
-              Width = 40
-              Align = alLeft
-              Alignment = taCenter
-              Caption = #13#10'A'
-              TabOrder = 0
-            end
             object mmoBigFloatA: TMemo
               Left = 40
               Height = 120
@@ -750,6 +725,16 @@ object FormMain: TFormMain
                 '0'
               )
               ScrollBars = ssAutoVertical
+              TabOrder = 0
+            end
+            object StaticText2: TStaticText
+              Left = 0
+              Height = 120
+              Top = 0
+              Width = 40
+              Align = alLeft
+              Alignment = taCenter
+              Caption = #13#10'A'
               TabOrder = 1
             end
           end
@@ -774,16 +759,6 @@ object FormMain: TFormMain
             ClientWidth = 653
             Constraints.MinHeight = 120
             TabOrder = 2
-            object StaticText3: TStaticText
-              Left = 0
-              Height = 120
-              Top = 0
-              Width = 40
-              Align = alLeft
-              Alignment = taCenter
-              Caption = #13#10'B'
-              TabOrder = 0
-            end
             object mmoBigFloatB: TMemo
               Left = 40
               Height = 120
@@ -794,6 +769,16 @@ object FormMain: TFormMain
                 '0'
               )
               ScrollBars = ssAutoVertical
+              TabOrder = 0
+            end
+            object StaticText3: TStaticText
+              Left = 0
+              Height = 120
+              Top = 0
+              Width = 40
+              Align = alLeft
+              Alignment = taCenter
+              Caption = #13#10'B'
               TabOrder = 1
             end
           end
@@ -974,18 +959,21 @@ object FormMain: TFormMain
         end
       end
     end
+    object tsCalc: TTabSheet
+      Caption = 'Calc'
+    end
     object tsConstant: TTabSheet
       Caption = 'constant'
       ClientHeight = 450
-      ClientWidth = 716
+      ClientWidth = 661
       object PageControl1: TPageControl
         Left = 0
         Height = 450
         Top = 0
-        Width = 716
-        ActivePage = tsConstantMath
+        Width = 661
+        ActivePage = TabSheet1
         Align = alClient
-        TabIndex = 0
+        TabIndex = 3
         TabOrder = 0
         object tsConstantMath: TTabSheet
           Caption = 'Math'

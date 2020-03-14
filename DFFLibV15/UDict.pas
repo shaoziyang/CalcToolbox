@@ -1,7 +1,4 @@
 unit UDict;
-
-{$MODE Delphi}
-
 {Copyright 2000, Gary Darby, Intellitech Systems Inc., www.DelphiForFun.org
 
  This program may be used or modified for any non-commercial purpose
@@ -22,12 +19,12 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics,
-   Controls, Forms, Dialogs, FileUtil;
+   Controls, Forms, Dialogs;
 
 const
     dichighletter='z';
 type
-
+  char=ansichar;
   TDicForm = class(TForm)
     OpenDialog1: TOpenDialog;
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -74,43 +71,44 @@ type
 
     public
 
-    IniPathName:string;  {path to dic.inifile}
+    IniPathName:AnsiString;  {path to dic.inifile}
     Maxwordlength:integer;
     DicLoaded:boolean;
-    Dicname:string;
-    DefaultDic,SmallDic,MediumDic,LargeDic:String;
+    Dicname:AnsiString;
+    DefaultDic,SmallDic,MediumDic,LargeDic:AnsiString;
 
     constructor Create(Precheckedflag:boolean); overload;
-    constructor Create(Newpath:string; Precheckedflag:boolean); overload;
+    constructor Create(Newpath:AnsiString; Precheckedflag:boolean); overload;
 
-    procedure LoadDicFromFile(filename:string);
+    procedure LoadDicFromFile(filename:AnsiString);
     procedure LoadDefaultDic;
     procedure LoadSmallDic;
     procedure LoadMediumDic;
     procedure LoadLargeDic;
 
-    procedure SaveDicToFile(filename:string);
-    procedure SaveDicToTextFile(filename:string); {save uncompressed}
+    procedure SaveDicToFile(filename:AnsiString);
+    procedure SaveDicToTextFile(filename:AnsiString); {save uncompressed}
 
     procedure Setrange(const letter1:char;length1:byte;const letter2:char;length2:byte);
     procedure saverange;
     procedure restorerange;
 
-    function Lookup(s:string; var abbrev,foreign,caps:boolean):boolean;  overload;
-    Function Lookup(s:string ):boolean; overload;
-    function GetnextWord(var word:string;var abbrev,foreign,caps:boolean):boolean; overload;
-    Function GetnextWord(var word:string;var wordnbr:integer; var abbrev,foreign,caps:boolean):boolean; overload;
-    function GetWordByNumber(n:integer; var word:string):boolean;
-    function IsValidword(const ss:string):boolean;
-    function AddWord(s:String;abbrev,foreign,caps:boolean):boolean;
-    function RemoveWord(s:String):boolean;
+    function Lookup(s:AnsiString; var abbrev,foreign,caps:boolean):boolean;  overload;
+    Function Lookup(s:AnsiString ):boolean; overload;
+    function GetnextWord(var word:AnsiString;var abbrev,foreign,caps:boolean):boolean; overload;
+    Function GetnextWord(var word:AnsiString;var wordnbr:integer; var abbrev,foreign,caps:boolean):boolean; overload;
+    Function GetnextWord(var word:AnsiString):boolean; overload;
+    function GetWordByNumber(n:integer; var word:AnsiString):boolean;
+    function IsValidword(const ss:AnsiString):boolean;
+    function AddWord(s:AnsiString;abbrev,foreign,caps:boolean):boolean;
+    function RemoveWord(s:AnsiString):boolean;
     procedure Rebuildindex; {after insertions or deletions}
     procedure reSortrange;   {fixup missorted dictionary}
     function  GetwordCount:integer;
     function checksave:integer;
     function getDicSize:integer;
-    { Future function:
-      Function LookupPartial(s:string; fullwordlen:integer):boolean; }
+    //Function LookupPartial(s:AnsiString; fullwordlen:integer):boolean; }
+    function LookupPartial(s:ANSIstring; shortest, longest:integer):boolean;
   End;
 
 
@@ -121,7 +119,7 @@ var
 
 implementation
 
-{$R *.lfm}
+{$R *.DFM}
 
 Uses Inifiles;
 
@@ -133,7 +131,7 @@ Uses Inifiles;
  {**************** Local functions ********************}
  Function min(a,b:integer):integer; Begin If a<b then result:=a else result:=b; End;
 
-  Function CompressWord(prev,word:String; abbrev,foreign,caps:boolean):String;
+  Function CompressWord(prev,word:AnsiString; abbrev,foreign,caps:boolean):AnsiString;
    {replace initial letters of word that match prev word with a count
     field}
        var
@@ -153,7 +151,7 @@ Uses Inifiles;
          result[1]:=char(letterstocopy or mask);
        End;
 
-    Function ExpandWord(prev,Compressedword:string;Var abbrev,foreign,caps:boolean):String;
+    Function ExpandWord(prev,Compressedword:AnsiString;Var abbrev,foreign,caps:boolean):AnsiString;
     {expand a compressed word  to full length}
     Begin
       result:=copy(prev,1,ord(Compressedword[1]) and $0F)
@@ -163,7 +161,7 @@ Uses Inifiles;
       if (byte(compressedword[1]) and $10)>0 then caps:=true else caps:=false;
     End;
 
-    function GetAsciiCode(s:string):integer;
+    function GetAsciiCode(s:AnsiString):integer;
     var  sstr:ShortString;
     begin
       setlength(SStr,length(s));
@@ -176,7 +174,7 @@ Uses Inifiles;
   {create dictionary object}
  var
    i:char;
-   //path:string;
+   //path:AnsiString;
    ini:TInifile;
  Begin
   inherited create;
@@ -196,20 +194,20 @@ Uses Inifiles;
   //path:=extractfilepath(application.exename);
   ini:=TIniFile.create(IniPathname+'Dic.ini');
   SmallDic:=ini.ReadString('Files','Small Dictionary',InipathName + 'Small.Dic');
-  if not FileExistsUTF8(smalldic) { *Converted from FileExists*  } then smalldic:='';
+  if not fileexists(smalldic) then smalldic:='';
   MediumDic:=ini.ReadString('Files','Medium Dictionary',InipathName + 'General.Dic');
-  if not FileExistsUTF8(Mediumdic) { *Converted from FileExists*  } then Mediumdic:='';
+  if not fileexists(Mediumdic) then Mediumdic:='';
   LargeDic:=ini.ReadString('Files','Large Dictionary',IniPathName + 'Full.Dic');
-  if not FileExistsUTF8(Largedic) { *Converted from FileExists*  } then Largedic:='';
+  if not fileexists(Largedic) then Largedic:='';
   ini.free;
  End;
 
  {*************** TDic.Create ********************}
- Constructor TDic.Create(newpath:string; precheckedflag:boolean); 
+ Constructor TDic.Create(newpath:AnsiString; precheckedflag:boolean);
  {create dictionary object}
  var
    i:char;
-   //path:string;
+   //path:AnsiString;
    ini:TInifile;
  Begin
   inherited create;
@@ -229,20 +227,20 @@ Uses Inifiles;
   //path:=extractfilepath(application.exename);
   ini:=TIniFile.create(IniPathName+'Dic.ini');
   SmallDic:=ini.ReadString('Files','Small Dictionary',IniPathName+ 'Small.Dic');
-  if not FileExistsUTF8(smalldic) { *Converted from FileExists*  } then smalldic:='';
+  if not fileexists(smalldic) then smalldic:='';
   MediumDic:=ini.ReadString('Files','Medium Dictionary', IniPathName+ 'General.Dic');
-  if not FileExistsUTF8(Mediumdic) { *Converted from FileExists*  } then Mediumdic:='';
+  if not fileexists(Mediumdic) then Mediumdic:='';
   LargeDic:=ini.ReadString('Files','Large Dictionary',IniPathName + 'Full.Dic');
-  if not FileExistsUTF8(Largedic) { *Converted from FileExists*  } then Largedic:='';
+  if not fileexists(Largedic) then Largedic:='';
   ini.free;
  End;
 
 
  {******************* TDic.LoadDicFromFile *************}
- Procedure TDic.LoadDicFromFile(filename:string);
+ Procedure TDic.LoadDicFromFile(filename:AnsiString);
  {load a dictionary}
 
- function getword(var w:string):string; overload;
+ function getword(var w:AnsiString):AnsiString; overload;
     var
       i:integer;
     Begin
@@ -263,10 +261,10 @@ Uses Inifiles;
       else w:='';
     End;
 
- function getword(const ww:string; var startat:integer):string; overload;
+ function getword(const ww:AnsiString; var startat:integer):AnsiString; overload;
     var
       i:integer;
-      w:string;
+      w:AnsiString;
     Begin
       w:=ww;
       result:='';
@@ -292,7 +290,7 @@ Uses Inifiles;
     End;
 
  var
-   line,prevword,dicword,w:string;
+   line,prevword,dicword,w:AnsiString;
    f:textfile;
    compressed:boolean;
    mr,i:integer;
@@ -311,7 +309,7 @@ Uses Inifiles;
        dicform.opendialog1.execute;
        filename:=dicform.opendialog1.filename;
      End;
-     If FileExistsUTF8(filename) { *Converted from FileExists*  } then
+     If fileexists(filename) then
      Begin
        assignfile(f,filename);
        reset(f);
@@ -375,12 +373,12 @@ Uses Inifiles;
  {Load a default dictionary}
  Var
    ini:TIniFile;
-   //path:string;
+   //path:AnsiString;
  Begin
    //path:=extractfilepath(application.exename);
    ini:=TIniFile.create(IniPathName+'Dic.ini');
    DefaultDic:=ini.ReadString('Files','Default Dictionary',IniPathName + 'Full.Dic');
-   If not FileExistsUTF8(DefaultDic) { *Converted from FileExists*  } then
+   If not fileexists(DefaultDic) then
    begin
      if dicform=nil then createdicform;
      with dicForm.opendialog1 do
@@ -402,12 +400,12 @@ Uses Inifiles;
  {Load a small dictionary}
  Var
    ini:TIniFile;
-   //path:string;
+   //path:AnsiString;
  Begin
    //path:=extractfilepath(application.exename);
    ini:=TIniFile.create(IniPathName+'Dic.ini');
    SmallDic:=ini.ReadString('Files','Small Dictionary',IniPathName + 'Small.Dic');
-   If not FileExistsUTF8(SmallDic) { *Converted from FileExists*  } then
+   If not fileexists(SmallDic) then
    begin
      if dicform=nil then createdicform;
      with dicForm.opendialog1 do
@@ -430,12 +428,12 @@ Uses Inifiles;
  {Load a Medium dictionary}
  Var
    ini:TIniFile;
-   //path:string;
+   //path:AnsiString;
  Begin
    //path:=extractfilepath(application.exename);
    ini:=TIniFile.create(IniPathName+'Dic.ini');
    MediumDic:=ini.ReadString('Files','Medium Dictionary',IniPathname + 'General.Dic');
-   If not FileExistsUTF8(MediumDic) { *Converted from FileExists*  } then
+   If not fileexists(MediumDic) then
    begin
      if dicform=nil then createdicform;
      with dicForm.opendialog1 do
@@ -458,12 +456,12 @@ Uses Inifiles;
  {Load a large dictionary}
  Var
    ini:TIniFile;
-   //path:string;
+   //path:AnsiString;
  Begin
    //path:=extractfilepath(application.exename);
    ini:=TIniFile.create(IniPathname+'Dic.ini');
    LargeDic:=ini.ReadString('Files','Large Dictionary',IniPathname + 'Full.Dic');
-   If not FileExistsUTF8(LargeDic) { *Converted from FileExists*  } then
+   If not fileexists(LargeDic) then
    begin
      if dicform=nil then createdicform;
      with dicForm.opendialog1 do
@@ -497,13 +495,13 @@ end;
 
 
  {******************** TDic.SaveDicToFile *******************}
- Procedure TDic.SaveDicToFile(filename:string);
+ Procedure TDic.SaveDicToFile(filename:AnsiString);
  var
    f:text;
-   w:string;
+   w:AnsiString;
    a,fr,caps:boolean;
  Begin
-   If not FileExistsUTF8(filename) { *Converted from FileExists*  } or ( FileExistsUTF8(Filename) { *Converted from FileExists*  }  and
+   If not fileexists(filename) or ( fileexists(Filename)  and
      (MessageDlg('Overwrite '+filename +'?',mtconfirmation,[mbYes, mbNo],0)=
        mrYes)) then
    begin
@@ -521,16 +519,16 @@ end;
  End;
 
  {******************* TDic.SaveDicToTextFile *****************}
- Procedure TDic.SaveDicToTextFile(filename:string);
+ Procedure TDic.SaveDicToTextFile(filename:AnsiString);
  {save dictionary}
  var
-   textname:string;
+   textname:AnsiString;
    f:textfile;
-   w:string;
+   w:AnsiString;
    a,fo,caps,useprops:boolean;
  Begin
    textname:=changefileext(filename,'.txt');
-   If not FileExistsUTF8(textname) { *Converted from FileExists*  } or ( FileExistsUTF8(textname) { *Converted from FileExists*  }  and
+   If not fileexists(textname) or ( fileexists(textname)  and
      (MessageDlg('Overwrite '+textname +'?',mtconfirmation,[mbYes, mbNo],0)=
        mrYes)) then
    Begin
@@ -589,7 +587,7 @@ Begin
     wordlength:=letterstocopy+length(words.strings[i])-1;
     if wordlength>maxwordlength then maxwordlength:=wordlength;
 
-    if letterstocopy=0 then letter:=words[i][2];  {new letter}
+    if letterstocopy=0 then letter:=ansistring(words[i])[2];  {new letter}
     if letter <> prevletter then
     Begin
       for a := succ(prevletter) to letter do letterindex[a]:=i;
@@ -613,7 +611,7 @@ procedure TDic.reSortRange;
 {fixup mis-sorted dictionary by deleting and inserting words that are
  out of sequence}
 var
-  w1,w2:string;
+  w1,w2:AnsiString;
   a,f,c:boolean;
   insequence:boolean;
 begin
@@ -644,7 +642,7 @@ begin
 {Warning!  the values for CurrentWordindex Currword, and PrevWord set
  by GetNextWord are used by other routines and shouldn't be changed
 }
-Function TDic.GetnextWord(var word:string;var abbrev,foreign,caps:boolean):boolean;
+Function TDic.GetnextWord(var word:AnsiString;var abbrev,foreign,caps:boolean):boolean;
 {Get the next word from dictionary within range}
 Begin
   result:=false;
@@ -663,7 +661,7 @@ Begin
     if currentwordindex>words.count-1 then exit;
     currword:=words[CurrentWordIndex];
     currword:=expandword(prevword,currword,abbrev,foreign,caps);
-    If currword[1]>endletter then exit;
+    If ansistring(currword[1])>endletter then exit;
     If (startlength<=length(currword)) and (length(currword)<=endlength)
     then result:=true;
   until result=true;
@@ -676,7 +674,7 @@ End;
 {Warning!  the values for CurrentWordindex Currword, and PrevWord set
  by GetNextWord are used by other routines and shouldn't be changed
 }
-Function TDic.GetnextWord(var word:string;var wordnbr:integer; var abbrev,foreign,caps:boolean):boolean;
+Function TDic.GetnextWord(var word:AnsiString;var wordnbr:integer; var abbrev,foreign,caps:boolean):boolean;
 {Get the next word from dictionary within range - overloaded version returns word number}
 Begin
   result:=false;
@@ -689,7 +687,7 @@ Begin
     if currentwordindex>words.count-1 then exit;
     currword:=words[CurrentWordIndex];
     currword:=expandword(prevword,currword,abbrev,foreign,caps);
-    If currword[1]>endletter then exit;
+    If ansistring(currword[1])>endletter then exit;
     If (startlength<=length(currword)) and (length(currword)<=endlength)
     then
     begin
@@ -701,12 +699,21 @@ Begin
 
 End;
 
+{***************** GetNextWord *****************}
+Function TDic.GetnextWord(var word:ansistring):boolean;
+{Get the next word from dictionary within range - overloaded version asume no a,f,c types}
+var a,f,c:boolean;
+Begin
+  result:=GetnextWord(word,a,f,c);
+End;
+
+
 {****************** TDic.IsValidword ********************}
-Function TDic.Isvalidword(const ss:string):boolean;
+Function TDic.Isvalidword(const ss:AnsiString):boolean;
 {return true if the word has valid format - not necessarily in dictionary}
 var
   i:integer;
-  s:string;
+  s:AnsiString;
 Begin
   s:=ansilowerCase(ss);
   result:=false;
@@ -717,7 +724,7 @@ End;
 
 
 
-Function TDic.GetWordByNumber(n:integer; var word:string):boolean;
+Function TDic.GetWordByNumber(n:integer; var word:AnsiString):boolean;
 {retrieve word number N from the expanded word list}
 Begin
   If n<ExpandedList.count then
@@ -733,11 +740,11 @@ Begin
 End;
 
 {***************** LookUp *****************}
-Function TDic.Lookup(s:string; var abbrev,foreign,caps:boolean):boolean;
+Function TDic.Lookup(s:AnsiString; var abbrev,foreign,caps:boolean):boolean;
 {lookup word "s" in the current dictionary}
 var
   start:char;
-  testword:string;
+  testword:AnsiString;
   belowit:boolean;
   len,origlen:integer;
 
@@ -764,13 +771,46 @@ var
   End;
 End;
 
-Function TDic.Lookup(s:string):boolean; 
+Function TDic.Lookup(s:AnsiString):boolean;
 {lookup word "s" in the current dictionary}
 {Override if we don't care obout word characteristics}
 var a,f,c:boolean;
 begin
   result:=lookup(s,a,f,c);
 end;
+
+Function TDic.LookupPartial(s:ANSIstring; shortest, longest:integer):boolean;
+{lookup partial word "s" in the current dictionary. Return true if there is
+ a word starting with these letters with length between shortest and longest
+ inclusive}
+var
+  start:char;
+  testword:ANSIstring;
+  belowit:boolean;
+  //len:integer;
+  a,f,c:boolean;
+Begin
+    result:=false;
+  s:=lowercase(s);
+  if length(s)=0 then exit;
+  if (prechecked or IsValidword(s)) and (length(s)<=shortest) then
+  Begin
+    start:=s[1];
+    setrange(start,shortest,start,longest);
+    belowit:=true;
+    while  belowit do
+    Begin
+      if not getnextword(testword, a,f,c)
+      then belowit:=false;
+
+      testword:=(copy(testword,1,length(s)));
+      //origlen:=length(testword);
+      if (testword>=s) and(not a) then belowit:=false;
+    End;
+    if (testword=s) and (not a) then result:=true;
+    //restorerange;
+  End;
+End;
 
 
  procedure TDic.saverange;
@@ -791,10 +831,10 @@ end;
     end;
 
 {****************** AddWord *****************}
-Function TDic.AddWord(s:String; abbrev,foreign,caps:boolean):boolean;
+Function TDic.AddWord(s:AnsiString; abbrev,foreign,caps:boolean):boolean;
 {Add word s to dictionary}
 var
-  newword, nextword,w:string;
+  newword, nextword,w:AnsiString;
   a,f,c:boolean;
 Begin
   s:=lowercase(s);
@@ -823,10 +863,10 @@ Begin
 end;
 
 {****************** RemoveWord *****************}
-Function TDic.RemoveWord(s:String):boolean;
+Function TDic.RemoveWord(s:AnsiString):boolean;
 {Remove word s from dictionary}
 var
-  nextword:string;
+  nextword:AnsiString;
   a,f,c:boolean;
 Begin
   s:=lowercase(s);
@@ -853,7 +893,7 @@ Procedure TDic.Setrange(const letter1:char;length1:byte;
                         const letter2:char;length2:byte);
 {set a range of letters and lengths to search}
 var
-  s1,s2:string;
+  s1,s2:AnsiString;
 Begin
   s1:=ansilowercase(letter1);
   s2:=ansilowercase(letter2);
@@ -876,13 +916,13 @@ Begin
 End;
 
 (*
- Procedure TDic.Findwords(scrambled:string; NbrToFind:byte; List:Tstrings);
+ Procedure TDic.Findwords(scrambled:AnsiString; NbrToFind:byte; List:Tstrings);
  {given a scrambled word - find up to the specified # of words from
   dictionary and return them in a list}
 
  var
    c:TComboSet;
-   s:string;
+   s:AnsiString;
    n,i:integer;
    abbrev,foreign:boolean;
  Begin
@@ -908,7 +948,7 @@ End;
  Function TDic.GetwordCount:integer;
  {retrieve and count all words starting with letters and length set by "setrange"}
  var
-   w:string;
+   w:AnsiString;
    a,f,c:boolean;
    n:integer;
  Begin
@@ -940,6 +980,42 @@ begin
     if mr=mrcancel then canclose:=false;
   end;
 end;
+
+(*
+Function TDic.LookupPartial(s:string; shortest, longest:integer):boolean;
+{lookup partial word "s" in the current dictionary. Return true if there is
+ a word starting with these letters with length between shortest and longest
+ inclusive}
+var
+  start:char;
+  testword:string;
+  belowit:boolean;
+  len,origlen:integer;
+  a,f,c:boolean;
+  Begin
+  result:=false;
+  s:=lowercase(s);
+  if length(s)=0 then exit;
+  if (prechecked or IsValidword(s)) and (length(s)<=shortest) then
+  Begin
+    start:=s[1];
+    len:=length(s);
+    //saverange;
+    setrange(start,shortest,start,longest);
+    belowit:=true;
+    while  belowit do
+    Begin
+      if not getnextword(testword, a,f,c)
+      then belowit:=false;
+      testword:=(copy(testword,1,length(s)));
+      //origlen:=length(testword);
+      if (testword>=s) then belowit:=false;
+    End;
+    if (testword=s) then result:=true;
+    //restorerange;
+  End;
+End;
+*)
 
 Initialization
   PubDic:=TDic.Create(false);

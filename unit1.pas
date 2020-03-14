@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   ExtCtrls, Buttons, Grids, lclintf, DateUtils,
   Clipbrd,
-  UBigFloatV3, UBigIntsV3,
+  UBigFloatV3,
   IniFiles;
 
 const
@@ -63,7 +63,6 @@ type
     Panel6: TPanel;
     Panel7: TPanel;
     Panel8: TPanel;
-    pcCalc: TPageControl;
     pcDigit: TPageControl;
     pcMain: TPageControl;
     rbBigBytes: TRadioButton;
@@ -88,6 +87,7 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
+    tsBigFloat: TTabSheet;
     tbBigFloat: TToolBar;
     btnBigFloatReciprocal: TToolButton;
     btnBigFloatPI: TToolButton;
@@ -106,7 +106,6 @@ type
     btnBigFloatSqrt: TToolButton;
     btnBigFloatE: TToolButton;
     btnBigFloatElapsed: TToolButton;
-    tsBigFloat: TTabSheet;
     tsCalc: TTabSheet;
     tsBytes: TTabSheet;
     tbByteErr: TToolButton;
@@ -915,7 +914,7 @@ begin
   p^     := fd;
   for i := 0 to 3 do
   begin
-    Result := Result + IntToHex(b[i], 2);
+    Result := Result + IntToHex(b[3-i], 2);
     if i < 3 then
       Result := Result + ' ';
   end;
@@ -932,7 +931,7 @@ begin
   p^     := fd;
   for i := 0 to 7 do
   begin
-    Result := Result + IntToHex(b[i], 2);
+    Result := Result + IntToHex(b[7-i], 2);
     if i < 7 then
       Result := Result + ' ';
   end;

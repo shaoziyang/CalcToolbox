@@ -1,11 +1,6 @@
 Unit uBigIntsV3;
 
-{$IFDEF FPC}
-{$MODE Delphi}
-{$ENDIF}
-
-
-{Copyright 2001-2012, Gary Darby, Intellitech Systems Inc., www.DelphiForFun.org
+{Copyright 2001-2013, Gary Darby, Intellitech Systems Inc., www.DelphiForFun.org
 
  This program may be used or modified for any non-commercial purpose
  so long as this original notice remains in place.
@@ -43,13 +38,13 @@ type
     procedure AbsSubtract(const i2: Tinteger);
 
     function  GetBasePower: integer;
-    
+
     function  GetLength: integer;
     procedure SetDigitLength(const k: integer);
     procedure assignsmall(i2: int64);
     procedure divmodsmall(d:int64; var rem: int64);
     procedure divide2;   {fast divide by 2}
-   
+
   public
     property Digits: TDigits Read fDigits;
     constructor Create;
@@ -94,6 +89,7 @@ type
     function IsNegative: boolean;
     function IsProbablyPrime: boolean;
     function IsZero: boolean;
+    function IsOne: boolean;
     procedure ChangeSign;
     procedure Pow(const exponent: int64);
     procedure Trim;
@@ -1218,6 +1214,11 @@ begin
   result := Sign=0;
 end;
 
+function TInteger.IsOne: boolean;
+begin
+  result:=compare(1)=0;
+end;
+
 {************* AbsCompare *************}
 function TInteger.AbsCompare(i2: Tinteger): integer;
   {compare absolute values ingoring signs - to Tinteger}
@@ -1361,7 +1362,11 @@ begin
         Result[NewPos]     := Result[CurPos];
         Result[NewPos - 1] := Result[CurPos - 1];
         Result[NewPos - 2] := Result[CurPos - 2];
+       {$IF compilerversion<22}  {Before XE?}
         Result[NewPos - 3] := ThousandSeparator;
+        {$ELSE}  {XE and later}
+        Result[NewPos - 3] := FormatSettings.ThousandSeparator;
+        {$IFEND}
         Dec(NewPos, 4);
         Dec(CurPos, 3);
       end;

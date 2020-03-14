@@ -19,8 +19,9 @@ uses
   Dialogs,
   Forms,
   SysUtils,
-  UBigIntsV3,
-  Windows;
+  UBigIntsForFloatV4; {Version of UBigInts to use the "class" version regardless
+                       of compiler version}
+
 
 type
   TMaxSig=integer;
@@ -995,8 +996,8 @@ begin
   TempN.Assign(self);
   if tempn.sigdigits<MaxSig then
     tempn.SetSigdigits(MaxSig);
-  if tempN.decpart.Sign<0 then
-    tempN.decpart.Sign := 1;
+   {Ensure that the divisor is positive}
+  {if tempn.decpart.Sign<0 then} tempn.decpart.Sign := 1;
   nexp := self.exponent;
   tempn.exponent := 0;
   tempN.Trunc(15);
@@ -1004,7 +1005,9 @@ begin
   d := 1/d;
   TempN.Assign(self);
   tempn.exponent := 0;
+  if tempn.decpart.sign<0 then tempn.decpart.sign:=1;
   tempn.SetSigdigits(MaxSig);
+
   guess.Assign(d);
   guess.setsigdigits(MaxSig);
   tolerance := MaxSig+4;

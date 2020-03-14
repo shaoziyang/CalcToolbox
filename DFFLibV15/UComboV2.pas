@@ -1,8 +1,10 @@
-unit UcomboV2;
+Unit UcomboV2;
 
-{$MODE Delphi}
+{Updated to handle larger combo counts by use 64 bit integers and calling the
+ Mathslib 64 bit random number generator  11/19/2013  - GDD}
 
- {Copyright 2002-2005, Gary Darby, Intellitech Systems Inc., www.DelphiForFun.org
+
+ {Copyright 2002-2013, Gary Darby, Intellitech Systems Inc., www.DelphiForFun.org
 
   Revisions:
   Copyright (C) 2004, 2005 Charles Doumar
@@ -44,10 +46,10 @@ unit UcomboV2;
 interface
 
 const
-  MaxEntries = 100;
+  MaxEntries = 600;
 
 type
-  ByteArray  = array[0..MaxEntries + 1] of integer;
+  ByteArray  = array[0..MaxEntries + 1] of int64;
   TCombotype = (Combinations,  {Lexicographical order up}
     Permutations,              {Lexicographical order up}
     CombinationsDown,          {Lexicographical order down}
@@ -71,6 +73,7 @@ type
                              each position, e.g. if n=10, then leftmost
                              has 10 of 10, for each of these, next position
                              has 9, next 8, etc. }
+
     {NEW PRIVATE FUNCTIONS ADDED BY CHARLES DOUMAR}
     procedure ClearArrays;
     {******************** Setup First Procedures ********************}
@@ -101,10 +104,12 @@ type
     procedure SetupPrevLexRepRPermute;
     {******************** Valid Function *********************}
     function IsValidRN(const RPick,Number:integer;const ACtype:TComboType):boolean;
-    function IsValidRNRank(const RPick,Number,Rank:integer;const ACtype:TComboType):boolean;
-  public
-    Selected: bytearray;
+    function IsValidRNRank(const RPick,Number:integer;Rank:int64;const ACtype:TComboType):boolean;
+    procedure SetError;
 
+  public
+    Selected: ByteArray;
+    RandomRank : int64; {Result from various random rank calls}
     {Setup to retrieve R of N objects}
 
     procedure Setup(newR, newN: word; NewCtype: TComboType); {Replaced by SetupR}
@@ -193,12 +198,12 @@ type
 
     {******************** Random Functions ********************}
     {Returns combinatorial sequence from a particular rank}
-    function RandomR(const RPick, Number: integer; const NewCtype: TComboType):Boolean;
-    function RandomCoLexRCombo(const RPick, Number: integer):Boolean;
-    function RandomLexRCombo(const RPick, Number: integer):Boolean;
-    function RandomLexRepRCombo(const RPick, Number: integer):Boolean;
-    function RandomLexRPermute(const RPick, Number: integer):Boolean;
-    function RandomLexRepRPermute(const RPick, Number: integer):Boolean;
+    function RandomR(const RPick, Number: int64; const NewCtype: TComboType):Boolean;
+    function RandomCoLexRCombo(const RPick, Number: int64):Boolean;
+    function RandomLexRCombo(const RPick, Number: int64):Boolean;
+    function RandomLexRepRCombo(const RPick, Number: int64):Boolean;
+    function RandomLexRPermute(const RPick, Number: int64):Boolean;
+    function RandomLexRepRPermute(const RPick, Number: int64):Boolean;
   end;
 
 var
@@ -206,14 +211,23 @@ var
 
 implementation
 
-uses math;
+uses math, Windows, Dialogs, Mathslib{, UBigIntsV4};
 
 var
   Count: int64;  {count of entries}
 
+
+procedure TComboSet.SetError;
+begin
+   showmessage('Values for N, R, and selected type exceed max values');
+   N:=0;
+   R:=0;
+end;
+
 procedure TComboset.Setup(newR, newN: word; NewCtype: TComboType);
 begin
   setupr(newR, newN, NewCtype);
+  randomize64;
 end;
 
 
@@ -222,8 +236,6 @@ function TComboset.GetNextPermute: boolean;
 begin
   result:=nextLexRPermute;
 end;
-
-
 
 function Tcomboset.getNextcombo: boolean;
 {Retained for compatibility - replaced by NextLexRCombo}
@@ -237,8 +249,6 @@ function Tcomboset.getnext;
 begin
   result:=GetnextPrevR;
 end;
-
-
 
 function TComboset.Getcount: int64;
 begin
@@ -260,7 +270,6 @@ function TComboset.GetCType: TComboType;
 begin
   Result := Ctype;
 end;
-
 
  {******************** PRIVATE FUNCTION ********************}
 procedure TComboSet.ClearArrays;
@@ -461,12 +470,13 @@ begin
   Result := false;
   if (RPick < 1) or (Number < 1) or
      ((RPick > Number) and (not(aCtype in [PermutationsRepeat,
-     PermutationsWithrep, CombinationsWithRep, PermutationsRepeatDown, CombinationsRepeat,CombinationsRepeatDown]))) then
+     PermutationsWithrep, CombinationsWithRep,
+     PermutationsRepeatDown, CombinationsRepeat,CombinationsWithrep,CombinationsRepeatDown]))) then
        exit;
   Result := True;
 end;
 
-function TComboSet.IsValidRNRank(const RPick,Number,Rank:integer;const ACtype:TComboType):boolean;
+function TComboSet.IsValidRNRank(const RPick,Number:integer;Rank:int64;const ACtype:TComboType):boolean;
 
 begin
    Result := False;
@@ -552,34 +562,41 @@ function TComboSet.GetRCombo(const RPick, Number: integer): int64;
 }
 
 var
-  i, f, nn, rr: integer;
+  i:integer;
+  f, nn, rr: int64;
   num: extended;
 begin
   Result := 1;  {this function defaults to 1 use binomial}
   nn     := Number;
   rr     := RPick;
   num    := 1;
-  if (nn <= rr) then
-  begin
-    exit
-  end;
-  if (rr * 2 > nn) then
-  begin
-    rr := nn - rr
-  end;
-  for i := 1 to rr do
-  begin
-    f := nn;
-    if (nn mod i = 0) then
+  try
+    if (nn <= rr) then
     begin
-      f := f div i
-    end
-    else
-    begin
-      num := num / i
+      exit
     end;
-    num := num * f;
-    Dec(nn);
+    if (rr * 2 > nn) then
+    begin
+      rr := nn - rr
+    end;
+    for i := 1 to rr do
+    begin
+      f := nn;
+      if (nn mod i = 0) then
+      begin
+        f := f div i
+      end
+      else
+      begin
+        num := num / i
+      end;
+      num := num * f;
+      Dec(nn);
+    end;
+  except
+    Seterror;
+    num:=0;
+    result:=0;
   end;
   Result := trunc(num + 0.5);
 end;
@@ -597,7 +614,11 @@ begin
     Combination(n,r) = n! / ( (n-r)! * r! )
     Permutation(n,r) = Combination(n,r) * r!
     Permutation(n,r) = n! / ( (n-r)! * r! ) * r!}
-  Result := GetRCombo(RPick, Number) * Factorial(RPick);
+  try
+    Result := GetRCombo(RPick, Number) * Factorial(RPick);
+  except
+    Seterror;
+  end;
 end;
 
 function TComboSet.GetRepRPermute(const RPick, Number: integer): int64;
@@ -1333,21 +1354,28 @@ begin
   end;
   Ctype := newCtype;
   ClearArrays;
-  case Ctype of
-    Combinations: SetupNextLexRCombo;  {Lexicographical order up}
-    Permutations: SetupNextLexRPermute; {Lexicographical order up}
-    CombinationsDown: SetupPrevLexRCombo; {Lexicographical order down}
-    PermutationsDown: SetupPrevLexRPermute; {Lexicographical order down}
-    CombinationsCoLex: SetupNextCoLexRCombo; {Co-Lexicographical order up}
-    CombinationsCoLexDown: SetupPrevCoLexRCombo; {Co-Lexicographical order down}
-    PermutationsRepeat, PermutationsWithRep: SetupNextLexRepRPermute; {Lexicographical order up}
-    PermutationsRepeatDown: SetupPrevLexRepRPermute; {Lexicographical order down}
-    CombinationsRepeat,CombinationsWithrep: SetupNextLexRepRCombo; {Lexicographical order up}
-    CombinationsRepeatDown: SetupPrevLexRepRCombo; {Lexicographical order down}
-    else
-    begin
-      SetupNextLexRCombo
-    end;                  {picked a default value to prevent warning}
+  try
+    case Ctype of
+      Combinations: SetupNextLexRCombo;  {Lexicographical order up}
+      Permutations: SetupNextLexRPermute; {Lexicographical order up}
+      CombinationsDown: SetupPrevLexRCombo; {Lexicographical order down}
+      PermutationsDown: SetupPrevLexRPermute; {Lexicographical order down}
+      CombinationsCoLex: SetupNextCoLexRCombo; {Co-Lexicographical order up}
+      CombinationsCoLexDown: SetupPrevCoLexRCombo; {Co-Lexicographical order down}
+      PermutationsRepeat, PermutationsWithRep: SetupNextLexRepRPermute; {Lexicographical order up}
+      PermutationsRepeatDown: SetupPrevLexRepRPermute; {Lexicographical order down}
+      CombinationsRepeat,CombinationsWithrep: SetupNextLexRepRCombo; {Lexicographical order up}
+      CombinationsRepeatDown: SetupPrevLexRepRCombo; {Lexicographical order down}
+      else
+      begin
+        SetupNextLexRCombo
+      end;                  {picked a default value to prevent warning}
+    end;
+  except
+    Seterror;
+
+  //finally
+
   end;
   NumberOfSubsets := GetNumberSubsets(r,n,Ctype);
   if Ctype in [CombinationsDown, PermutationsDown, CombinationsCoLexDown,
@@ -1499,7 +1527,8 @@ end;
 
 function TComboSet.UnRankLexRepRCombo({const RPick, Number: integer;} const Rank: int64):boolean;
 var
-  DistinctNo,i,RankRemaining : integer;
+  i:integer;
+  DistinctNo,RankRemaining : int64;
   wrank:int64;
 begin
   result:=false;
@@ -1771,8 +1800,14 @@ begin
   Result := True;
 end;
 
+
+
+
+
+
+
 {******************** Random Functions ********************}
-function TComboSet.RandomR(const RPick, Number: integer;
+function TComboSet.RandomR(const RPick, Number: int64;
   const NewCtype: TComboType): Boolean;
 begin
   case NewCtype of
@@ -1791,47 +1826,39 @@ begin
   end;
 end;
 
-function TComboSet.RandomCoLexRCombo(const RPick, Number: integer):boolean;
-var
-RandomRank : int64;
+
+function TComboSet.RandomCoLexRCombo(const RPick, Number: int64):boolean;
 begin
-  RandomRank := random(GetRCombo(RPick,Number))+1; {Math.RandomRange(1,GetRCombo(RPick,Number));}
-  Result := UnRankCoLexRCombo({RPick,Number,}RandomRank);
+  RandomRank := random64(GetRCombo(RPick,Number))+1;
+  Result := UnRankCoLexRCombo(RandomRank);
 end;
 
-function TComboSet.RandomLexRCombo(const RPick, Number: integer):boolean;
-var
-RandomRank : int64;
+function TComboSet.RandomLexRCombo(const RPick, Number: int64):boolean;
 begin
-  RandomRank := random(GetRCombo(RPick,Number))+1; {Math.RandomRange(1,GetRCombo(RPick,Number));}
+  RandomRank := random64(GetRCombo(RPick,Number))+1;
   Result := UnRankLexRCombo(RandomRank);
 end;
 
-function TComboSet.RandomLexRepRCombo(const RPick, Number: integer):boolean;
-var
-RandomRank : int64;
+function TComboSet.RandomLexRepRCombo(const RPick, Number: int64):boolean;
 begin
-  RandomRank :=random(GetRepRCombo(RPick,Number))+1;  {GDD}
+  RandomRank :=random64(GetRepRCombo(RPick,Number))+1;  {GDD}
   Result := UnRankLexRepRCombo(RandomRank);
 end;
 
-function TComboSet.RandomLexRepRPermute(const RPick, Number: integer):boolean;
-var
-RandomRank : int64;
+function TComboSet.RandomLexRepRPermute(const RPick, Number: int64):boolean;
 begin
-   RandomRank := random(GetRepRPermute(RPick,Number))+1; {GDD}
+   RandomRank := random64(GetRepRPermute(RPick,Number))+1; {GDD}
   Result := UnRankLexRepRPermute(RandomRank);
 end;
 
-function TComboSet.RandomLexRPermute(const RPick, Number: integer):boolean;
-var
-RandomRank : int64;
+function TComboSet.RandomLexRPermute(const RPick, Number: int64):boolean;
 begin
-  RandomRank := random(GetRPermute(RPick,Number))+1; {GDD}
+  RandomRank := random64(GetRPermute(RPick,Number))+1; {GDD}
   Result := UnRankLexRPermute(RandomRank);
 end;
 
 initialization
   Combos := TComboset.Create;
   randomize;
+  randomize64;
 end.

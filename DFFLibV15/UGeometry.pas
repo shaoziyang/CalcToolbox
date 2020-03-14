@@ -31,6 +31,10 @@ type
     cx,cy,r:extended;
   end;
 
+  TPolygon=array of TPoint;
+  TRealPolygon=array of TRealpoint;
+
+
   PPResult=(PPoutside, PPInside, PPVertex, PPEdge, PPError);
 
   function realpoint(x,y:extended):TRealPoint;
@@ -42,8 +46,8 @@ type
   function intdist(const p1,p2:TPoint):integer;
 
   {Make a line from two points}
-  function MakeLine(const p1,p2:TPoint):Tline;   overload;
-  function MakeLine(const p1,p2:TRealPoint):TRealline; overload;
+  function Line(const p1,p2:TPoint):Tline;   overload;
+  function Line(const p1,p2:TRealPoint):TRealline; overload;
 
   {Make a circle from center and radius}
   function Circle(const cx,cy,R:integer):TCircle;    overload;
@@ -66,6 +70,7 @@ type
   function ExtendedLinesIntersect({Const} Line1,Line2:TLine;
                                   Const extendlines:boolean;
                                   var IP:TPoint):boolean;  overload;
+
   function ExtendedLinesIntersect(Const Line1,Line2:TLine;
                                   Const extendlines:boolean;
                                   var IP:TRealPoint):boolean; overload;
@@ -73,10 +78,6 @@ type
   {A more complex (and probably slower) version which identifies the intersection
   point and whether either end of either line falls exactly on the other line}
   function Intersect(L1,L2:TLine; var pointonborder:boolean; var IP:TPoint):boolean;
-
-
-
-
   {Find the line from a given point which is perpendicular to a given line}
   {p1 of the returned line is the given point, p2 is the intersection point of the
    given line and the reutrned line}
@@ -123,6 +124,7 @@ procedure InflatePolygon(const points:array of Tpoint;
 {PolyBuiltClockwise reurns true if passed polygon was built in a clockwise direction}
 function PolyBuiltClockwise(const points:array of TPoint;
                               const screencoordinates:boolean):boolean;
+
 
 
 function DegtoRad(d:extended):extended;  {Degrees to radians}
@@ -190,21 +192,19 @@ begin
 end;
 
 
-function MakeLine(const p1,p2:TPoint):Tline;
+function Line(const p1,p2:TPoint):Tline;
 {Make a Tline record from two points}
 begin
   result.p1:=p1;
   result.p2:=p2;
 end;
 
-
-function MakeLine(const p1,p2:TRealPoint):TRealline;
+function Line(const p1,p2:TRealPoint):TRealline;
 {Make a Tline record from two points}
 begin
   result.p1:=p1;
   result.p2:=p2;
 end;
-
 
 function Circle(const cx,cy,R:integer):TCircle;
 {Make a TCircle record using passed center and radius}
@@ -861,7 +861,7 @@ begin
   result:=clockwise;
 end;
 
-
+{************ InflatePolygon ***********}
 procedure InflatePolygon(const Points:array of Tpoint;
                         var Points2: array of TPoint;
                         var area:integer;
@@ -1114,7 +1114,7 @@ var
  xr:extended;
  cosalpha,alpha:extended;
 begin
-  L:=MakeLine(point(c1.cx,c1.cy),point(c2.cx,c2.cy));
+  L:=Line(point(c1.cx,c1.cy),point(c2.cx,c2.cy));
   d:=intdist(L.p1,L.p2);
   if (d<c1.r+c2.r) and (d+min(c1.r,c2.r)>max(c1.r,c2.r)) then {the circles intersect}
   with L do
@@ -1124,8 +1124,8 @@ begin
     xr:=(sqr(d)-sqr(c2.r)+sqr(c1.r))/(2*d); {x coordinate of intersection}
     cosalpha:=xr/c1.r;
     alpha:=arccos(cosalpha);
-    IL1:=MakeLine(L.p1,point(c1.r,0));
-    IL2:=MakeLine(L.p1,point(c1.r,0));
+    IL1:=line(L.p1,point(c1.r,0));
+    IL2:=line(L.p1,point(c1.r,0));
     RotateRightEndto(IL1,-alpha+theta);
     TranslateleftTo(IL1,point(c1.cx,c1.cy));
     RotateRightEndto(IL2,alpha+theta);
@@ -1145,7 +1145,7 @@ var
  xr:extended;
  cosalpha,alpha:extended;
 begin
-  L:=MakeLine(realpoint(c1.cx,c1.cy),realpoint(c2.cx,c2.cy));
+  L:=Line(realpoint(c1.cx,c1.cy),realpoint(c2.cx,c2.cy));
   d:=dist(L.p1,L.p2);
   if (d<=c1.r+c2.r) and (d+min(c1.r,c2.r)>=max(c1.r,c2.r)) then {the circles intersect}
   with L do
@@ -1155,8 +1155,8 @@ begin
     xr:=(sqr(d)-sqr(c2.r)+sqr(c1.r))/(2*d); {x coordinate of intersection}
     if c1.r=0 then cosalpha:=1 else cosalpha:=xr/c1.r;
     alpha:=arccos(cosalpha);
-    IL1:=MakeLine(L.p1,realpoint(c1.r,0));
-    IL2:=MakeLine(L.p1,realpoint(c1.r,0));
+    IL1:=line(L.p1,realpoint(c1.r,0));
+    IL2:=line(L.p1,realpoint(c1.r,0));
     RotateRightEndto(IL1.p1,IL1.p2,-alpha+theta);
     TranslateleftTo(IL1,realpoint(c1.cx,c1.cy));
     RotateRightEndto(IL2.p1,il2.p2,alpha+theta);
@@ -1186,14 +1186,14 @@ begin
   begin
     d:=intdist(point(c.cx,c.cy),P);
     pc:=point(cx,cy);
-    L:=MakeLine(pc,p);
+    L:=line(pc,p);
     M:=point((cx+p.x) div 2, (cy+p.Y) div 2);
     C1:=Circle(m.x, m.y, d div 2);
     C2:=C;
     if circleCircleIntersect(C1,C2,Ip1,Ip2) then
     begin
-      L1:=MakeLine(P,Ip1);
-      L2:=MakeLine(P,Ip2);
+      L1:=line(P,Ip1);
+      L2:=Line(P,Ip2);
     end
     else result:=false;
   end;

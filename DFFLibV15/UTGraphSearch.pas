@@ -1,8 +1,5 @@
 unit UTGraphSearch;
-
-{$MODE Delphi}
-
- {Copyright  Â© 2000-2005, Gary Darby,  www.DelphiForFun.org
+ {Copyright  © 2000-2016, Gary Darby,  www.DelphiForFun.org
  This program may be used or modified for any non-commercial purpose
  so long as this original notice remains in place.
  All other rights are reserved
@@ -12,7 +9,7 @@ unit UTGraphSearch;
 
 
 interface
-  uses windows,forms,classes, dialogs, sysutils, UIntList, UGeometry;
+  uses windows,forms, classes, dialogs, sysutils, UIntlist, UGeometry;
 
  type
   tMethodCall = procedure of object;
@@ -45,6 +42,8 @@ interface
     stop:boolean;   {stop flag checked during searching}
     nodesSearched, queuesize:integer; {counts kept by search routines}
     edgecount:integer;
+    LocalQ:TList;
+    Pathlen:integer;
     constructor create;
     destructor destroy;    override;
     procedure clear;  {a version of clear to free node objects as well as clearing the list}
@@ -651,7 +650,7 @@ var
   temp, temp2:TBreadthObj;
   node2:TNode;
   nodenbr:integer;
-  LocalQ:TList;
+
   inpath:boolean;
 begin
   if not finalized then finalize{exit};
@@ -682,7 +681,7 @@ begin
       inc(nodessearched);
       temp:=Localq.items[0];{get the oldest beadthobj}
       Localq.delete(0);
-      if nodessearched mod 1024=0 then application.processmessages;
+      if nodessearched mod 4096=0 then application.processmessages;
       //application.processmessages;  {is this often enough?}
       If temp.pathlength>=maxdepth {maxdepth reached, we're done}
       then
@@ -712,6 +711,7 @@ begin
               path:=copy(temp.path,0,temp.pathlength);
               setlength(path,maxdepth);
               pathlength:=temp.pathlength+1;
+              pathlen:=pathlength;  {expose current pathlength}
               if pathlength>length(path)
                then
                begin
@@ -740,7 +740,8 @@ begin
         end;
         temp.free;
       end;
-      If nodesSearched mod 1024 = 0 then application.processmessages;
+      If nodesSearched mod 4096 = 0
+      then application.processmessages;
     end;
     finally
       if localQ.count>0 then
@@ -765,14 +766,14 @@ end;
 function TGraphList.Dijkstra(const FromNode, ToNode:string; var ExtPath:TIntList):integer;
 {Overloaded call with no Verbosecall or Goalfound parameters}
 begin
-  result:=Dijkstra( FromNode, ToNode, Extpath, noverbose, nogoal);
+  result:=Dijkstra( FromNode, ToNode, Extpath, NoVerbose, nogoal);
 end;
 
 function TGraphList.Dijkstra(const FromNode, ToNode:string;  var ExtPath:TIntList;
                                     GoalFound:TMethodCall):integer;
 {Overloaded call with no Verbosecall  parameter}
 begin
-  result:=Dijkstra(FromNode, ToNode, ExtPath, noverbose, goalfound);
+  result:=Dijkstra(FromNode, ToNode, ExtPath, NoVerbose, goalfound);
 end;
 
 function TGraphList.Dijkstra(const FromNode, ToNode:string; var ExtPath:TIntList;
@@ -816,7 +817,6 @@ var
   i,m,ix:integer;
   fromNodeIndex, ToNodeIndex:integer;
   path,d:array of integer;
-  //verbose:TVerboseCall;
 
 
     function Minx:integer;
@@ -839,9 +839,8 @@ var
     end;
 
 begin
-  result:=0;                        
+  result:=-100;
 
-  //verbose:=verbosecall;
   if not finalized then begin finalize{result:=-1; exit;} end;  {-1 'Not finalized'}
   if (not find(fromNode, FromNodeIndex)) or (not find(toNode,ToNodeIndex)) then
   begin
@@ -871,12 +870,13 @@ begin
       break;
     end;
     dist.delete(m);
-    verbosecall('1. "Closest" unchecked is  node ' + strings[v]
-                                              + ' with weight to it = '+inttostr(dv));
+
+    //verbosecall('1. "Closest" unchecked is  node ' + strings[v]
+    //                                          + ' with weight to it = '+inttostr(dv));
     if (v=tonodeindex) then
     {solution found}
     begin
-      verbosecall('5.  Destination node '+ strings[v]+' found!');
+      If @verbosecall <> nil then verbosecall('Level 5:  All paths to  node '+ strings[v]+' checked!');
       break; {path complete, we can stop}
     end;
     with TNode(objects[v]) do
@@ -884,21 +884,28 @@ begin
     begin
       du:=dv+adjacents[i].weight; {new distance= minimum to adjacent plus its weight}
       u:=adjacents[i].tonodeIndex; {the node to which this applies}
-      verbosecall('2. Node '+strings[u]+' through node '
-                                    +strings[v]+' has path weight ' +inttostr(du));
+      If (@verbosecall <>nil) and ((strings[u]<>fromnode) {or (i=0)}) then
+      verbosecall(format('Level 2: From Node %s through %s to node %s path weight is %s',
+                           [fromnode, strings[v],strings[u],inttostr(du)]));
       if (dist.find(u,ix)) and (du<integer(dist.objects[ix]))
       then  {this is a new shortest distance to this node}
       begin  {so...}
         dist.objects[ix]:=TObject(du); {update the distance list with the new distance}
         path[u]:=v;  {set the path to this node to the node that got us here}
         d[u]:=du; {put the distance in the distance array}
-       verbosecall('3. *** It is the smallest path so far from start to '+strings[u]);
+        If @verbosecall<>nil
+        then verbosecall(format('   Level 3: This is the smallest path so far from %s to %s',[fromnode,strings[u]]));
+
       end;
     end;
-    verbosecall('4. All paths from '+ strings[v]+' checked');
+    If @verbosecall<>nil then
+    begin
+      verbosecall('Level 4: All paths from '+ strings[v]+' checked');
+      verbosecall('');
+    end;
   end;
 
-  if (result>=0) and (v=ToNodeIndex) then
+  if ((result=-100 {first time throughindicator}) or (result>=0)) and (v=ToNodeIndex) then
   begin
     result:=v;
     extpath.clear;
@@ -910,16 +917,14 @@ begin
     end;
     extpath.addobject(fromnodeindex,TObject(0));
     q.clear;
-     {put solution nodes in "Q" before calling Goalfound to provide
+    {put solution nodes in "Q" before calling Goalfound to provide
      compatibility with breadth first and depth first searches}
-    for i:=extpath.count-1 downto 0 do
-          q.add(TNode(objects[extpath[i]]));
+    for i:=extpath.count-1 downto 0 do q.add(TNode(objects[extpath[i]]));
     queuesize:=q.count;
     goalfound;
   end
   else result:=-3; {err -3 ='No path found'}
   dist.free;
 end;
-
 
 end.

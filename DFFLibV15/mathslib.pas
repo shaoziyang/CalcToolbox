@@ -1,7 +1,12 @@
-unit MathsLib;
+unit  MathsLib;
 
-{Copyright 2005,2008 Gary Darby, www.DelphiForFun.org
+{Copyright 2005,2013 Gary Darby, www.DelphiForFun.org
 
+{Updated to include a 64 bit Random Number Generator  and to compile under
+ all Delphi versions 11/19/2013 GDD}
+
+
+{
  This program may be used or modified for any non-commercial purpose
  so long as this original notice remains in place.
  All other rights are reserved
@@ -24,13 +29,24 @@ unit MathsLib;
 
 interface
 
-uses Classes, SysUtils, Windows, Dialogs,  UBigIntsV3;
+uses Classes, SysUtils, Windows, Dialogs, UBigIntsV4;
 
 type
   intset = set of byte;
 
   TPoint64=record
     x,y:int64;
+  end;
+
+
+  TRealPoint=record
+     x,y:extended;
+  end;
+
+  TMercScalingRec= record
+    BaseDeg:TRealPoint; {base long/lat for Mercator scaling}
+    BasePix:TPoint;   {base pixel x/y coordinates for scaling}
+    scalex,scaley:extended; {calculated scaling factors for converting between pixel and degree coordinates}
   end;
 
 function GetNextPandigital(size: integer; var Digits: array of integer): boolean;
@@ -40,12 +56,10 @@ function IsPentagon(p: integer): boolean;
 function isSquare(const N: int64): boolean;
 function isCube(const N: int64): boolean;
 
-
 function isPalindrome(const n: int64): boolean;  overload;
 function isPalindrome(const n: int64; var len:integer): boolean;  overload;
 
 function GetEulerPhi(n: int64): int64;
-
 
 function IntPower(a, b: int64): int64; overload;
 function IntPower(a:extended; b: int64): extended; overload;
@@ -54,7 +68,7 @@ function gcd2(a, b: int64): int64;
 function GCDMany(A: array of integer): integer;
 function LCMMany(A: array of integer): integer;
 procedure ContinuedFraction(A: array of int64; const wholepart: integer;
-  var numerator, denominator: int64);
+          var numerator, denominator: int64);
 function Factorial(n: int64): int64;
 
 function digitcount(n:int64):integer;
@@ -63,11 +77,13 @@ function nextpermute(var a:array of integer):boolean;
 function convertfloattofractionstring( N:extended; maxdenom:integer;multipleof:boolean):string;
 function convertStringToDecimal(s:string; var n:extended):Boolean;  {string may include fractions}
 function InttoBinaryStr(nn: integer): string;
-
+function cyclelen(n: integer; var s: string): integer;
 
 {Latitude Longitude Routines}
   function StrtoAngle(const s:string; var angle:extended):boolean;
-  function AngleToStr(angle:extended):string;
+ // function AngleToStr(angle:extended):string; overload;
+  function AngleToStr(angle:extended;decimals:integer=2):string;  Overload;
+  function AngleToStr10(angle:extended; dir:char):string; {ddd:mm:ssX 10 character format}
   function deg2rad(deg:extended):extended;
   function rad2deg(rad:extended):extended;
   function GetLongToMercProjection(const long:extended):extended;
@@ -75,7 +91,17 @@ function InttoBinaryStr(nn: integer): string;
   function GetMercProjectionToLong(const ProjLong:extended):extended;
   function GetMercProjectionToLat(const ProjLat:extended):extended;
 
+  function MercScaling(Long0,lat0, long1, lat1:extended; x0,y0,x1,y1:integer):TMercScalingRec;
+  {In order to accurately plot lat-long points on a Mercator projection map
+   we need two pixel and let/long coordinates for two known point from
+   which scaling factors can be computed.  data are stroed in a TMercScalingrec record}
+  function LonglatToPlotPt(Long,lat:Extended; Scalerec:TMercScalingrec):TPoint;
 
+  function PlotPtToLonglat(PlotPt:TPoint; Scalerec:TMercScalingrec):TRealPoint;
+
+
+  function distance(lat1,lon1,lat2,lon2:extended; Units:integer):extended;
+  function SphericalEarthDistance(lat1,lon1,lat2,lon2:extended; Units:integer):extended;
 
 
 type
@@ -88,7 +114,7 @@ type
     nbrprimes, nbrfactors, nbrcanonicalfactors, nbrdivisors: integer;
     Factors:  array of int64; {array of factors - 0th entry is not used}
     CanonicalFactors: array of TPoint64;
-    Divisors: array of int64;
+    Divisors:  array of int64;
     function GetNextPrime(n: int64): int64;
     function GetPrevPrime(n: int64): int64;
     function IsPrime(n: int64): boolean;
@@ -104,7 +130,7 @@ type
   end;
 
 
-const deg=chr(176); {'Â°'}
+const deg=chr(176); {'°'}
       minmark=chr(180);
 
 
@@ -121,6 +147,21 @@ var
   {User fields for Continued fraction calculation}
   continuants:   array of int64;
   maxcontinuant: integer;
+
+
+{******** 64 bit Random Routines ********}
+{$IF compilerversion>15}
+  RandSeed64 : UInt64 ;
+  function Random64(const UI64 : UInt64) : UInt64 ; overload ;
+{$ELSE}
+  RandSeed64:Int64;
+  function Random64(const N:Int64) : Int64 ; overload ;
+{$IFEND}
+
+  procedure Randomize64 ;
+  function Random64 : extended ; overload ;
+
+
 
 implementation
 
@@ -270,12 +311,10 @@ end;
 procedure GetBigCombocount(const r, n: integer; var ccount: TInteger);
 {Return number of combinations -- n things taken r at a time
  without replacement}
-{Return number of combinations -- n things taken r at a time
- without replacement}
 var
   work: TInteger;
 begin
-  work := TInteger.Create;
+  work := TInteger.Create(0);
   if (r > 0) and (r < n) then
   begin
     ccount.Assign(N);
@@ -441,8 +480,7 @@ end;
 function isPalindrome(const n: int64): boolean;
 {Returns true if "n" is a palindrome}
 var
-  s: string;
-  i,len: integer;
+  len: integer;
 begin
   result:=isPalindrome(n,len);
 end;
@@ -780,30 +818,6 @@ begin
     n[i] := 0;
 end;
 
-(*
-{************ DigitCount ********}
-function DigitCount(n: Tbigint): integer;
-var
-  i: integer;
-  w: int64;
-begin
-  Result := 0;
-  for i := high(n) downto 0 do
-    if n[i] > 0 then
-    begin
-      Result := 10 * i;
-      w      := n[i];
-      while w > 0 do
-      begin
-        w := w div 10;
-        Inc(Result);
-
-      end;
-      break;
-    end;
-end;
-*)
-
 {*********** DivSum *********}
 function divsum(n: integer): integer;
   {Return the sum of the prpoer divisors of N}
@@ -915,19 +929,31 @@ begin
   s:=trim(s);
   errflag:=false;
   repeat
+    {$IF compilerversion<=15}
     x:=pos(thousandseparator,s);
+    {$ELSE}
+    x:=pos(Formatsettings.ThousandSeparator,s);
+    {$IFEND}
     if x>0 then delete(s,x,1);
   until x=0;
   repeat
     x:=pos('  ',s);
     if x>0 then delete(s,x,1);
   until x=0;
+  {$IF compilerversion<=15}
   if (pos('/',s)>0) and (pos(decimalseparator,s)>0)
+  {$ELSE}
+  if (pos('/',s)>0) and (pos(FormatSettings.decimalseparator,s)>0)
+  {$IFEND}
   then error('Numbers cannot contain decimal and ''/''',0);
 
   for i:= 1 to length(s) do
   begin
+    {$IF compilerversion<=15}
     if  s[i] = decimalseparator
+    {$ELSE}
+    if  s[i] = FormatSettings.decimalseparator
+    {$IFEND}
     then  if (part=1) then part:=2 else error('misplaced ''.''',i)
     else
     case s[i] of
@@ -1062,7 +1088,7 @@ begin
   result:=s;
 end;
 
-{************ DigitCount *************}
+{************ DigitCount  *************}
 function digitcount(n:int64):integer;
 {count nbr of digits in an integer}
 begin
@@ -1076,9 +1102,9 @@ end;
 
 
 
-{---------------------------}
-{-TPrimes object definition-}
-{---------------------------}
+{--------------------------}
+{-TPrimes Class definition-}
+{--------------------------}
 
 {********************Primes.Create ***********************}
 constructor TPrimes.Create;
@@ -1630,9 +1656,7 @@ begin
 end;
 
 
-
-
-
+{************** Mapping and Geometry Routines ***********************}
 
  {********* Deg2rad ***********}
 function deg2rad(deg:extended):extended;
@@ -1722,15 +1746,53 @@ function StrtoAngle(const s:string; var angle:extended):boolean;
  end;
 
 
+{********* AngleToStr10 ************}
+function AngleToStr10(angle:extended; dir:char):string;
+{make 10 character string representation  of an angle}
+var
+  D:integer;
+  M,S:extended;
+  ch:char;
+begin
+  d:=Trunc(angle);
+  m:=abs(frac(angle)*60);
+  s:=frac(M)*60;
+  m:=int(M);
+  if s>=59.99 then
+  begin
+    s:=0;
+    m:=m+1;
+  end;
+  ch:=' ';
+  if dir in ['N','S'] then
+  begin
+    if angle<0 then ch:='S'else if angle>0  then ch:='N';
+  end
+  else
+  begin
+    if angle<0 then ch:='W' else if angle>0 then ch:='E';
+  end;
+  result:=format('%4d:%2d:%2d%1s',[abs(d),trunc(m),round(s),ch])
+end;
+
 {********* AngleToStr ************}
- function AngleToStr(angle:extended):string;
+ function AngleToStr(angle:extended;decimals:integer=2):string;  //Overload;
  {make string representation  of an angle}
        var
          D:integer;
-         M,S:extended;
+         F, M,S:extended;
+         sign:integer;
        begin
          d:=Trunc(angle);
-         m:=abs(frac(angle)*60);
+         If angle<0 then sign:=-1 else sign:=+1;
+         F:=abs(frac(angle));
+         If F > 0.9997222 then
+         begin
+           m:=0.0;
+           d:=d+sign;
+         end
+         else  m:=F*60;
+
          s:=frac(M)*60;
          m:=int(M);
          if s>=59.99 then
@@ -1739,20 +1801,56 @@ function StrtoAngle(const s:string; var angle:extended):boolean;
            m:=m+1;
          end;
          if (angle<0) and (d=0) then
-         result:=format('-%3dÂ° %2dÂ´ %5.2fÂ´Â´',[d,trunc(m),s])
-         else result:=format('%3dÂ° %2dÂ´ %5.2fÂ´Â´',[d,trunc(m),s]);
+         result:=format('-%3d° %2d´ %5.*f´´',[d,trunc(m),decimals,s])
+         else result:=format('%3d° %2d´ %5.*f´´',[d,trunc(m),decimals,s]);
        end;
 
+
+(*
+{********* AngleToStr ************}
+function AngleToStr(angle:extended):string;
+{make string representation  of an angle}
+var
+  D:integer;
+  M,S:extended;
+begin
+  d:=Trunc(angle);
+  m:=abs(frac(angle)*60);
+  s:=frac(M)*60;
+  m:=int(M);
+  if s>=59.99 then
+  begin
+    s:=0;
+    m:=m+1;
+  end;
+  if (angle<0) and (d=0) then
+  result:=format('-%3d° %2d´ %5.2f´´',[d,trunc(m),s])
+  else result:=format('%3d° %2d´ %5.2f´´',[d,trunc(m),s]);
+end;
+*)
 
 function GetLongToMercProjection(const long:extended):extended;
     begin
       result:=long;
     end;
 
+(*
+ function GetLatToMercProjection(const Lat:Extended):Extended;
+var
+  radlat:extended;
+
+  begin
+    radlat:=deg2rad(lat);
+    result:=rad2deg(ln((sin(radlat)+1)/cos(radLat)));
+  end;
+*)
+
+//  {older version?}
 function GetLatToMercProjection(const Lat:Extended):Extended;
   begin
     result:=rad2deg(ln(abs(tan(deg2rad(lat))+1/cos(deg2rad(Lat)))));
   end;
+
 
 function GetMercProjectionToLong(const ProjLong:extended):extended;
   begin
@@ -1764,6 +1862,116 @@ function GetMercProjectionToLat(const ProjLat:extended):extended;
     result:=rad2deg(arctan(sinh(deg2rad(ProjLat))));
   end;
 
+function MercScaling(Long0,lat0, long1, lat1:extended; x0,y0,x1,y1:integer):TMercScalingRec;
+  {In order to accurately plot lat-long points on a Mercator projection map
+   we need two sets of pixel and lat/long coordinates for two known points from
+   which scaling factors can be computed.  Data are stroed in a TMercScalingrec record}
+begin
+  with result do
+  begin
+    basedeg.x:=GetLongToMercProjection(long1);
+    basedeg.y:=GetLatToMercProjection(lat1);
+    BasePix.x:=x1;
+    basePix.y:=y1;
+    ScaleX:=(BasePix.x-x0)/(Basedeg.x-getLongtoMercProjection(long0));
+    ScaleY:=(BasePix.y-y0)/(BaseDeg.y-getLatToMercProjection(lat0));
+  end;
+end;
+
+
+
+{************** LongLatToPlotPt ***********8}
+function LonglatToPlotPt(Long,lat:Extended; Scalerec:TMercScalingrec):TPoint;
+var
+  mlat,mlong:extended;
+begin
+  with scalerec do
+  begin
+    MLong:=GetLongToMercProjection(long);
+    Mlat:=GetLatToMercProjection(lat);
+    result.x:=Basepix.x+trunc(scalex*(MLong-BaseDeg.x));
+    result.y:=Basepix.y+trunc(scaley*(Mlat-BaseDeg.y));
+  end;
+end;
+
+{**************** PlotPtToLongLat *************}
+function PlotPtToLonglat(PlotPt:TPoint; Scalerec:TMercScalingrec):TRealPoint;
+var
+  mlat,mlong:extended;
+begin
+  with scalerec do
+  begin
+    MLong:=BaseDeg.x-(BasePix.x-plotpt.x)/scalex;
+    MLat:=BaseDeg.y-(BasePix.y-plotpt.y)/scaley;
+    result.x:=GetMercProjectionToLong(MLong);
+    result.y:=GetMercProjectionToLat(Mlat);
+  end;
+end;
+
+{************* SphericalEarthDistance ****************}
+function SphericalEarthDistance(lat1,lon1,lat2,lon2:extended; Units:integer):extended;
+{Distance between to points assuming spherical earth}
+{"Units" values: 0 = miles, 1 = kilometers, 2 = nautical miles}
+ var
+   theta:extended;
+ begin
+   theta := lon1 - lon2;
+   result:= Sin(deg2rad(lat1)) * Sin(deg2rad(lat2))
+   + Cos(deg2rad(lat1)) * Cos(deg2rad(lat2)) * Cos(deg2rad(theta));
+   result := rad2deg(Arccos(result))*60*1.1515; {miles per degree (24872 mile circumference)}
+   if units=1 then result := result * 1.609344 {miles to kilometers}
+   else if units=2 then result := result * 0.8684; {miles to nautical miles}
+ end;
+
+{************* Distance (Spherical Earth) ************}
+function distance(lat1,lon1,lat2,lon2:extended; Units:integer):extended;
+{"Units" values: 0=miles, 1=kilometers, 2=nautical miles}
+begin
+ result:=SphericalEarthDistance(lat1,lon1,lat2,lon2,Units)
+end;
+
+procedure Randomize64 ;
+begin
+  QueryPerformanceCounter(Int64(RandSeed64))
+end {Randomize64} ;
+
+{$IF compilerversion>15}  {After Delphi 7}
+{*************** 64-bit Random routines for Delphi after D7 **********}
+const
+Factor = 6364136223846793005 { Said to be OK by Knuth } ;
+HalfTo64 = 1.0 / (65536.0 * 65536.0 * 65536.0 * 65536.0) ;
+ {$OVERFLOWCHECKS ON} {$RANGECHECKS ON}
+
+function Random64 : extended ; overload ;
+begin
+  {$OVERFLOWCHECKS OFF} {$RANGECHECKS OFF}
+  RandSeed64 := RandSeed64*Factor + 1 ;
+  {$RANGECHECKS ON} {$OVERFLOWCHECKS ON}
+  Result := RandSeed64*HalfTo64 ;
+  end {Random64} ;
+
+function Random64(const UI64 : UInt64) : UInt64 ; overload ;
+begin
+  Result := Trunc((Random64)*UI64)
+end {Random64} ;
+
+{$ELSE}
+ {64 bit RNG for Delphi 7 or earlier}
+function random64(Const N:int64):int64;   overload;
+var r1:TInteger;
+begin
+  r1:=tinteger.create(N);
+  r1.random(r1);
+  r1.converttoint64(result);
+ r1.free;
+end;
+
+
+function random64:extended; overload;
+begin
+  Result:=1/random64(high(Int64));
+end;
+{$IFEND}
 
 initialization
   Primes := TPrimes.Create;

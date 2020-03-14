@@ -1,8 +1,16 @@
 unit DFFUtils;
+ {Copyright © 2010, Gary Darby,  www.DelphiForFun.org
+ This program may be used or modified for any non-commercial purpose
+ so long as this original notice remains in place.
+ All other rights are reserved
+ }
 interface
   uses Windows, Messages, Stdctrls, Sysutils, Classes, Grids;
 
+  {TMemo routines}
+  {Reset line lengths based on current TMemo width}
   procedure reformatMemo(const m:TCustomMemo);
+  {Set pixel margins in a TMemo}
   procedure SetMemoMargins(m:TCustomMemo; const L,T,R,B:integer);  {in pixels}
 
   {Scroll the first line into view}
@@ -10,14 +18,11 @@ interface
   procedure ScrollToTop(memo:TMemo);
 
   {Return the line clicked on by the mouse}
-
-  
   function LineNumberClicked(memo:TMemo):integer;
-  {same function with 3 alternate names (for forgetful users)}
+  {same function with 3 alternate names (for me and other forgetful users)}
   function MemoClickedLine(memo:TMemo):integer;
   function ClickedMemoLine(memo:TMemo):integer;
   function MemoLineClicked(memo:TMemo):integer;
-
 
   {Return Line Position clicked}
   function LinePositionClicked(Memo:TMemo):integer;
@@ -25,7 +30,8 @@ interface
   function MemoPositionClicked(memo:TMemo):integer;
 
 
-  {TStringGrid operations}
+  {TStringGrid routines}
+
   {Adjust size to just fit cell dimensions}
   procedure AdjustGridSize(grid:TDrawGrid);
   {Delete a row}
@@ -37,15 +43,21 @@ interface
   procedure Sortgrid(Grid : TStringGrid; Const SortCol:integer);  overload;
   procedure Sortgrid(Grid : TStringGrid;
                      Const SortCol:integer; sortascending:boolean); overload;
+  {Call IgnoreSelectDrawCell from an OnDrawCell exit to remove Selected cell highlighting}
+  function IgnoreSelectedDrawCell(Sender: TObject; ACol, ARow: Integer;
+                                  Rect: TRect; State: TGridDrawState):boolean;
 
-  procedure sortstrDown(var s: string); {sort string characters descending}
-  procedure sortstrUp(var s: string);   {sort string characters ascending}
-  procedure rotatestrleft(var s: string); {rotate stringleft}
-  function  strtofloatdef(s:string; default:extended):extended;
-  function  deblank(s:string):string;  {remove all blanks from a string}
-  function IntToBinaryString(const n:integer; MinLength:integer):string;
 
-  {Free objects contained in a string list and clear the strings}
+  {String operations}
+
+  procedure sortstrDown(var s: ANSIstring); {sort string characters descending}
+  procedure sortstrUp(var s: ANSIstring);   {sort string characters ascending}
+  procedure rotatestrleft(var s: ANSIstring); {rotate stringleft}
+  function  strtofloatdef(s:ANSIstring; default:extended):extended;
+  function  deblank(s:ANSIstring):ANSIstring;  {remove all blanks from a string}
+  function IntToBinaryString(const n:integer; MinLength:integer):ANSIstring;
+
+  {Free objects contained in a string list, Memo, or ListBox  and clear the strings}
   procedure FreeAndClear(C:TListBox); overload;
   procedure FreeAndClear(C:TMemo);   overload;
   procedure FreeAndClear(C:TStringList);   overload;
@@ -53,7 +65,18 @@ interface
   {compute file size for files larger than 4GB}
   function getfilesize(f:TSearchrec):int64;
 
+ {Shuffle an array of integers}
+  procedure shuffle(var deck:array of integer);
+
+
+
 implementation
+
+  Type
+
+    //Char=ANSIChar;
+    wideString=ANSIString;
+
 
 {************ Reformat **********}
 procedure reformatMemo(const m:TCustomMemo);
@@ -88,6 +111,8 @@ begin
   If R>=0 then cr.right:=cr.right-r;
   If B>=0 then cr.bottom:=cr.Bottom-b;
   m.perform(EM_SETRECT,0,longint(@cr));
+
+  reformatmemo(m); {good idea to reformat after changing margins}
 end;
 
 procedure MoveToTop(memo:TMemo);
@@ -110,7 +135,8 @@ end;
 function LineNumberClicked(Memo:TMemo):integer;
 {For a click on a memo line, return the line number (number is relative to 0)}
 begin
-  result:=Memo.Perform(EM_LINEFROMCHAR, -1, 0);
+  //result:=Memo.Perform(EM_LINEFROMCHAR, -1, 0);  {cause subrange error in XE5}
+  result:=Memo.Perform(EM_LINEFROMCHAR, WPARAM(-1), 0);  {GDD 12/12/13}
 end;
 
 
@@ -144,6 +170,7 @@ function ClickedMemoPosition(memo:TMemo):integer;
 begin
   result:=LinePositionClicked(Memo);
 end;
+
 function MemoPositionClicked(memo:TMemo):integer;
 begin
   result:=LinePositionClicked(Memo);
@@ -168,7 +195,7 @@ begin
       lines[j]:=s;
     end;
     endupdate;
-  end;  
+  end;
 end;
 
 
@@ -277,13 +304,44 @@ begin
   Sortgrid(grid,Sortcol, true);  {ascending}
 end;
 
+{*********** IgnoreSelectDrawCell *************}
+function IgnoreSelectedDrawCell(Sender: TObject; ACol, ARow: Integer;
+  Rect: TRect; State: TGridDrawState):boolean;
+{OK, here's the thing:  The Selected cell (current row and column) is drawn with
+ the highlight color and font color which bugs the heck out of me.}
+{Call this function from the OnDrawCell exit of any TStringGrid to redraw the
+ Selected cell with the default font but without the highlighting.   Result is
+ true if the selected cell has been redrawn, false otherwise. If your OnDrawCell
+ exit is doing other special drawing, call this function first so that  it can be
+ redrawn using your parameters.
+}
+
+var
+  g:TStringGrid;
+begin
+  result:=false;
+  if sender is TstringGrid then
+  begin
+    G:=TStringGrid(Sender); {G is just shorthand  for the grid object}
+    If (gdselected in state) then
+    with G, canvas do
+    begin
+      if canvas.font<>g.Font then font.assign(g.font);  {1st time, get the proper font for the canvas}
+      brush.Color:=color;
+      fillrect(rect);
+      textrect(rect, rect.Left+2, rect.Top+2, cells[acol,arow]);
+      result:=true;
+    end;
+  end;
+end;
+
 
 {************** SortStrDown ************}
-procedure sortstrDown(var s: string);
+procedure sortstrDown(var s: ANSIstring);
 {Sort characters of a string in descending sequence}
 var
   i, j: integer;
-  ch: char;
+  ch: ANSIchar;
 begin
   for i := 1 to length(s) - 1 do
     for j := i + 1 to length(s) do
@@ -296,11 +354,11 @@ begin
 end;
 
 {************** SortStrUp ************}
-procedure sortstrUp(var s: string);
-{Sort characters of a string in ascending sequence}
+procedure sortstrUp(var s: ANSIString);
+{Sort characters of a ANSIString in ascending sequence}
 var
   i, j: integer;
-  ch:   char;
+  ch:   ANSIchar;
 begin
   for i := 1 to length(s) - 1 do
     for j := i + 1 to length(s) do
@@ -312,11 +370,11 @@ begin
       end;
 end;
 {************ RotateStrLeft **********}
-procedure rotatestrleft(var s: string);
-{Move all characters of a string left one position,
- 1st character moves to end of string}
+procedure rotatestrleft(var s: ANSIString);
+{Move all characters of an ANSIString left one position,
+ 1st character moves to end of ANSIString}
 var
-  ch:     char;
+  ch:   ANSIchar;
   len: integer;
 begin
   len := length(s);
@@ -329,9 +387,9 @@ begin
 end;
 
 {********** StrToFloatDef **********}
-function strtofloatdef(s:string; default:extended):extended;
-{Convert input string to extended}
-{Return "default" if input string is not a valid real number}
+function strtofloatdef(s:ANSIString; default:extended):extended;
+{Convert input ANSIString to extended}
+{Return "default" if input ANSIString is not a valid real number}
 begin
   try
     result:=strtofloat(trim(s));
@@ -341,16 +399,16 @@ begin
 end;
 
 {*************** Deblank ************}
-function  deblank(s:string):string;
-{remove all blanks from a string}
+function  deblank(s:ANSIString):ANSIString;
+{remove all blanks from a ANSIString}
 begin
   result:=StringReplace(s,' ','',[rfreplaceall]);
 end;
 
 
 {************* IntToBinaryString **********}
-function IntToBinaryString(const n:integer; MinLength:integer):string;
-{Convert an integer to a binary string of at least length "MinLength"}
+function IntToBinaryString(const n:integer; MinLength:integer):ANSIString;
+{Convert an integer to a binary ANSIString of at least length "MinLength"}
 var i:integer;
 begin
   result:='';
@@ -408,6 +466,23 @@ function getfilesize(f:TSearchrec):int64;
       inc(m,1);
       result:=fszhi*m+fszlo;
     end;
+
+{*********** Shuffle ***********}
+procedure shuffle(var deck:array of integer);
+{Shuffle = randomly rearrange  an array of integers}
+var  i,n,temp:integer;
+begin
+  i:= high(deck); {starting from the end of the deck}
+  while i>0 do
+  begin
+    n:=random(i+1);  {pick a random card, "n",  at or below this card}
+    temp:=deck[i];   {and swap card "i" with card "n"}
+    deck[i]:=deck[n];
+    deck[n]:=temp;
+    dec(i);       {move to the next prior card}
+  end;            {and loop}
+end;
+
 
 end.
 
