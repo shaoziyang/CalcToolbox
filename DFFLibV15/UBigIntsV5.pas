@@ -1,3 +1,4 @@
+{$mode DELPHI}
 Unit UBigIntsV5;
  { Copyright 2001-2016, Gary Darby, Intellitech Systems Inc., www.DelphiForFun.org
   This program may be used or modified for any non-commercial purpose
@@ -26,11 +27,11 @@ uses Forms, Dialogs, SysUtils, Windows, strUtils;
 type
   char=ANSIChar;
   TDigits = array of int64;
-  {$IF compilerversion>15}
-  TInteger = record
-  {$Else}
+  //{$IF compilerversion>15}
+  //TInteger = record
+  //{$Else}
   TInteger  = class(TObject)
-  {$IfEnd}
+  //{$IfEnd}
   private
     Sign:  integer;
     fDigits: TDigits;
@@ -48,9 +49,9 @@ type
 
    public
     constructor Create(const initialValue: int64);  overload;
-    {$IF compilerversion <= 15}
+    //{$IF compilerversion <= 15}
     constructor Create;  overload;
-    {$IFEND}
+    //{$IFEND}
     procedure Free;
     property  Digits: TDigits Read fDigits;
     procedure Assign(const I2: TInteger); overload;
@@ -115,29 +116,29 @@ type
     procedure Getnextprime;
 
     //property Length: integer read GetLength write Setdigitlength {ChangeLength};
-    {$IF compilerversion > 15}
-    class operator Implicit(a: Int64): TInteger;
-    class operator Implicit(a: TInteger): Int64;
-    //class operator Implicit(s: ANSIString): TInteger;
-    //class operator Implicit(a: TInteger): TInteger;
-    class operator Implicit(a: TInteger): ANSIString; // write to a ANSIString;
-    class operator Negative(a: TInteger): TInteger;
-
-    class operator Add(a, b: TInteger): TInteger;
-    class operator Subtract(a, b: TInteger): TInteger;
-    class operator Inc(var a: TInteger): TInteger;
-    class operator Dec(var a: TInteger): TInteger;
-    class operator Equal(a, b: TInteger): boolean;
-    class operator NotEqual(a: TInteger; b: TInteger): boolean;
-    class operator GreaterThan(a: TInteger; b: TInteger): boolean;
-    class operator GreaterThanOrEqual(a: TInteger; b: TInteger): boolean;
-    class operator LessThan(a: TInteger; b: TInteger): boolean;
-    class operator LessThanOrEqual(a: TInteger; b: TInteger): boolean;
-    class operator Multiply(a, b: TInteger): TInteger;
-    class operator IntDivide(a, b: TInteger): TInteger;
-    class operator Modulus(a, b: TInteger): TInteger;
-
-    {$IFEND}
+    //{$IF compilerversion > 15}
+    //class operator Implicit(a: Int64): TInteger;
+    //class operator Implicit(a: TInteger): Int64;
+    ////class operator Implicit(s: ANSIString): TInteger;
+    ////class operator Implicit(a: TInteger): TInteger;
+    //class operator Implicit(a: TInteger): ANSIString; // write to a ANSIString;
+    //class operator Negative(a: TInteger): TInteger;
+    //
+    //class operator Add(a, b: TInteger): TInteger;
+    //class operator Subtract(a, b: TInteger): TInteger;
+    //class operator Inc(var a: TInteger): TInteger;
+    //class operator Dec(var a: TInteger): TInteger;
+    //class operator Equal(a, b: TInteger): boolean;
+    //class operator NotEqual(a: TInteger; b: TInteger): boolean;
+    //class operator GreaterThan(a: TInteger; b: TInteger): boolean;
+    //class operator GreaterThanOrEqual(a: TInteger; b: TInteger): boolean;
+    //class operator LessThan(a: TInteger; b: TInteger): boolean;
+    //class operator LessThanOrEqual(a: TInteger; b: TInteger): boolean;
+    //class operator Multiply(a, b: TInteger): TInteger;
+    //class operator IntDivide(a, b: TInteger): TInteger;
+    //class operator Modulus(a, b: TInteger): TInteger;
+    //
+    //{$IFEND}
   end;
   {Caution - calculations with mixed basevalues are not allowed,
    changes to Baseval should be made before any other TInteger
@@ -318,7 +319,7 @@ begin
   ThreadSafe:= newval;
 end;
 
-{$IF compilerVersion <=15}
+//{$IF compilerVersion <=15}
 { ************* Create *********** }
 constructor TInteger.Create;
 begin
@@ -326,14 +327,14 @@ begin
   Base:=baseval;
   assignzero;
 end;
-{$IFEND}
+//{$IFEND}
 
 { ************* Create *********** }
 constructor TInteger.Create(const initialValue: int64);
 begin
-  {$IF compilerversion <=15}
+  //{$IF compilerversion <=15}
   inherited create;;
-  {$IFEND}
+  //{$IFEND}
   Base:= BaseVal; {save  base in TInteger in case we want to handle other bases later }
   if Assigned(@initialValue)
   then  self.Assign(initialValue) else AssignZero;
@@ -1366,11 +1367,11 @@ begin
         result[NewPos]:= result[CurPos];
         result[NewPos - 1]:= result[CurPos - 1];
         result[NewPos - 2]:= result[CurPos - 2];
-        {$IF compilerversion >21}
-        result[NewPos - 3]:= char(FormatSettings.ThousandSeparator);
-        {$Else}
+        //{$IF compilerversion >21}
+        //result[NewPos - 3]:= char(FormatSettings.ThousandSeparator);
+        //{$Else}
          result[NewPos - 3]:= ThousandSeparator;
-         {$IFEND}
+         //{$IFEND}
         Dec(NewPos, 4);
         Dec(CurPos, 3);
       end;
@@ -2647,138 +2648,138 @@ end;
 
 
 { GDD Operator additions Nov 2013}
-{$IF compilerVersion>15}
-{_________  OPERATOR CLASS IMPLEMENTATIONS ____________}
-
-
-class operator TInteger.GreaterThan(a, b: TInteger): boolean;
-begin
-  Result:= (a.Compare(b) > 0);
-end;
-
-class operator TInteger.GreaterThanOrEqual(a, b: TInteger): boolean;
-begin
-  Result:= (a.Compare(b) >= 0)
-end;
-
-class operator TInteger.Subtract(a, b: TInteger): TInteger;
-begin
-  Result.Create(empty);
-  Result.Assign(a);
-  Result.Subtract(b);
-end;
-
-class operator TInteger.Add(a, b: TInteger): TInteger;
-begin
-  Result.Create(empty);
-  Result.Assign(a);
-  Result.Add(b);
-end;
-
-class OPERATOR TInteger.Multiply(a, b: TInteger): TInteger;
-begin
-  Result.Create(empty);
-  Result.Assign(a);
-  Result.Mult(b);
-end;
-class operator TInteger.LessThan(a, b: TInteger): boolean;
-begin
-  Result:= (a.Compare(b) < 0);
-end;
-
-class operator TInteger.LessThanOrEqual(a, b: TInteger): boolean;
-begin
-  Result:= (a.Compare(b) <=0)
-end;
-class operator TInteger.Implicit(a: Int64): TInteger;
-begin
-  Result.assign{Create}(a);
-end;
-
-class operator TInteger.Implicit(a: TInteger): ANSIString;
-begin
-  Result:= a.ConvertToDecimalString(true);
-end;
-
-(*
-class operator TInteger.Implicit(s: ANSIString): TInteger;
-begin
-  Result:= assign(s);
-end;
-*)
-
-class operator TInteger.Implicit(a: TInteger): Int64;
-begin
-  a.ConvertToInt64(Result);
-end;
-
-class operator TInteger.Inc(var a: TInteger): TInteger;
-begin
-  //Result.Create(empty);
-  result := a + 1;
- a.assign(result);
-end;
-
- { ********* Dec ************ }
-class operator TInteger.Dec(var a: TInteger): TInteger;
-begin
-  Result.Create(empty);
-  Result:= a - 1;
-  a.assign(result);
-end;
-
-class operator TInteger.IntDivide(a, b: TInteger): TInteger;
-begin
-  Result.Create(empty);
-  Result.Assign(a);
-  Result.Divide(b);
-end;
-
-class operator TInteger.Modulus(a, b: TInteger): TInteger;
-begin
-  Result.Create(empty);
-  Result.Assign(a);
-  Result.Modulo(b);
-end;
-
-
-{ ************ NRoot ********** }
-class operator TInteger.Negative(a: TInteger): TInteger;
-begin
-  Result.Create(empty);
-  Result.Assign(a);
-  Result.ChangeSign;
-end;
-
-{********** Operator <> *******}
-class operator TInteger.NotEqual(a, b: TInteger): boolean;
-begin
-  Result:= (a.Compare(b) <> 0);
-end;
-
-{*********** Operator = ***********}
-class operator TInteger.Equal(a, b: TInteger): boolean;
-begin
-  Result:= (a.Compare(b) = 0);
-end;
-
-(*
-{****** Operator Inc *********}
-Class Operator TInteger.Inc(a:TInteger):TInteger;
-begin
-  a:=a+1;
-end;
-
-
-{*********** Operator Dec ******}
-Class Operator TInteger.Dec(a:TInteger):TInteger;
-begin
-  result:=a-1;
-  a:=result;
-end;
-*)
-
-{$IFEND}
+//{$IF compilerVersion>15}
+//{_________  OPERATOR CLASS IMPLEMENTATIONS ____________}
+//
+//
+//class operator TInteger.GreaterThan(a, b: TInteger): boolean;
+//begin
+//  Result:= (a.Compare(b) > 0);
+//end;
+//
+//class operator TInteger.GreaterThanOrEqual(a, b: TInteger): boolean;
+//begin
+//  Result:= (a.Compare(b) >= 0)
+//end;
+//
+//class operator TInteger.Subtract(a, b: TInteger): TInteger;
+//begin
+//  Result.Create(empty);
+//  Result.Assign(a);
+//  Result.Subtract(b);
+//end;
+//
+//class operator TInteger.Add(a, b: TInteger): TInteger;
+//begin
+//  Result.Create(empty);
+//  Result.Assign(a);
+//  Result.Add(b);
+//end;
+//
+//class OPERATOR TInteger.Multiply(a, b: TInteger): TInteger;
+//begin
+//  Result.Create(empty);
+//  Result.Assign(a);
+//  Result.Mult(b);
+//end;
+//class operator TInteger.LessThan(a, b: TInteger): boolean;
+//begin
+//  Result:= (a.Compare(b) < 0);
+//end;
+//
+//class operator TInteger.LessThanOrEqual(a, b: TInteger): boolean;
+//begin
+//  Result:= (a.Compare(b) <=0)
+//end;
+//class operator TInteger.Implicit(a: Int64): TInteger;
+//begin
+//  Result.assign{Create}(a);
+//end;
+//
+//class operator TInteger.Implicit(a: TInteger): ANSIString;
+//begin
+//  Result:= a.ConvertToDecimalString(true);
+//end;
+//
+//(*
+//class operator TInteger.Implicit(s: ANSIString): TInteger;
+//begin
+//  Result:= assign(s);
+//end;
+//*)
+//
+//class operator TInteger.Implicit(a: TInteger): Int64;
+//begin
+//  a.ConvertToInt64(Result);
+//end;
+//
+//class operator TInteger.Inc(var a: TInteger): TInteger;
+//begin
+//  //Result.Create(empty);
+//  result := a + 1;
+// a.assign(result);
+//end;
+//
+// { ********* Dec ************ }
+//class operator TInteger.Dec(var a: TInteger): TInteger;
+//begin
+//  Result.Create(empty);
+//  Result:= a - 1;
+//  a.assign(result);
+//end;
+//
+//class operator TInteger.IntDivide(a, b: TInteger): TInteger;
+//begin
+//  Result.Create(empty);
+//  Result.Assign(a);
+//  Result.Divide(b);
+//end;
+//
+//class operator TInteger.Modulus(a, b: TInteger): TInteger;
+//begin
+//  Result.Create(empty);
+//  Result.Assign(a);
+//  Result.Modulo(b);
+//end;
+//
+//
+//{ ************ NRoot ********** }
+//class operator TInteger.Negative(a: TInteger): TInteger;
+//begin
+//  Result.Create(empty);
+//  Result.Assign(a);
+//  Result.ChangeSign;
+//end;
+//
+//{********** Operator <> *******}
+//class operator TInteger.NotEqual(a, b: TInteger): boolean;
+//begin
+//  Result:= (a.Compare(b) <> 0);
+//end;
+//
+//{*********** Operator = ***********}
+//class operator TInteger.Equal(a, b: TInteger): boolean;
+//begin
+//  Result:= (a.Compare(b) = 0);
+//end;
+//
+//(*
+//{****** Operator Inc *********}
+//Class Operator TInteger.Inc(a:TInteger):TInteger;
+//begin
+//  a:=a+1;
+//end;
+//
+//
+//{*********** Operator Dec ******}
+//Class Operator TInteger.Dec(a:TInteger):TInteger;
+//begin
+//  result:=a-1;
+//  a:=result;
+//end;
+//*)
+//
+//{$IFEND}
 
 //  GDD November 2016
 
