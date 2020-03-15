@@ -7,14 +7,16 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   ExtCtrls, Buttons, Grids, lclintf, DateUtils,
-  Clipbrd,
+  Clipbrd, Menus,
   UBigFloatV3,
+  //UBigIntsForFloatV4,
+  UBigIntsV5,
   IniFiles;
 
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '0.2';
+  VERSION = '0.3';
 
 type
   SingleBytes = array[0..3] of byte;
@@ -23,9 +25,24 @@ type
   { TFormMain }
 
   TFormMain = class(TForm)
+    btnBigIntAdd: TToolButton;
+    btnBigIntDiv: TToolButton;
+    btnBigIntFib: TToolButton;
+    btnBigIntElapsed: TToolButton;
+    btnBigIntNRoot: TToolButton;
+    btnBigIntGcd: TToolButton;
+    btnBigIntFact: TToolButton;
+    btnBigIntPrime: TToolButton;
+    btnBigIntMul: TToolButton;
+    btnBigIntRandom: TToolButton;
+    btnBigIntPower: TToolButton;
+    btnBigIntMod: TToolButton;
+    btnBigIntSqrt: TToolButton;
+    btnBigIntSub: TToolButton;
     btnOpenGITEE: TSpeedButton;
     btnOpenGITHUB: TSpeedButton;
     btnOptionSelectFont: TBitBtn;
+    chkBigIntComma: TCheckBox;
     chkCrcInvOut: TCheckBox;
     chkCrcInvIn: TCheckBox;
     ComboBox1: TComboBox;
@@ -40,22 +57,31 @@ type
     edtNumericNum: TEdit;
     GroupBox1: TGroupBox;
     ImageList: TImageList;
-    ilCalc: TImageList;
+    ilDigit: TImageList;
     imgLaz: TImage;
     imgLogo: TImage;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     lbVer: TLabel;
-    Memo1: TMemo;
-    Memo2: TMemo;
+    mmoAboutReadme: TMemo;
+    mmoAboutChangeLog: TMemo;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
     mmoBigFloatA: TMemo;
+    mmoBigIntA: TMemo;
     mmoBigFloatB: TMemo;
+    mmoBigIntB: TMemo;
+    mmoBigIntC: TMemo;
     mmoCRC: TMemo;
     mmoBigFloatC: TMemo;
     PageControl1: TPageControl;
     PageControl2: TPageControl;
     Panel1: TPanel;
+    Panel10: TPanel;
+    Panel11: TPanel;
     Panel2: TPanel;
     Panel3: TPanel;
     Panel4: TPanel;
@@ -63,8 +89,10 @@ type
     Panel6: TPanel;
     Panel7: TPanel;
     Panel8: TPanel;
+    Panel9: TPanel;
     pcDigit: TPageControl;
     pcMain: TPageControl;
+    pmBitIntBase: TPopupMenu;
     rbBigBytes: TRadioButton;
     rbCrc7bits: TRadioButton;
     rbCrc6bits: TRadioButton;
@@ -79,14 +107,28 @@ type
     sgDigit: TStringGrid;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
-    StaticText1: TStaticText;
+    Splitter3: TSplitter;
+    lbOptFont: TStaticText;
     sgConstantMath: TStringGrid;
     StaticText2: TStaticText;
     StaticText3: TStaticText;
     StaticText4: TStaticText;
+    StaticText5: TStaticText;
+    StaticText6: TStaticText;
+    StaticText7: TStaticText;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
+    tbBigInt: TToolBar;
+    ToolButton23: TToolButton;
+    ToolButton24: TToolButton;
+    ToolButton25: TToolButton;
+    btnBigIntHint: TToolButton;
+    ToolButton26: TToolButton;
+    btnBigFloatHint: TToolButton;
+    ToolButton27: TToolButton;
+    btnBigIntBase: TToolButton;
+    tsBigInt: TTabSheet;
     tsBigFloat: TTabSheet;
     tbBigFloat: TToolBar;
     btnBigFloatReciprocal: TToolButton;
@@ -167,6 +209,7 @@ type
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
     procedure btnBigFloatAddClick(Sender: TObject);
+    procedure btnBigIntAddClick(Sender: TObject);
     procedure btnCrc1wireClick(Sender: TObject);
     procedure btnCrcCalcClick(Sender: TObject);
     procedure btnCrc_CRC16_CCITTClick(Sender: TObject);
@@ -196,7 +239,10 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure imgLazClick(Sender: TObject);
-    procedure mmoBigFloatCClick(Sender: TObject);
+    procedure mmoBigFloatCMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: integer);
+    procedure mmoBigIntCMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: integer);
     procedure rbBigBytesChange(Sender: TObject);
     procedure sgBytesEditingDone(Sender: TObject);
     procedure sgConstantMathClick(Sender: TObject);
@@ -210,6 +256,7 @@ type
     function getCrcBit: integer;
     procedure setCrcBit(bit: integer);
     procedure bfCalc(Sender: TObject);
+    procedure biCalc(Sender: TObject);
   public
     function NumToBytes(d: int64; n: integer): string;
     function SingleToBytes(fd: single): string;
@@ -227,11 +274,11 @@ type
 
 var
   FormMain: TFormMain;
-  //ini: TFastIniFile;
   ini: TIniFile;
   writeable: boolean;
   path: string;
   bfA, bfB: TBigFloat;
+  biA, biB: TInteger;
   bfPrec: integer;
 
 implementation
@@ -249,6 +296,9 @@ begin
   ini  := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
 
   lbVer.Caption := 'ver ' + VERSION;
+
+  tsCalc.TabVisible     := False;
+  tsConstant.TabVisible := False;
 
   // test inifile writeable
   try
@@ -270,6 +320,21 @@ begin
 
     pcMain.PageIndex := ini.ReadInteger('Last', 'Page', 0);
 
+    // option
+    lbOptFont.Font.Name := ini.ReadString('Option', 'FontName', Font.Name);
+    lbOptFont.Font.Size := ini.ReadInteger('Option', 'FontSize', Font.Size);
+    if lbOptFont.Font.Size < 7 then
+      lbOptFont.Font.Size := 7
+    else if lbOptFont.Font.Size > 24 then
+      lbOptFont.Font.Size := 24;
+    if ini.ReadBool('Option', 'FontBold', False) then
+    begin
+      lbOptFont.Font.Style := [fsBold];
+      lbOptFont.Caption    := ', Bold';
+    end;
+    Font := lbOptFont.Font;
+    lbOptFont.Caption := Format('%s, %d', [Font.Name, Font.Size]) + lbOptFont.Caption;
+
     // Digit
     rbBigBytes.Checked      := ini.ReadBool('Digit', 'BigBytes', True);
     pcDigit.ActivePageIndex := ini.ReadInteger('Digit', 'Page', 0);
@@ -284,6 +349,9 @@ begin
 
     // BigFloat
     edtBigFloatPrec.Text := ini.ReadString('BigFloat', 'prec', '100');
+
+    // BigInt
+    chkBigIntComma.Checked := ini.ReadBool('BigInt', 'comma', False);
   except
 
   end;
@@ -294,6 +362,9 @@ begin
     bfA := TBigFloat.Create;
     bfB := TBigFloat.Create;
     edtBigFloatPrecEditingDone(Sender);
+
+    biA := TInteger.Create;
+    biB := TInteger.Create;
 
   except
     tsBigFloat.TabVisible := False;
@@ -328,9 +399,17 @@ begin
       // BigFloat
       ini.WriteString('BigFloat', 'prec', edtBigFloatPrec.Text);
 
+      // BigInt
+      ini.WriteBool('BigInt', 'comma', chkBigIntComma.Checked);
+
       ini.UpdateFile;
     end;
   finally
+    bfA.Free;
+    bfB.Free;
+    biA.Free;
+    biB.Free;
+
     ini.Free;
   end;
 end;
@@ -346,9 +425,34 @@ begin
   OpenURL('http://www.lazarus-ide.org/');
 end;
 
-procedure TFormMain.mmoBigFloatCClick(Sender: TObject);
+procedure TFormMain.mmoBigFloatCMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: integer);
 begin
-  Clipboard.AsText := mmoBigFloatC.Text;
+  if mmoBigFloatC.SelLength = 0 then
+  begin
+    btnBigFloatHint.Caption := IntToStr(Length(mmoBigFloatC.Text));
+    Clipboard.AsText := mmoBigFloatC.Text;
+  end
+  else
+  begin
+    btnBigFloatHint.Caption := IntToStr(mmoBigFloatC.SelLength);
+    Clipboard.AsText := mmoBigFloatC.SelText;
+  end;
+end;
+
+procedure TFormMain.mmoBigIntCMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: integer);
+begin
+  if mmoBigIntC.SelLength = 0 then
+  begin
+    btnBigIntHint.Caption := IntToStr(Length(mmoBigIntC.Text));
+    Clipboard.AsText      := mmoBigIntC.Text;
+  end
+  else
+  begin
+    btnBigIntHint.Caption := IntToStr(mmoBigIntC.SelLength);
+    Clipboard.AsText      := mmoBigIntC.SelText;
+  end;
 end;
 
 procedure TFormMain.rbBigBytesChange(Sender: TObject);
@@ -410,6 +514,11 @@ end;
 procedure TFormMain.btnBigFloatAddClick(Sender: TObject);
 begin
   bfCalc(Sender);
+end;
+
+procedure TFormMain.btnBigIntAddClick(Sender: TObject);
+begin
+  biCalc(Sender);
 end;
 
 procedure TFormMain.btnCrcCalcClick(Sender: TObject);
@@ -691,6 +800,12 @@ begin
     bfPrec := 100;
     edtBigFloatPrec.Text := '100';
   end;
+  if (bfPrec >= 2000) and edtBigFloatPrec.Modified then
+  begin
+    edtBigFloatPrec.Modified := False;
+    MessageDlg('Warning', 'High precision may cause long calculation time',
+      mtWarning, [mbOK], 0);
+  end;
   bfA.Setsigdigits(bfPrec);
   bfB.Setsigdigits(bfPrec);
 end;
@@ -799,7 +914,7 @@ begin
   if (Sender is TToolButton) then
     if TToolButton(Sender).Parent = tbBigFloat then
     begin
-      Screen.Cursor:=crHourGlass;
+      Screen.Cursor := crHourGlass;
       T1 := Now();
       sa := Trim(mmoBigFloatA.Text);
       sb := Trim(mmoBigFloatB.Text);
@@ -876,11 +991,154 @@ begin
       end;
       mmoBigFloatC.Text := bfA.ConverttoString(normal);
       T2 := Now();
-      Screen.Cursor:=crDefault;
+      Screen.Cursor := crDefault;
       btnBigFloatElapsed.Caption := Format('%d ms', [MilliSecondsBetween(T2, T1)]);
+      btnBigFloatHint.Caption := IntToStr(Length(mmoBigFloatC.Text));
     end;
 end;
 
+procedure TFormMain.biCalc(Sender: TObject);
+var
+  sa, sb: string;
+  T1, T2: TDateTime;
+  bt: int64;
+  biFib1, biFib2: TInteger;
+begin
+  if (Sender is TToolButton) then
+    if TToolButton(Sender).Parent = tbBigInt then
+    begin
+      Screen.Cursor := crHourGlass;
+      T1 := Now();
+      sa := Trim(mmoBigIntA.Text);
+      sb := Trim(mmoBigIntB.Text);
+      mmoBigIntC.Text := '';
+      case TToolButton(Sender).Tag of
+        101: // add
+        begin
+          biA.Assign(sa);
+          biB.Assign(sb);
+          biA.Add(biB);
+        end;
+        102: // sub
+        begin
+          biA.Assign(sa);
+          biB.Assign(sb);
+          biA.Subtract(biB);
+        end;
+        103: // mul
+        begin
+          biA.Assign(sa);
+          biB.Assign(sb);
+          biA.Mult(biB);
+        end;
+        104: // div
+        begin
+          biA.Assign(sa);
+          biB.Assign(sb);
+          biA.Divide(biB);
+        end;
+        105: // mod
+        begin
+          biA.Assign(sa);
+          biB.Assign(sb);
+          biA.Modulo(biB);
+        end;
+        106: // Sqrt
+        begin
+          biA.Assign(sa);
+          biA.Sqroot;
+        end;
+        107: // NRoot
+        begin
+          biA.Assign(sa);
+          biB.Assign(sb);
+          biB.ConvertToInt64(bt);
+          biA.NRoot(bt);
+        end;
+        108: // power
+        begin
+          biA.Assign(sa);
+          biB.Assign(sb);
+          biB.ConvertToInt64(bt);
+          biA.Pow(bt);
+        end;
+        109: // Fact
+        begin
+          biA.Assign(sa);
+          biA.Factorial;
+        end;
+        110: // GCD
+        begin
+          biA.Assign(sa);
+          biB.Assign(sb);
+          biA.Gcd(biB);
+        end;
+        201: // random
+        begin
+          biB.Assign(sa);
+          biA.Random(biB);
+        end;
+        202: // Febocera series
+        begin
+          biB.Assign(sa);
+          biA.Assign('1');
+          biFib1 := TInteger.Create(1);
+          biFib2 := TInteger.Create(1);
+          sa     := '1' + #13#10 + '1' + #13#10;
+          biB.Subtract(2);
+          while biB.IsPositive do
+          begin
+            biFib1.Assign(biA);
+            biA.Add(biFib2);
+            biFib2.Assign(biFib1);
+            biB.Subtract(1);
+            sa := sa + biA.ConvertToDecimalString(chkBigIntComma.Checked) + #13#10;
+          end;
+          biFib1.Free;
+          biFib2.Free;
+          mmoBigIntC.Text := sa;
+        end;
+        203: // Prime
+        begin
+          biA.Assign(sa);
+          biB.Assign(sb);
+          if biA.Compare(biB) = 1 then
+          begin
+            biA.Assign(sa);
+            biB.Assign(sb);
+          end
+          else
+          begin
+            biA.Assign(sb);
+            biB.Assign(sa);
+          end;
+
+          sa := '';
+          repeat
+            biB.Getnextprime;
+            if biA.Compare(biB) = 1 then
+              sa := sa + biB.ConvertToDecimalString(chkBigIntComma.Checked) + #13#10
+            else
+              break;
+          until False;
+          mmoBigIntC.Text := sa;
+        end;
+        300: // base
+        begin
+          // todo
+          biA.Assign(sa);
+          mmoBigIntC.Text := sa;
+        end
+        else
+      end;
+      if mmoBigIntC.Text = '' then
+        mmoBigIntC.Text := biA.ConvertToDecimalString(chkBigIntComma.Checked);
+      T2 := Now();
+      Screen.Cursor := crDefault;
+      btnBigIntElapsed.Caption := Format('%d ms', [MilliSecondsBetween(T2, T1)]);
+      btnBigIntHint.Caption := IntToStr(Length(mmoBigIntC.Text));
+    end;
+end;
 
 function TFormMain.NumToBytes(d: int64; n: integer): string;
 var
@@ -914,7 +1172,7 @@ begin
   p^     := fd;
   for i := 0 to 3 do
   begin
-    Result := Result + IntToHex(b[3-i], 2);
+    Result := Result + IntToHex(b[3 - i], 2);
     if i < 3 then
       Result := Result + ' ';
   end;
@@ -931,7 +1189,7 @@ begin
   p^     := fd;
   for i := 0 to 7 do
   begin
-    Result := Result + IntToHex(b[7-i], 2);
+    Result := Result + IntToHex(b[7 - i], 2);
     if i < 7 then
       Result := Result + ' ';
   end;

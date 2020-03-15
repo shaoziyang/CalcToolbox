@@ -58,10 +58,10 @@ object FormMain: TFormMain
     Height = 480
     Top = 0
     Width = 669
-    ActivePage = tsDigit
+    ActivePage = tsCRC
     Align = alClient
     MultiLine = True
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     Options = [nboMultiLine]
     object tsCRC: TTabSheet
@@ -488,9 +488,9 @@ object FormMain: TFormMain
         Height = 450
         Top = 0
         Width = 661
-        ActivePage = tsBigFloat
+        ActivePage = tsBytes
         Align = alClient
-        TabIndex = 2
+        TabIndex = 0
         TabOrder = 0
         object tsBytes: TTabSheet
           Caption = 'Bytes'
@@ -716,10 +716,10 @@ object FormMain: TFormMain
             Constraints.MinHeight = 120
             TabOrder = 0
             object mmoBigFloatA: TMemo
-              Left = 40
+              Left = 32
               Height = 120
               Top = 0
-              Width = 613
+              Width = 621
               Align = alClient
               Lines.Strings = (
                 '0'
@@ -731,7 +731,7 @@ object FormMain: TFormMain
               Left = 0
               Height = 120
               Top = 0
-              Width = 40
+              Width = 32
               Align = alLeft
               Alignment = taCenter
               Caption = #13#10'A'
@@ -760,10 +760,10 @@ object FormMain: TFormMain
             Constraints.MinHeight = 120
             TabOrder = 2
             object mmoBigFloatB: TMemo
-              Left = 40
+              Left = 32
               Height = 120
               Top = 0
-              Width = 613
+              Width = 621
               Align = alClient
               Lines.Strings = (
                 '0'
@@ -775,7 +775,7 @@ object FormMain: TFormMain
               Left = 0
               Height = 120
               Top = 0
-              Width = 40
+              Width = 32
               Align = alLeft
               Alignment = taCenter
               Caption = #13#10'B'
@@ -809,7 +809,7 @@ object FormMain: TFormMain
               Top = 0
               Width = 653
               AutoSize = True
-              Images = ilCalc
+              Images = ilDigit
               ShowCaptions = True
               TabOrder = 0
               Transparent = True
@@ -821,6 +821,7 @@ object FormMain: TFormMain
               object btnBigFloatAdd: TToolButton
                 Tag = 101
                 Left = 192
+                Hint = 'add'
                 Top = 2
                 ImageIndex = 0
                 OnClick = btnBigFloatAddClick
@@ -828,6 +829,7 @@ object FormMain: TFormMain
               object btnBigFloatSub: TToolButton
                 Tag = 102
                 Left = 215
+                Hint = 'sub'
                 Top = 2
                 ImageIndex = 1
                 OnClick = btnBigFloatAddClick
@@ -835,6 +837,7 @@ object FormMain: TFormMain
               object btnBigFloatMul: TToolButton
                 Tag = 103
                 Left = 238
+                Hint = 'mul'
                 Top = 2
                 ImageIndex = 2
                 OnClick = btnBigFloatAddClick
@@ -842,6 +845,7 @@ object FormMain: TFormMain
               object btnBigFloatDiv: TToolButton
                 Tag = 104
                 Left = 261
+                Hint = 'div'
                 Top = 2
                 ImageIndex = 3
                 OnClick = btnBigFloatAddClick
@@ -849,6 +853,7 @@ object FormMain: TFormMain
               object btnBigFloatSqrt: TToolButton
                 Tag = 105
                 Left = 284
+                Hint = 'sqrt'
                 Top = 2
                 ImageIndex = 4
                 OnClick = btnBigFloatAddClick
@@ -856,6 +861,7 @@ object FormMain: TFormMain
               object edtBigFloatPrec: TEdit
                 Left = 89
                 Height = 25
+                Hint = 'set maxim digits'
                 Top = 2
                 Width = 80
                 Alignment = taRightJustify
@@ -871,6 +877,7 @@ object FormMain: TFormMain
               object btnBigFloatReciprocal: TToolButton
                 Tag = 106
                 Left = 307
+                Hint = 'Reciprocal'
                 Top = 2
                 ImageIndex = 5
                 OnClick = btnBigFloatAddClick
@@ -878,6 +885,7 @@ object FormMain: TFormMain
               object btnBigFloatPI: TToolButton
                 Tag = 201
                 Left = 422
+                Hint = 'constant pi'
                 Top = 2
                 ImageIndex = 10
                 OnClick = btnBigFloatAddClick
@@ -885,6 +893,7 @@ object FormMain: TFormMain
               object btnBigFloatPower: TToolButton
                 Tag = 107
                 Left = 330
+                Hint = 'pow'
                 Top = 2
                 ImageIndex = 6
                 OnClick = btnBigFloatAddClick
@@ -892,6 +901,7 @@ object FormMain: TFormMain
               object btnBigFloatLog: TToolButton
                 Tag = 109
                 Left = 376
+                Hint = 'log'
                 Top = 2
                 ImageIndex = 8
                 OnClick = btnBigFloatAddClick
@@ -899,6 +909,7 @@ object FormMain: TFormMain
               object btnBigFloatLn: TToolButton
                 Tag = 110
                 Left = 399
+                Hint = 'log10'
                 Top = 2
                 ImageIndex = 9
                 OnClick = btnBigFloatAddClick
@@ -906,6 +917,7 @@ object FormMain: TFormMain
               object btnBigFloatExp: TToolButton
                 Tag = 108
                 Left = 353
+                Hint = 'exp'
                 Top = 2
                 ImageIndex = 7
                 OnClick = btnBigFloatAddClick
@@ -913,6 +925,7 @@ object FormMain: TFormMain
               object btnBigFloatLog2: TToolButton
                 Tag = 203
                 Left = 468
+                Hint = 'constant log(2)'
                 Top = 2
                 ImageIndex = 12
                 OnClick = btnBigFloatAddClick
@@ -920,6 +933,7 @@ object FormMain: TFormMain
               object btnBigFloatE: TToolButton
                 Tag = 202
                 Left = 445
+                Hint = 'constant e'
                 Top = 2
                 ImageIndex = 11
                 OnClick = btnBigFloatAddClick
@@ -933,24 +947,326 @@ object FormMain: TFormMain
                 Left = 514
                 Top = 2
               end
+              object ToolButton26: TToolButton
+                Left = 537
+                Height = 22
+                Top = 2
+                Enabled = False
+                Style = tbsSeparator
+              end
+              object btnBigFloatHint: TToolButton
+                Left = 545
+                Top = 2
+              end
             end
             object StaticText4: TStaticText
               Left = 0
               Height = 143
               Top = 27
-              Width = 40
+              Width = 32
               Align = alLeft
               Alignment = taCenter
               Caption = #13#10'C'
               TabOrder = 1
             end
             object mmoBigFloatC: TMemo
-              Left = 40
+              Left = 32
               Height = 143
               Top = 27
-              Width = 613
+              Width = 621
               Align = alClient
-              OnClick = mmoBigFloatCClick
+              OnMouseUp = mmoBigFloatCMouseUp
+              ReadOnly = True
+              ScrollBars = ssAutoVertical
+              TabOrder = 2
+            end
+          end
+        end
+        object tsBigInt: TTabSheet
+          Caption = 'BigInt'
+          ClientHeight = 420
+          ClientWidth = 653
+          object Panel9: TPanel
+            Left = 0
+            Height = 120
+            Top = 0
+            Width = 653
+            Align = alTop
+            BevelOuter = bvNone
+            Caption = 'Panel9'
+            ClientHeight = 120
+            ClientWidth = 653
+            Constraints.MinHeight = 120
+            TabOrder = 0
+            object mmoBigIntA: TMemo
+              Left = 32
+              Height = 120
+              Top = 0
+              Width = 621
+              Align = alClient
+              Lines.Strings = (
+                '0'
+              )
+              ScrollBars = ssAutoVertical
+              TabOrder = 0
+            end
+            object StaticText5: TStaticText
+              Left = 0
+              Height = 120
+              Top = 0
+              Width = 32
+              Align = alLeft
+              Alignment = taCenter
+              Caption = #13#10'A'
+              TabOrder = 1
+            end
+          end
+          object Splitter3: TSplitter
+            Cursor = crVSplit
+            Left = 0
+            Height = 5
+            Top = 120
+            Width = 653
+            Align = alTop
+            ResizeAnchor = akTop
+          end
+          object Panel10: TPanel
+            Left = 0
+            Height = 120
+            Top = 125
+            Width = 653
+            Align = alTop
+            BevelOuter = bvNone
+            Caption = 'Panel10'
+            ClientHeight = 120
+            ClientWidth = 653
+            Constraints.MinHeight = 120
+            TabOrder = 2
+            object mmoBigIntB: TMemo
+              Left = 32
+              Height = 120
+              Top = 0
+              Width = 621
+              Align = alClient
+              Lines.Strings = (
+                '0'
+              )
+              ScrollBars = ssAutoVertical
+              TabOrder = 0
+            end
+            object StaticText6: TStaticText
+              Left = 0
+              Height = 120
+              Top = 0
+              Width = 32
+              Align = alLeft
+              Alignment = taCenter
+              Caption = #13#10'B'
+              TabOrder = 1
+            end
+          end
+          object Panel11: TPanel
+            Left = 0
+            Height = 175
+            Top = 245
+            Width = 653
+            Align = alClient
+            BevelOuter = bvNone
+            Caption = 'Panel11'
+            ClientHeight = 175
+            ClientWidth = 653
+            Constraints.MinHeight = 120
+            TabOrder = 3
+            object tbBigInt: TToolBar
+              Left = 0
+              Height = 24
+              Top = 0
+              Width = 653
+              AutoSize = True
+              EdgeBorders = []
+              Images = ilDigit
+              ShowCaptions = True
+              TabOrder = 0
+              Transparent = True
+              object ToolButton23: TToolButton
+                Left = 1
+                Height = 22
+                Top = 2
+                Enabled = False
+                Style = tbsDivider
+              end
+              object btnBigIntAdd: TToolButton
+                Tag = 101
+                Left = 6
+                Hint = 'Add'
+                Top = 2
+                ImageIndex = 0
+                OnClick = btnBigIntAddClick
+              end
+              object btnBigIntSub: TToolButton
+                Tag = 102
+                Left = 29
+                Hint = 'Subtract'
+                Top = 2
+                ImageIndex = 1
+                OnClick = btnBigIntAddClick
+              end
+              object btnBigIntMul: TToolButton
+                Tag = 103
+                Left = 52
+                Hint = 'mult'
+                Top = 2
+                ImageIndex = 2
+                OnClick = btnBigIntAddClick
+              end
+              object btnBigIntDiv: TToolButton
+                Tag = 104
+                Left = 75
+                Hint = 'div'
+                Top = 2
+                ImageIndex = 3
+                OnClick = btnBigIntAddClick
+              end
+              object btnBigIntSqrt: TToolButton
+                Tag = 106
+                Left = 121
+                Hint = 'sqrt'
+                Top = 2
+                ImageIndex = 4
+                OnClick = btnBigIntAddClick
+              end
+              object btnBigIntMod: TToolButton
+                Tag = 105
+                Left = 98
+                Hint = 'mod'
+                Top = 2
+                ImageIndex = 13
+                OnClick = btnBigIntAddClick
+              end
+              object btnBigIntRandom: TToolButton
+                Tag = 201
+                Left = 236
+                Hint = 'random'
+                Top = 2
+                ImageIndex = 17
+                OnClick = btnBigIntAddClick
+              end
+              object btnBigIntPower: TToolButton
+                Tag = 108
+                Left = 167
+                Hint = 'pow'
+                Top = 2
+                ImageIndex = 6
+                OnClick = btnBigIntAddClick
+              end
+              object btnBigIntFact: TToolButton
+                Tag = 109
+                Left = 190
+                Hint = 'Factorial'
+                Top = 2
+                ImageIndex = 15
+                OnClick = btnBigIntAddClick
+              end
+              object btnBigIntGcd: TToolButton
+                Tag = 110
+                Left = 213
+                Hint = 'Greatest Common Divisor'
+                Top = 2
+                ImageIndex = 16
+                OnClick = btnBigIntAddClick
+              end
+              object btnBigIntNRoot: TToolButton
+                Tag = 107
+                Left = 144
+                Hint = 'N root'
+                Top = 2
+                ImageIndex = 14
+                OnClick = btnBigIntAddClick
+              end
+              object btnBigIntPrime: TToolButton
+                Tag = 203
+                Left = 282
+                Hint = 'primes from A-B'
+                Top = 2
+                ImageIndex = 19
+                OnClick = btnBigIntAddClick
+              end
+              object btnBigIntFib: TToolButton
+                Tag = 202
+                Left = 259
+                Hint = 'Febocera series'
+                Top = 2
+                ImageIndex = 18
+                OnClick = btnBigIntAddClick
+              end
+              object ToolButton25: TToolButton
+                Left = 355
+                Height = 22
+                Top = 2
+                Enabled = False
+                Style = tbsSeparator
+              end
+              object btnBigIntElapsed: TToolButton
+                Left = 363
+                Top = 2
+              end
+              object ToolButton24: TToolButton
+                Left = 386
+                Height = 22
+                Top = 2
+                Enabled = False
+                Style = tbsSeparator
+              end
+              object btnBigIntHint: TToolButton
+                Left = 394
+                Top = 2
+              end
+              object chkBigIntComma: TCheckBox
+                Left = 425
+                Height = 21
+                Hint = 'show comma in result'
+                Top = 2
+                Width = 62
+                Caption = 'comma'
+                TabOrder = 0
+              end
+              object ToolButton27: TToolButton
+                Left = 417
+                Height = 22
+                Top = 2
+                Caption = 'ToolButton27'
+                Style = tbsSeparator
+              end
+              object btnBigIntBase: TToolButton
+                Tag = 300
+                Left = 305
+                Hint = 'base convert'
+                Top = 2
+                Caption = 'Base'
+                Enabled = False
+                OnClick = btnBigIntAddClick
+                PopupMenu = pmBitIntBase
+                Style = tbsButtonDrop
+                Visible = False
+              end
+            end
+            object StaticText7: TStaticText
+              Left = 0
+              Height = 151
+              Top = 24
+              Width = 32
+              Align = alLeft
+              Alignment = taCenter
+              Caption = #13#10'C'
+              TabOrder = 1
+            end
+            object mmoBigIntC: TMemo
+              Left = 32
+              Height = 151
+              Top = 24
+              Width = 621
+              Align = alClient
+              OnMouseUp = mmoBigIntCMouseUp
               ReadOnly = True
               ScrollBars = ssAutoVertical
               TabOrder = 2
@@ -1068,7 +1384,7 @@ object FormMain: TFormMain
     object tsOption: TTabSheet
       Caption = 'Option'
       ClientHeight = 450
-      ClientWidth = 716
+      ClientWidth = 661
       object GroupBox1: TGroupBox
         Left = 16
         Height = 272
@@ -1084,21 +1400,22 @@ object FormMain: TFormMain
           Top = 56
           Width = 83
           Caption = 'Font'
+          Enabled = False
           TabOrder = 0
         end
-        object StaticText1: TStaticText
+        object lbOptFont: TStaticText
           Left = 16
           Height = 40
           Top = 8
-          Width = 241
-          Caption = 'StaticText1'
+          Width = 249
+          Caption = ' '
           TabOrder = 1
         end
         object ComboBox1: TComboBox
           Left = 16
           Height = 25
           Top = 136
-          Width = 248
+          Width = 249
           ItemHeight = 17
           Style = csDropDownList
           TabOrder = 2
@@ -1116,26 +1433,26 @@ object FormMain: TFormMain
     object tsAbout: TTabSheet
       Caption = 'About'
       ClientHeight = 450
-      ClientWidth = 716
+      ClientWidth = 661
       object Panel5: TPanel
         Left = 170
         Height = 450
         Top = 0
-        Width = 546
+        Width = 491
         Align = alClient
         BevelOuter = bvNone
         ClientHeight = 450
-        ClientWidth = 546
+        ClientWidth = 491
         TabOrder = 1
         object Panel6: TPanel
           Left = 0
           Height = 88
           Top = 0
-          Width = 546
+          Width = 491
           Align = alTop
           BevelOuter = bvNone
           ClientHeight = 88
-          ClientWidth = 546
+          ClientWidth = 491
           TabOrder = 0
           object Label1: TLabel
             Left = 24
@@ -1180,7 +1497,7 @@ object FormMain: TFormMain
             Cursor = crHandPoint
             Left = 256
             Height = 21
-            Top = 16
+            Top = 20
             Width = 72
             AutoSize = True
             Caption = 'github'
@@ -1207,31 +1524,31 @@ object FormMain: TFormMain
           Left = 0
           Height = 362
           Top = 88
-          Width = 546
+          Width = 491
           Align = alClient
           BevelOuter = bvNone
           BorderWidth = 16
           ClientHeight = 362
-          ClientWidth = 546
+          ClientWidth = 491
           TabOrder = 1
           object PageControl2: TPageControl
             Left = 16
             Height = 330
             Top = 16
-            Width = 514
-            ActivePage = TabSheet3
+            Width = 459
+            ActivePage = TabSheet2
             Align = alClient
-            TabIndex = 1
+            TabIndex = 0
             TabOrder = 0
             object TabSheet2: TTabSheet
               Caption = 'Change Log'
               ClientHeight = 300
-              ClientWidth = 506
-              object Memo2: TMemo
+              ClientWidth = 451
+              object mmoAboutChangeLog: TMemo
                 Left = 0
                 Height = 300
                 Top = 0
-                Width = 506
+                Width = 451
                 Align = alClient
                 BorderStyle = bsNone
                 Font.CharSet = GB2312_CHARSET
@@ -1241,6 +1558,9 @@ object FormMain: TFormMain
                 Font.Pitch = fpFixed
                 Font.Quality = fqDraft
                 Lines.Strings = (
+                  '2020.3 v0.3'
+                  '        add Big Int and Big float.'
+                  ''
                   '2020.3  v0.2, first version.'
                   '        include CRC, base convert, digit bytes'
                   ''
@@ -1253,12 +1573,12 @@ object FormMain: TFormMain
             object TabSheet3: TTabSheet
               Caption = 'Readme'
               ClientHeight = 300
-              ClientWidth = 506
-              object Memo1: TMemo
+              ClientWidth = 451
+              object mmoAboutReadme: TMemo
                 Left = 0
                 Height = 300
                 Top = 0
-                Width = 506
+                Width = 451
                 Align = alClient
                 BorderStyle = bsNone
                 Font.CharSet = ANSI_CHARSET
@@ -3949,11 +4269,11 @@ object FormMain: TFormMain
     left = 16
     top = 320
   end
-  object ilCalc: TImageList
+  object ilDigit: TImageList
     left = 16
     top = 376
     Bitmap = {
-      4C690D0000001000000010000000000000000000000000000000000000000000
+      4C69140000001000000010000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000008000FF008000FF008000FF008000FF00000000000000000000
@@ -4369,7 +4689,248 @@ object FormMain: TFormMain
       000000000000000000000000000000000000B3B3B3FFB3B3B3FF000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000000000FF000000FF0000
+      00FF0000000000000000000000000000000000000000000000FF000000550000
+      000000000000000000000000000000000000000000FF000000FF000000000000
+      00FF000000FF000000000000000000000000000000FF00000055000000000000
+      000000000000000000000000000000000000000000FF000000FF000000000000
+      00FF000000FF000000000000000000000000000000FF00000055000000000000
+      000000000000000000000000000000000000000000FF000000FF000000000000
+      00FF000000FF0000000000000000000000FF0000005500000000000000000000
+      000000000000000000000000000000000000000000FF000000FF000000000000
+      00FF000000FF0000000000000000000000FF0000005500000000000000000000
+      000000000000000000000000000000000000000000FF000000FF000000000000
+      00FF000000FF00000000000000FF000000550000000000000000000000000000
+      00000000000000000000000000000000000000000000000000FF000000FF0000
+      00FF0000005500000000000000FF0000005500000000000000FF000000FF0000
+      00FF000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000FF00000000000000FF000000FF000000000000
+      00FF000000FF0000000000000000000000000000000000000000000000000000
+      000000000000000000FF0000005500000000000000FF000000FF000000000000
+      00FF000000FF0000000000000000000000000000000000000000000000000000
+      000000000000000000FF0000000000000000000000FF000000FF000000000000
+      00FF000000FF0000000000000000000000000000000000000000000000000000
+      0000000000FF000000550000000000000000000000FF000000FF000000000000
+      00FF000000FF0000000000000000000000000000000000000000000000000000
+      0000000000FF000000000000000000000000000000FF000000FF000000000000
+      00FF000000FF0000000000000000000000000000000000000000000000000000
+      00FF0000005500000000000000000000000000000000000000FF000000FF0000
+      00FF000000550000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000800000DA800000DA000000000000
+      0000800000DA800000DA00000000000000000000000000000000000000000000
+      000000000000000000000000000000000000800000DA800000DA800000DA0000
+      0000800000DA800000DA00000000000000000000000000000000000000000000
+      000000000000000000000000000000000000800000DA800000DA800000DA0000
+      0000800000DA800000DA00000000000000000000000000000000000000000000
+      000000000000000000000000000000000000800000DA800000DA800000DA0000
+      0000800000DA800000DA00000000000000000000000000000000FF0000FFFF00
+      00FFFF0000FFFF0000FFFF0000FF00000000800000DA800000DA800000DA8000
+      00DA800000DA800000DA000000000000000000000000FF0000FFFF00008EFF00
+      0055FF000055FF000055FF00005500000000800000DA800000DA000000008000
+      00DA800000DA800000DA000000000000000000000000FF0000FFFF0000550000
+      000000000000000000000000000000000000800000DA800000DA000000008000
+      00DA800000DA800000DA0000000000000000FF0000FFFF000055000000000000
+      000000000000000000000000000000000000800000DA800000DA000000008000
+      00DA800000DA800000DA0000000000000000FF0000FFFF000055000000000000
+      000000000000000000000000000000000000800000DA800000DA000000000000
+      0000800000DA800000DA00000000FF0000FFFF00005500000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000FF0000FFFF00005500000000000000000000
+      000000000000000000000000000000000000000000000000000000000000FF00
+      00FF0000000000000000FF0000FFFF0000550000000000000000000000000000
+      000000000000000000000000000000000000000000000000000000000000FF00
+      0055FF0000FF00000000FF0000FFFF0000550000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000FF000055FF0000FFFF000055000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000FF000055FF0000FFFF000055000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000800000228000002280000022800000228000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000080000022800000DF800000DF800000DF8000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000080000022800000DF800000DF800000DF8000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000080000022800000DF800000DF800000DF8000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000080000022800000DF800000DF800000DF8000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000080000022800000DF800000DF800000DF8000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000080000022800000DF800000DF800000DF8000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000080000022800000DF800000DF800000DF8000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000080000022800000DF800000DF800000DF8000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000080000022800000BE800000DF800000BE8000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00008000001C8000002280000022800000228000001C00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000800000228000009E800000DF8000009E8000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000080000022800000DF800000DF800000DF8000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000800000228000009E800000DF8000009E8000002200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000800000168000002280000022800000228000001600000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000008000FF0080
+      00FF008000FF008000FF000000000000000000000000008000FF008000FF0080
+      00FF008000FF00000000000000000000000000000000008000FF008000FF0000
+      000000000000008000FF008000FF00000000008000FF008000FF000000000000
+      0000008000FF008000FF000000000000000000000000008000FF008000FF0000
+      000000000000008000FF008000FF00000000008000FF008000FF000000000000
+      0000008000FF008000FF000000000000000000000000008000FF008000FF0000
+      000000000000000000000000000000000000008000FF008000FF000000000000
+      0000008000FF008000FF000000000000000000000000008000FF008000FF0000
+      0000008000FF008000FF008000FF00000000008000FF008000FF000000000000
+      00000000000000000000000000000000000000000000008000FF008000FF0000
+      000000000000558000FF558000FF808000AA558000FF558000FF808000AA0000
+      0000008000FF008000FF000000000000000000000000008000FF008000FF0000
+      000000000000558000FF558000FF808000AA008000FF558000FF808000AA8080
+      00AA008000FF008000FF000000000000000000000000008000FF008000FF0000
+      000000000000558000FF558000FF808000AA008000FF558000FF808000AA8080
+      00AA008000FF008000FF00000000000000000000000000000000008000FF0080
+      00FF008000FF808000AA558000FF808000AA00000000558000FF558000FF5580
+      00FF008000FF0000000000000000000000000000000000000000000000000000
+      000000000000808000AA808000AA808000AA00000000808000AA808000AA8080
+      00AA000000000000000000000000000000000000000000000000000000000000
+      000000000000808000AA808000AA808000AA00000000808000AA808000AA8080
+      00AA000000000000000000000000000000000000000000000000000000000000
+      000000000000808000AA808000AA808000AA00000000808000AA808000AA8080
+      00AA000000000000000000000000000000000000000000000000000000000000
+      000000000000808000AA808000AA808000AA00000000808000AA808000AA8080
+      00AA000000000000000000000000000000000000000000000000000000000000
+      000000000000808000AA808000AA808000AA808000AA808000AA808000AA8080
+      00AA000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000FBFEFC00FBFEFC00FBFEFC00EAF0F9FFACB9
+      EDFF99A3E3FFA7ADE2FFBFC4E7FFE4E6F2FFFBFEFC00FBFEFC00FBFEFC00FBFE
+      FC00FBFEFC00FBFEFC00FBFEFC00FBFEFC00FBFEFC00F4F8FBFF7B90E6FF7883
+      D6FF9B9DD7FF6A69C9FF615DC4FF5249B6FF5248AEFF6F66B9FF8681C0FFD3D4
+      E7FFFBFEFC00FBFEFC00FBFEFC00FBFEFC00FBFEFC00BAC7F3FF7587DFFFBDC0
+      E3FFFAF9FBFF908ED5FF625CC3FF6056BEFF7D75C5FF7F76C5FF4C3FADFF1004
+      82FF8E8BC3FFFBFEFC00FBFEFC00FBFEFC00FAFDFCFF8094E8FF7586DEFF9297
+      DAFFB9B9E5FF6A68C8FF625BC2FF655DBFFFF3F3F5FFE7E5F3FF5547B3FF0D00
+      81FF0F0188FFACAAD3FFFBFEFC00FBFEFC00CFD9F5FF7186E2FF7482DBFF6D74
+      D2FF6868CAFF9B9AD3FF817BCAFF6055BDFFB0AADBFF9288CEFF3C2FA1FF1001
+      83FF13019AFF2C1DA4FFF5F7F8FFFBFEFC0090A1E9FF7789E0FF707CD8FF6B70
+      CEFF8484CDFFFAF9FBFFCAC6E7FF5E52BCFF5D4FB9FF5C4EB8FF201288FF1002
+      83FF14019BFF1501A7FFADAAD9FFE5EBF7FF6C81E1FF8B97DBFFE3E3EDFF9495
+      D7FF6A69C8FFACA8DDFF7970C8FF5E51BBFF5C4EB8FF5042AFFF0F0275FF1102
+      85FF14019CFF1501A8FF7A72CAFFA1AFE9FF7689E2FFA5ACE0FFFAF9FBFF9999
+      DBFF6562C7FF625BC3FF766FC4FF928BCDFF5C4EB8FF322598FF10026FFF1101
+      86FF1B09A0FF1501A8FF776EC8FF7584DBFF6F81DDFF7381DAFF797DD4FF6868
+      CAFF6460C6FF6158C1FFDDDCEAFFFAF9FBFF675BBDFF160A7AFF10026FFF3D32
+      9AFF9790D1FF1501A8FF938DD0FF727CCEFF2C2FA2FF3635A7FF4240ADFF5552
+      BBFF625DC4FF6158C0FF9892D2FFA097D4FF4033A4FF0E016DFF100271FF645A
+      A6FF6B60BFFF1501A6FFD4D4E8FFAAACD6FF0E0269FF0D0067FF0D006BFF0D01
+      72FF12067EFF251991FF372B9FFF32259BFF100382FF0E016AFF110272FF1B0B
+      8CFF1604A1FF3A2CAAFFF4F7F5FFFAFDFB005D57A2FF0D0066FF0D0066FF0E00
+      69FF0F0071FF10007FFF17088DFF1A0C91FF0D0081FF0E016CFF100172FF1201
+      8AFF1401A1FF6760A2FFCACDCB00FBFEFC00F0F2F6003C3389FF0F0268FF2519
+      7BFF271A82FF8983BDFF30219DFF9994C9FF1300A6FF0E0179FF100273FF1102
+      8CFF16059EFF92919C00C1C4C200FBFEFC00FBFEFC00EEF0F4FF706AA7FFA09D
+      BEFF1C0E8AFF37299DFF1401A0FF1500ACFF1600B2FF1500A8FF10027AFF1101
+      8CFF3B3092FF93939300A8A8A800FBFEFC00FBFEFC00FBFEFC00FBFEFC00E1E2
+      EEFF9C98CEFF645ABCFF2D1BB0FF1601B1FF1600B2FF1600B2FF100094FF0F01
+      86FF686683FFA6A7A700D4D6D500FBFEFC00FBFEFC00FBFEFC00FBFEFC00FBFE
+      FC00FBFEFC00FBFEFC00FBFDFC00D8D8EEFF9F99DBFF675BC9FF5A4FB8FF9C9A
+      C1FFE9ECEB00FBFEFC00FBFEFC00BFCFB100C6D4BA00778D9E003D6C89002553
+      78123F627F5B4F85AE9C224C6DBC5A7F9EBC38688E9C4C67845B567799125277
+      93006A8199007A8AA0009FBDD900D4D1BB00A6B3B7004868850044748F5B2454
+      7AFF61819CFF689ABCFF2C5574FF5C7A96FF4A6E8DFF4E667EFF5A7C99FF6077
+      925B63728C006E869E006F95B300E0D2BF007295AE002149727C427290FF2C65
+      8AFF406485FF54829FFF476C88FF4E667FFF556E88FF3B4C66FF51748DFF576C
+      85FF50647F7C6C8CA100677E9200B0B7B9005C8EAC5B23577EFF5B89A6FF65A1
+      BDFF4A7592FF627F98FF53748CFF4D606CFF768993FF707F8AFF6E8592FF5361
+      71FF42657EFF788D9E5B778291008CA1AF125B8CA8FF3A7599FF527994FF89B2
+      C6FF57869FFF677F8BFF657482FF819C9DFF76AFC0FF7BBFD5FF80B5C5FF779A
+      A4FF6F888EFF676F76FF686D78126F90A95B4E7694FF518AACFF356B8DFF6A8D
+      9EFF6C8DA1FF708892FF8C9E9EFF70B4C1FF80DFF5FF7CE3FFFF74D1EDFF79C1
+      D6FF87AFB3FF637172FF3B5C685B6490B89C3F6F96FF5888A7FF89BCD5FF5A8E
+      A0FF83A2A3FF849291FF86A9A8FF8AD2D7FF9BCFCDFF99BCC4FF85D2E7FF79CE
+      DFFF7BC3D7FF8BA7AAFF79888A9C7198B0BC538EAEFF487E9BFF81A5B5FF85A3
+      B6FF708A99FF849598FF8AB7BCFF95C9CBFFA3BFBCFFA49FA1FF9BA3A0FF75C3
+      D4FF77C1D3FF84B9BFFF8A9390BC88949ABC6992A9FF5D97B5FF568FA8FF749E
+      B3FF7D9CACFF8398A1FF8FB6BBFF80C0CDFF7ECFEDFFA6D0E1FFA8A8A4FF70AA
+      C4FF72BBD0FF88BBC3FF99A59FBC99988F9C7495A7FF5F8DA8FF86BACBFF90C2
+      D3FF749BB1FF658693FF88A8A9FF9DCACAFFB8E5E7FFD0D5CAFF8FA4A4FF559D
+      B9FF7FBED2FF71AFBDFFB3C0B99C6549365B7698A4FF5A98B9FF5E96ABFF6AA4
+      BAFF7DB3C7FF76ADBDFF50859DFF79909AFFA2AAA7FF798E95FF49829FFF56A4
+      C0FF76B7CCFF86B1B8FF878B805B502F1B1271695EFF8BB9C8FF6EA4BEFF7EB0
+      CCFF96CDE5FF6FA7C5FF5C9CBEFF357BA6FF3175A4FF347EADFF519CC4FF6AB5
+      D2FF58A1B6FF92A9A0FF5A3C2D125D4237004F382B5B848480FF91B6C6FF76A3
+      BAFF72AAC2FF7ABCD3FF8FD1E6FF4FA5CDFF65B1D9FF54A9D0FF62B5D6FF5EA2
+      BDFF78A4AEFF6665605B37170F004C362A00463428004B30267C747A78FF82AE
+      BDFF7AACBCFF78AABEFF5BA4BEFF6EB9D5FF80B9D2FF5FABC7FF62A2BDFF7DAF
+      BAFF7C77687C371D1900482B240043302100463122004A302200492E205B6E5C
+      54FF8D8E88FF749DA6FF72A8B4FF86A2A5FF6596A2FF86B1BCFF7F9497FF6261
+      5C5B36201500452B230056383100422A2100422B2100422E250044302500290D
+      09123F19195B7662569C9FA173BCA6A97DBC8493829C786F5E5B503728122F17
+      1000462F2900523C3500634B4200D9D9D900D8D8D800C1C1C100E7E7E700EFEF
+      EF12B8B8B85BDADADA9CF3F3F3BCD1D1D1BCCECECE9CF3F3F35BE4E4E412BDBF
+      BF00E4E6E600E7E9E900C8CACA00ECECEC00F5F5F500FFFFFF00F6F6F65BF2F2
+      F2FFFCFCFCFFFEFEFEFFEEEEEEFFFAFAFAFFFFFFFFFFF3F3F3FFFAFAFAFFFFFF
+      FF5BF5F8F800F4F6F600F5F7F700FFFFFF00D2D2D200A1A1A17CC1C1C1FFF5F5
+      F5FFAFAFAFFFCBCBCBFFFEFEFEFFB1B1B1FFA7A7A7FFF3F3F3FFC8C8C8FF9797
+      97FFD6D6D67CF8F9F900F4F4F400F7F7F7008B8B8B5B5D5D5DFFD3D3D3FFE9E9
+      E9FF5F5F5FFF909090FFDFDFDFFF6D6D6DFF4A4A4AFFA3A3A3FF838383FF8585
+      85FF747474FFFEFEFE5B72727200D6D6D612BBBBBBFF838383FF818181FFF9F9
+      F9FFC3C3C3FFA5A5A5FFC3C3C3FF6A6A6AFF656565FF939393FF8F8F8FFF5656
+      56FFA1A1A1FFA0A0A0FF75757512CFCFCF5BE7E7E7FFE0E0E0FF565656FFEAEA
+      EAFFB0B0B0FF838383FFCFCFCFFF3D3D3DFF8A8A8AFF919191FF797979FFACAC
+      ACFF747474FF898989FF7070705BFFFFFF9CACACACFF707070FF9E9E9EFFF2F2
+      F2FF858585FF666666FFD2D2D2FF989898FF6B6B6BFFE2E2E2FFA9A9A9FF7070
+      70FFA9A9A9FFFCFCFCFFE5E5E59CF1F1F1BCF6F6F6FFFCFCFCFFFFFFFFFFF2F2
+      F2FFFFFFFFFFFFFFFFFFF1F1F1FFF3F3F3FFFFFFFFFFFCFCFCFFFFFFFFFFFFFF
+      FFFFFEFEFEFFF0F0F0FFFFFFFFBCFAFAFABCE5E5E5FFA6A6A6FFCDCDCDFFFAFA
+      FAFFBCBCBCFFA7A7A7FFEBEBEBFFF3F3F3FFC7C7C7FFEDEDEDFFD6D6D6FFA5A5
+      A5FFDCDCDCFFEEEEEEFFACACACBCF2F2F29C838383FF8A8A8AFF7B7B7BFFBCBC
+      BCFF616161FF9F9F9FFFFAFAFAFFBDBDBDFF282828FFCCCCCCFF787878FF7D7D
+      7DFF8D8D8DFFAAAAAAFF4646469CD8D8D85B767676FF9F9F9FFF636363FF8484
+      84FF5B5B5BFF878787FFC0C0C0FF888888FF656565FFCFCFCFFF878787FF5353
+      53FF9D9D9DFF7A7A7AFF6262625BDBDBDB12CFCFCFFF868686FF5B5B5BFF8989
+      89FF939393FFA0A0A0FF606060FF797979FF333333FF939393FF797979FFA8A8
+      A8FF7F7F7FFF797979FF9D9D9D12F4F4F400CCCCCC5B797979FFA3A3A3FFE6E6
+      E6FF767676FF717171FFDCDCDCFFF6F6F6FF878787FFCECECEFF959595FF6969
+      69FFADADADFFC6C6C65B62626200F5F5F500F5F5F500F0F0F07CFDFDFDFFFAFA
+      FAFFFAFAFAFFF5F5F5FFF5F5F5FFFBFBFBFFFFFFFFFFF6F6F6FFFDFDFDFFF2F2
+      F2FFFAFAFA7CF9F9F900F2F2F200FAFAFA00E9E9E900C5C5C500D2D2D25BF4F4
+      F4FFBABABAFFCFCFCFFFF3F3F3FFC2C2C2FFC7C7C7FFF9F9F9FFE2E2E2FFC5C5
+      C55BEBEBEB00E8E8E800BBBBBB00FFFFFF009696960043434300AAAAAA00C5C5
+      C5125E5E5E5B4A4A4A9CC6C6C6BC7E7E7EBC4141419CC2C2C25B737373123E3E
+      3E0086868600A2A2A20037373700
     }
+  end
+  object pmBitIntBase: TPopupMenu
+    left = 61
+    top = 376
+    object MenuItem1: TMenuItem
+      Caption = 'base 2'
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'base 4'
+    end
+    object MenuItem3: TMenuItem
+      Caption = 'base 8'
+    end
+    object MenuItem4: TMenuItem
+      Tag = 3
+      Caption = 'base 16'
+    end
   end
 end
