@@ -23,7 +23,7 @@ Unit UBigIntsV5;
 
 interface
 
-uses Forms, Dialogs, SysUtils, Windows, strUtils;
+uses Forms, Dialogs, SysUtils, strUtils;
 type
   char=ANSIChar;
   TDigits = array of int64;
@@ -2402,8 +2402,9 @@ begin
   SetLength(self.fDigits, d);
   PA:= @self.fDigits[0];
   dmemory:= (d shr 1) * 11 * sizeof(int64);
-  HR:= GlobalAlloc(GMEM_FIXED, dmemory);
-  PR:= GlobalLock(HR);
+  //HR:= GlobalAlloc(GMEM_FIXED, dmemory);
+  //PR:= GlobalLock(HR);
+  getmem(PR,d*6*sizeof(int64));
   fillchar(PR[0], dmemory, 0);
   KaratsubaSquare(PA, PR, d);
   DoCarry(PR, self.Base, d * 2);
@@ -2413,8 +2414,9 @@ begin
   move(PR[0], self.fDigits[0], d * sizeof(int64));
   self.Trim;
   self.Sign:= self.Sign * self.Sign;
-  GlobalUnlock(HR);
-  GlobalFree(HR);
+  freemem(PR);
+  //GlobalUnlock(HR);
+  //GlobalFree(HR);
 end;
 
 /// /////additions by morf//////////////////////////
