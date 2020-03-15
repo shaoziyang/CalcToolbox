@@ -60,7 +60,15 @@ Linux screenshot
 
 ### Reduce file size
 
-Default build file size is very large, to reduce file size, please open project option dialog, in **Debugging** tab, remove **Generate info for the debugger** and **Display line numbers in run-time error backtraces** option, then rebuild.
+Default build file size is very large, to reduce file size, please open project option dialog.
+- in **Debugging** tab, remove
+  - **Generate info for the debugger**
+  - **Display line numbers in run-time error backtraces**
+- in Compilation and Linking, select
+  - **Smart linkable**
+  - **Link smart**
+
+Then rebuild.
 
 
 
