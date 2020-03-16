@@ -60,6 +60,7 @@ type
     ilDigit: TImageList;
     imgLaz: TImage;
     imgLogo: TImage;
+    imgLogo1: TImage;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -120,6 +121,7 @@ type
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
     tbBigInt: TToolBar;
+    tmrLogo: TTimer;
     ToolButton23: TToolButton;
     ToolButton24: TToolButton;
     ToolButton25: TToolButton;
@@ -192,7 +194,7 @@ type
     btnCrc_CRC7_MMC: TToolButton;
     ToolBar5: TToolBar;
     ToolButton13: TToolButton;
-    ToolButton14: TToolButton;
+    btnCrcBufLen: TToolButton;
     btnCrcCalc: TToolButton;
     tsCRC: TTabSheet;
     tsConstant: TTabSheet;
@@ -252,6 +254,7 @@ type
     procedure btnCrc_CRC8_ITUClick(Sender: TObject);
     procedure btnCrc_CRC16_CCITT_FALSEClick(Sender: TObject);
     procedure btnCrc_CRC32_MPEG2Click(Sender: TObject);
+    procedure tmrLogoTimer(Sender: TObject);
   private
     function getCrcBit: integer;
     procedure setCrcBit(bit: integer);
@@ -267,6 +270,7 @@ type
     function IntToByteStr(d: dword): string;
     function ChrToByte(ch: char): byte;
     function Chr2ToByte(c1: char; c2: char): byte;
+    function StrBytesToChrs(s: string; Len: integer): string;
     procedure setCrcMode(bit: integer; poly: longword; v0: longword;
       XOROUT: longword; InvIn: boolean; InvOut: boolean);
   end;
@@ -491,11 +495,15 @@ begin
   sgBytes.Cells[1, 3] := NumToBytes(nd, 4);
   sgBytes.Cells[1, 4] := NumToBytes(nd, 8);
 
-  sgBytes.Cells[1, 5] := SingleToBytes(fd);
-  sgBytes.Cells[1, 6] := DoubleToBytes(fd);
+  sgBytes.Cells[1, 6] := SingleToBytes(fd);
+  sgBytes.Cells[1, 8] := DoubleToBytes(fd);
 
   if rbBigBytes.Checked then
     rbBigBytesChange(Sender);
+
+  sgBytes.Cells[1, 5] := StrBytesToChrs(sgBytes.Cells[1, 4], 8);
+  sgBytes.Cells[1, 7] := StrBytesToChrs(sgBytes.Cells[1, 6], 4);
+  sgBytes.Cells[1, 9] := StrBytesToChrs(sgBytes.Cells[1, 8], 8);
 
 end;
 
@@ -568,7 +576,8 @@ begin
       chkCrcInvOut.Checked);
     Delete(s, 1, len * 3);
   end;
-  edtCrcResult.Text := IntToByteStr(v0);
+  btnCrcBufLen.Caption := Format('<%d>', [bufN]);
+  edtCrcResult.Text    := IntToByteStr(v0);
 end;
 
 
@@ -611,7 +620,7 @@ begin
         nd := StrToInt64('0x' + s);
         edtBytesNum.Text := IntToStr(nd);
       end;
-      5:
+      6:
       begin
         ;
         try
@@ -623,7 +632,7 @@ begin
 
         end;
       end;
-      6:
+      8:
       begin
         try
           StrToBytes(ss, 8, pb);
@@ -868,6 +877,11 @@ end;
 procedure TFormMain.btnCrc_CRC32_MPEG2Click(Sender: TObject);
 begin
   setCrcMode(32, $04C11DB7, $FFFFFFFF, 0, False, False);
+end;
+
+procedure TFormMain.tmrLogoTimer(Sender: TObject);
+begin
+  imgLogo.Visible := not imgLogo.Visible;
 end;
 
 function TFormMain.getCrcBit: integer;
@@ -1303,6 +1317,24 @@ end;
 function TFormMain.Chr2ToByte(c1: char; c2: char): byte;
 begin
   Result := ChrToByte(c1) * 16 + ChrToByte(c2);
+end;
+
+function TFormMain.StrBytesToChrs(s: string; Len: integer): string;
+var
+  i: integer;
+  b: byte;
+begin
+  Result := '';
+  if Length(s) < Len then
+    Len := Length(s);
+  for i := 1 to Len do
+  begin
+    b := Chr2ToByte(s[i * 3 - 2], s[i * 3 - 1]);
+    if (b < 128) and (b > 31) then
+      Result := Result + Chr(b)
+    else
+      Result := Result + '.';
+  end;
 end;
 
 procedure TFormMain.setCrcMode(bit: integer; poly: longword; v0: longword;
