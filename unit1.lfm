@@ -89,7 +89,7 @@ object FormMain: TFormMain
         Transparent = True
         object ToolButton1: TToolButton
           Left = 185
-          Height = 8
+          Height = 22
           Top = 0
           AutoSize = True
           Caption = ' '
@@ -125,7 +125,7 @@ object FormMain: TFormMain
         end
         object ToolButton4: TToolButton
           Left = 353
-          Height = 8
+          Height = 22
           Top = 0
           Caption = ' '
           Style = tbsSeparator
@@ -153,7 +153,7 @@ object FormMain: TFormMain
         end
         object ToolButton21: TToolButton
           Left = 505
-          Height = 8
+          Height = 22
           Top = 0
           Caption = 'ToolButton21'
           Style = tbsSeparator
@@ -401,49 +401,49 @@ object FormMain: TFormMain
         end
         object ToolButton9: TToolButton
           Left = 519
-          Height = 5
+          Height = 22
           Top = 2
           Caption = 'ToolButton9'
           Style = tbsDivider
         end
         object ToolButton8: TToolButton
           Left = 187
-          Height = 5
+          Height = 22
           Top = 24
           Caption = 'ToolButton8'
           Style = tbsDivider
         end
         object ToolButton10: TToolButton
           Left = 580
-          Height = 5
+          Height = 22
           Top = 46
           Caption = 'ToolButton10'
           Style = tbsDivider
         end
         object ToolButton11: TToolButton
           Left = 352
-          Height = 5
+          Height = 22
           Top = 46
           Caption = 'ToolButton11'
           Style = tbsDivider
         end
         object ToolButton12: TToolButton
           Left = 487
-          Height = 5
+          Height = 22
           Top = 46
           Caption = 'ToolButton12'
           Style = tbsDivider
         end
         object ToolButton15: TToolButton
           Left = 602
-          Height = 5
+          Height = 22
           Top = 24
           Caption = 'ToolButton15'
           Style = tbsDivider
         end
         object ToolButton16: TToolButton
           Left = 107
-          Height = 5
+          Height = 22
           Top = 46
           Caption = 'ToolButton16'
           Style = tbsDivider
@@ -501,9 +501,9 @@ object FormMain: TFormMain
         Height = 450
         Top = 0
         Width = 661
-        ActivePage = tsBase
+        ActivePage = tsBigInt
         Align = alClient
-        TabIndex = 1
+        TabIndex = 3
         TabOrder = 0
         object tsBytes: TTabSheet
           Caption = 'Bytes'
@@ -590,7 +590,7 @@ object FormMain: TFormMain
             OnEditingDone = sgBytesEditingDone
             ColWidths = (
               159
-              476
+              493
             )
             Cells = (
               10
@@ -739,7 +739,7 @@ object FormMain: TFormMain
               Width = 621
               Align = alClient
               Lines.Strings = (
-                '0'
+                ''
               )
               ScrollBars = ssAutoVertical
               TabOrder = 0
@@ -764,6 +764,7 @@ object FormMain: TFormMain
             Align = alTop
             AutoSnap = False
             ResizeAnchor = akTop
+            ResizeStyle = rsLine
           end
           object pnlBigFloatB: TPanel
             Left = 0
@@ -782,7 +783,7 @@ object FormMain: TFormMain
               Width = 621
               Align = alClient
               Lines.Strings = (
-                '0'
+                ''
               )
               ScrollBars = ssAutoVertical
               TabOrder = 0
@@ -807,6 +808,7 @@ object FormMain: TFormMain
             Align = alTop
             AutoSnap = False
             ResizeAnchor = akTop
+            ResizeStyle = rsLine
           end
           object pnlBigFloatC: TPanel
             Left = 0
@@ -966,7 +968,7 @@ object FormMain: TFormMain
               end
               object ToolButton26: TToolButton
                 Left = 537
-                Height = 8
+                Height = 22
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1021,7 +1023,7 @@ object FormMain: TFormMain
               Width = 621
               Align = alClient
               Lines.Strings = (
-                '0'
+                ''
               )
               ScrollBars = ssAutoVertical
               TabOrder = 0
@@ -1046,6 +1048,7 @@ object FormMain: TFormMain
             Align = alTop
             AutoSnap = False
             ResizeAnchor = akTop
+            ResizeStyle = rsLine
           end
           object pnlBigIntB: TPanel
             Left = 0
@@ -1064,7 +1067,7 @@ object FormMain: TFormMain
               Width = 621
               Align = alClient
               Lines.Strings = (
-                '0'
+                ''
               )
               ScrollBars = ssAutoVertical
               TabOrder = 0
@@ -1295,6 +1298,7 @@ object FormMain: TFormMain
             Align = alTop
             AutoSnap = False
             ResizeAnchor = akTop
+            ResizeStyle = rsLine
           end
         end
       end
@@ -1329,6 +1333,7 @@ object FormMain: TFormMain
           Top = 0
           Width = 596
           Align = alClient
+          OnMouseUp = mmoBufferPythonMouseUp
           ScrollBars = ssAutoVertical
           TabOrder = 1
         end
@@ -1342,6 +1347,7 @@ object FormMain: TFormMain
         Align = alTop
         AutoSnap = False
         ResizeAnchor = akTop
+        ResizeStyle = rsLine
       end
       object pnlBufferHEX: TPanel
         Left = 0
@@ -1369,6 +1375,7 @@ object FormMain: TFormMain
           Top = 0
           Width = 596
           Align = alClient
+          OnMouseUp = mmoBufferPythonMouseUp
           ScrollBars = ssAutoVertical
           TabOrder = 1
         end
@@ -1399,6 +1406,7 @@ object FormMain: TFormMain
           Top = 0
           Width = 596
           Align = alClient
+          OnMouseUp = mmoBufferPythonMouseUp
           ScrollBars = ssAutoVertical
           TabOrder = 1
         end
@@ -1412,6 +1420,7 @@ object FormMain: TFormMain
         Align = alTop
         AutoSnap = False
         ResizeAnchor = akTop
+        ResizeStyle = rsLine
       end
       object Panel1: TPanel
         Left = 0

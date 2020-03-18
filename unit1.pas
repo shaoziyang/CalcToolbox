@@ -17,7 +17,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '0.3';
+  VERSION = '0.4';
 
 type
   SingleBytes = array[0..3] of byte;
@@ -263,6 +263,8 @@ type
       Shift: TShiftState; X, Y: integer);
     procedure mmoBigIntCMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
+    procedure mmoBufferPythonMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: integer);
     procedure rbBigBytesChange(Sender: TObject);
     procedure sgBytesEditingDone(Sender: TObject);
     procedure sgConstantMathClick(Sender: TObject);
@@ -377,28 +379,43 @@ begin
     edtBigFloatPrec.Text := ini.ReadString('BigFloat', 'prec', '100');
     pnlBigFloatA.Height  := ini.ReadInteger('BigFloat', 'PanelA', 80);
     pnlBigFloatB.Height  := ini.ReadInteger('BigFloat', 'PanelB', 80);
+    mmoBigFloatA.Text    := '';
+    mmoBigFloatB.Text    := '';
 
     // BigInt
     chkBigIntComma.Checked := ini.ReadBool('BigInt', 'comma', False);
-    pnlBigIntA.Height      := ini.ReadInteger('BigInt', 'PanelA', 80);
-    pnlBigIntB.Height      := ini.ReadInteger('BigInt', 'PanelB', 80);
+    pnlBigIntA.Height := ini.ReadInteger('BigInt', 'PanelA', 80);
+    pnlBigIntB.Height := ini.ReadInteger('BigInt', 'PanelB', 80);
+    mmoBigIntA.Text := '';
+    mmoBigIntB.Text := '';
+
+    // Buffer
+    pnlBufferPython.Height := ini.ReadInteger('Buffer', 'PanelPython', 120);
+    pnlBufferHEX.Height    := ini.ReadInteger('Buffer', 'PanelHex', 120);
+    mmoBufferPython.Text   := '';
+    mmoBufferHex.Text      := '';
+    mmoBufferStr.Text      := '';
+
   except
 
   end;
 
 
   try
-
     bfA := TBigFloat.Create;
     bfB := TBigFloat.Create;
     edtBigFloatPrecEditingDone(Sender);
-
-    biA := TInteger.Create;
-    biB := TInteger.Create;
-
   except
     tsBigFloat.TabVisible := False;
   end;
+
+  try
+    biA := TInteger.Create;
+    biB := TInteger.Create;
+  except
+    tsBigInt.TabVisible := False;
+  end;
+
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
@@ -435,6 +452,10 @@ begin
       ini.WriteBool('BigInt', 'comma', chkBigIntComma.Checked);
       ini.WriteInteger('BigInt', 'PanelA', pnlBigIntA.Height);
       ini.WriteInteger('BigInt', 'PanelB', pnlBigIntB.Height);
+
+      // Buffer
+      ini.WriteInteger('Buffer', 'PanelPython', pnlBufferPython.Height);
+      ini.WriteInteger('Buffer', 'PanelHex', pnlBufferHex.Height);
 
       ini.UpdateFile;
     end;
@@ -487,6 +508,12 @@ begin
     btnBigIntHint.Caption := IntToStr(mmoBigIntC.SelLength);
     Clipboard.AsText      := mmoBigIntC.SelText;
   end;
+end;
+
+procedure TFormMain.mmoBufferPythonMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: integer);
+begin
+  Clipboard.AsText := TMemo(Sender).Text;
 end;
 
 procedure TFormMain.rbBigBytesChange(Sender: TObject);
@@ -561,7 +588,7 @@ begin
     s1   := '';
     s2   := '';
     s3   := mmoBufferPython.Text;
-        mmoBufferStr.Text := '';
+    mmoBufferStr.Text := '';
     mmoBufferHEX.Text := '';
     bufN := Length(s3);
     i    := 1;
@@ -593,22 +620,22 @@ begin
             end;
             Ord('0')..Ord('7'): // Octal number
             begin
-              j:=1;
-              if (Ord(s3[i+2])<=Ord('7'))and(Ord(s3[i+2])>=Ord('0')) then
+              j := 1;
+              if (Ord(s3[i + 2]) <= Ord('7')) and (Ord(s3[i + 2]) >= Ord('0')) then
               begin
-                j:=2;
-                if (Ord(s3[i+3])<=Ord('7'))and(Ord(s3[i+3])>=Ord('0')) then
-                   j:=3;
+                j := 2;
+                if (Ord(s3[i + 3]) <= Ord('7')) and (Ord(s3[i + 3]) >= Ord('0')) then
+                  j := 3;
               end;
-              s:=Copy(s3,i+1,j);
+              s := Copy(s3, i + 1, j);
               d := StrToBase(s, 8, False, MaxInt);
-              if d>255 then
+              if d > 255 then
               begin
                 beep;
                 Exit;
-                end;
+              end;
               buf[len] := d;
-              i:=i+j-1;
+              i := i + j - 1;
             end
             else
               buf[len] := Ord(s3[i]);
