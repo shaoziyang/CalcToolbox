@@ -26,15 +26,21 @@
       <FormatVersion Value="2"/>
       <Modes Count="0"/>
     </RunParams>
-    <RequiredPackages Count="2">
+    <RequiredPackages Count="4">
       <Item1>
-        <PackageName Value="LazControls"/>
+        <PackageName Value="TurboPowerIPro"/>
       </Item1>
       <Item2>
-        <PackageName Value="LCL"/>
+        <PackageName Value="SynEdit"/>
       </Item2>
+      <Item3>
+        <PackageName Value="LazControls"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="LCL"/>
+      </Item4>
     </RequiredPackages>
-    <Units Count="4">
+    <Units Count="2">
       <Unit0>
         <Filename Value="CalcToolBox.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -47,15 +53,6 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
       </Unit1>
-      <Unit2>
-        <Filename Value="ucrc.pas"/>
-        <IsPartOfProject Value="True"/>
-        <UnitName Value="uCRC"/>
-      </Unit2>
-      <Unit3>
-        <Filename Value="udigit.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit3>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -66,10 +63,14 @@
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
-      <OtherUnitFiles Value="DFFLibV15"/>
+      <OtherUnitFiles Value="DFFLibV15;formula"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
+    <CodeGeneration>
+      <SmartLinkUnit Value="True"/>
+    </CodeGeneration>
     <Linking>
+      <LinkSmart Value="True"/>
       <Options>
         <Win32>
           <GraphicApplication Value="True"/>

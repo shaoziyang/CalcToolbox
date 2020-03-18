@@ -66,10 +66,10 @@ object FormMain: TFormMain
     Height = 480
     Top = 0
     Width = 669
-    ActivePage = tsDigit
+    ActivePage = tsBuffer
     Align = alClient
     MultiLine = True
-    TabIndex = 1
+    TabIndex = 2
     TabOrder = 0
     Options = [nboMultiLine]
     object tsCRC: TTabSheet
@@ -89,7 +89,7 @@ object FormMain: TFormMain
         Transparent = True
         object ToolButton1: TToolButton
           Left = 185
-          Height = 22
+          Height = 8
           Top = 0
           AutoSize = True
           Caption = ' '
@@ -125,7 +125,7 @@ object FormMain: TFormMain
         end
         object ToolButton4: TToolButton
           Left = 353
-          Height = 22
+          Height = 8
           Top = 0
           Caption = ' '
           Style = tbsSeparator
@@ -153,7 +153,7 @@ object FormMain: TFormMain
         end
         object ToolButton21: TToolButton
           Left = 505
-          Height = 22
+          Height = 8
           Top = 0
           Caption = 'ToolButton21'
           Style = tbsSeparator
@@ -401,49 +401,49 @@ object FormMain: TFormMain
         end
         object ToolButton9: TToolButton
           Left = 519
-          Height = 22
+          Height = 5
           Top = 2
           Caption = 'ToolButton9'
           Style = tbsDivider
         end
         object ToolButton8: TToolButton
           Left = 187
-          Height = 22
+          Height = 5
           Top = 24
           Caption = 'ToolButton8'
           Style = tbsDivider
         end
         object ToolButton10: TToolButton
           Left = 580
-          Height = 22
+          Height = 5
           Top = 46
           Caption = 'ToolButton10'
           Style = tbsDivider
         end
         object ToolButton11: TToolButton
           Left = 352
-          Height = 22
+          Height = 5
           Top = 46
           Caption = 'ToolButton11'
           Style = tbsDivider
         end
         object ToolButton12: TToolButton
           Left = 487
-          Height = 22
+          Height = 5
           Top = 46
           Caption = 'ToolButton12'
           Style = tbsDivider
         end
         object ToolButton15: TToolButton
           Left = 602
-          Height = 22
+          Height = 5
           Top = 24
           Caption = 'ToolButton15'
           Style = tbsDivider
         end
         object ToolButton16: TToolButton
           Left = 107
-          Height = 22
+          Height = 5
           Top = 46
           Caption = 'ToolButton16'
           Style = tbsDivider
@@ -458,6 +458,8 @@ object FormMain: TFormMain
         AutoSize = True
         Caption = 'ToolBar5'
         EdgeBorders = []
+        Images = ImageList
+        List = True
         ShowCaptions = True
         TabOrder = 4
         object ToolButton13: TToolButton
@@ -482,7 +484,9 @@ object FormMain: TFormMain
         object btnCrcCalc: TToolButton
           Left = 333
           Top = 0
+          AutoSize = True
           Caption = ' Calc '
+          ImageIndex = 11
           OnClick = btnCrcCalcClick
         end
       end
@@ -491,14 +495,15 @@ object FormMain: TFormMain
       Caption = 'Digit'
       ClientHeight = 450
       ClientWidth = 661
+      ImageIndex = 9
       object pcDigit: TPageControl
         Left = 0
         Height = 450
         Top = 0
         Width = 661
-        ActivePage = tsBytes
+        ActivePage = tsBase
         Align = alClient
-        TabIndex = 0
+        TabIndex = 1
         TabOrder = 0
         object tsBytes: TTabSheet
           Caption = 'Bytes'
@@ -585,7 +590,7 @@ object FormMain: TFormMain
             OnEditingDone = sgBytesEditingDone
             ColWidths = (
               159
-              493
+              476
             )
             Cells = (
               10
@@ -626,7 +631,7 @@ object FormMain: TFormMain
           Caption = 'Base'
           ClientHeight = 420
           ClientWidth = 653
-          object sgDigit: TStringGrid
+          object sgBase: TStringGrid
             Left = 0
             Height = 395
             Top = 25
@@ -644,7 +649,7 @@ object FormMain: TFormMain
             TitleFont.Pitch = fpFixed
             TitleFont.Quality = fqDraft
             OnClick = sgConstantMathClick
-            OnEditingDone = sgDigitEditingDone
+            OnEditingDone = sgBaseEditingDone
             ColWidths = (
               87
               565
@@ -717,17 +722,15 @@ object FormMain: TFormMain
           Caption = 'BigFloat'
           ClientHeight = 420
           ClientWidth = 653
-          object Panel1: TPanel
+          object pnlBigFloatA: TPanel
             Left = 0
             Height = 120
             Top = 0
             Width = 653
             Align = alTop
             BevelOuter = bvNone
-            Caption = 'Panel1'
             ClientHeight = 120
             ClientWidth = 653
-            Constraints.MinHeight = 120
             TabOrder = 0
             object mmoBigFloatA: TMemo
               Left = 32
@@ -759,19 +762,18 @@ object FormMain: TFormMain
             Top = 120
             Width = 653
             Align = alTop
+            AutoSnap = False
             ResizeAnchor = akTop
           end
-          object Panel2: TPanel
+          object pnlBigFloatB: TPanel
             Left = 0
             Height = 120
             Top = 125
             Width = 653
             Align = alTop
             BevelOuter = bvNone
-            Caption = 'Panel2'
             ClientHeight = 120
             ClientWidth = 653
-            Constraints.MinHeight = 120
             TabOrder = 2
             object mmoBigFloatB: TMemo
               Left = 32
@@ -803,40 +805,41 @@ object FormMain: TFormMain
             Top = 245
             Width = 653
             Align = alTop
+            AutoSnap = False
             ResizeAnchor = akTop
           end
-          object Panel3: TPanel
+          object pnlBigFloatC: TPanel
             Left = 0
             Height = 170
             Top = 250
             Width = 653
             Align = alClient
             BevelOuter = bvNone
-            Caption = 'Panel3'
             ClientHeight = 170
             ClientWidth = 653
             Constraints.MinHeight = 120
             TabOrder = 4
             object tbBigFloat: TToolBar
               Left = 0
-              Height = 27
+              Height = 25
               Top = 0
               Width = 653
               AutoSize = True
+              EdgeBorders = []
               Images = ilDigit
               ShowCaptions = True
               TabOrder = 0
               Transparent = True
               object ToolButton20: TToolButton
                 Left = 169
-                Top = 2
+                Top = 0
                 Enabled = False
               end
               object btnBigFloatAdd: TToolButton
                 Tag = 101
                 Left = 192
                 Hint = 'add'
-                Top = 2
+                Top = 0
                 ImageIndex = 0
                 OnClick = btnBigFloatAddClick
               end
@@ -844,7 +847,7 @@ object FormMain: TFormMain
                 Tag = 102
                 Left = 215
                 Hint = 'sub'
-                Top = 2
+                Top = 0
                 ImageIndex = 1
                 OnClick = btnBigFloatAddClick
               end
@@ -852,7 +855,7 @@ object FormMain: TFormMain
                 Tag = 103
                 Left = 238
                 Hint = 'mul'
-                Top = 2
+                Top = 0
                 ImageIndex = 2
                 OnClick = btnBigFloatAddClick
               end
@@ -860,7 +863,7 @@ object FormMain: TFormMain
                 Tag = 104
                 Left = 261
                 Hint = 'div'
-                Top = 2
+                Top = 0
                 ImageIndex = 3
                 OnClick = btnBigFloatAddClick
               end
@@ -868,7 +871,7 @@ object FormMain: TFormMain
                 Tag = 105
                 Left = 284
                 Hint = 'sqrt'
-                Top = 2
+                Top = 0
                 ImageIndex = 4
                 OnClick = btnBigFloatAddClick
               end
@@ -876,7 +879,7 @@ object FormMain: TFormMain
                 Left = 89
                 Height = 25
                 Hint = 'set maxim digits'
-                Top = 2
+                Top = 0
                 Width = 80
                 Alignment = taRightJustify
                 OnEditingDone = edtBigFloatPrecEditingDone
@@ -885,14 +888,14 @@ object FormMain: TFormMain
               end
               object ToolButton22: TToolButton
                 Left = 1
-                Top = 2
+                Top = 0
                 Caption = 'MAX Digits'
               end
               object btnBigFloatReciprocal: TToolButton
                 Tag = 106
                 Left = 307
                 Hint = 'Reciprocal'
-                Top = 2
+                Top = 0
                 ImageIndex = 5
                 OnClick = btnBigFloatAddClick
               end
@@ -900,7 +903,7 @@ object FormMain: TFormMain
                 Tag = 201
                 Left = 422
                 Hint = 'constant pi'
-                Top = 2
+                Top = 0
                 ImageIndex = 10
                 OnClick = btnBigFloatAddClick
               end
@@ -908,7 +911,7 @@ object FormMain: TFormMain
                 Tag = 107
                 Left = 330
                 Hint = 'pow'
-                Top = 2
+                Top = 0
                 ImageIndex = 6
                 OnClick = btnBigFloatAddClick
               end
@@ -916,7 +919,7 @@ object FormMain: TFormMain
                 Tag = 109
                 Left = 376
                 Hint = 'log'
-                Top = 2
+                Top = 0
                 ImageIndex = 8
                 OnClick = btnBigFloatAddClick
               end
@@ -924,7 +927,7 @@ object FormMain: TFormMain
                 Tag = 110
                 Left = 399
                 Hint = 'log10'
-                Top = 2
+                Top = 0
                 ImageIndex = 9
                 OnClick = btnBigFloatAddClick
               end
@@ -932,7 +935,7 @@ object FormMain: TFormMain
                 Tag = 108
                 Left = 353
                 Hint = 'exp'
-                Top = 2
+                Top = 0
                 ImageIndex = 7
                 OnClick = btnBigFloatAddClick
               end
@@ -940,7 +943,7 @@ object FormMain: TFormMain
                 Tag = 203
                 Left = 468
                 Hint = 'constant log(2)'
-                Top = 2
+                Top = 0
                 ImageIndex = 12
                 OnClick = btnBigFloatAddClick
               end
@@ -948,35 +951,35 @@ object FormMain: TFormMain
                 Tag = 202
                 Left = 445
                 Hint = 'constant e'
-                Top = 2
+                Top = 0
                 ImageIndex = 11
                 OnClick = btnBigFloatAddClick
               end
               object ToolButton19: TToolButton
                 Left = 491
-                Top = 2
+                Top = 0
                 Enabled = False
               end
               object btnBigFloatElapsed: TToolButton
                 Left = 514
-                Top = 2
+                Top = 0
               end
               object ToolButton26: TToolButton
                 Left = 537
                 Height = 8
-                Top = 2
+                Top = 0
                 Enabled = False
                 Style = tbsSeparator
               end
               object btnBigFloatHint: TToolButton
                 Left = 545
-                Top = 2
+                Top = 0
               end
             end
             object StaticText4: TStaticText
               Left = 0
-              Height = 143
-              Top = 27
+              Height = 145
+              Top = 25
               Width = 32
               Align = alLeft
               Alignment = taCenter
@@ -985,8 +988,8 @@ object FormMain: TFormMain
             end
             object mmoBigFloatC: TMemo
               Left = 32
-              Height = 143
-              Top = 27
+              Height = 145
+              Top = 25
               Width = 621
               Align = alClient
               OnMouseUp = mmoBigFloatCMouseUp
@@ -1000,17 +1003,16 @@ object FormMain: TFormMain
           Caption = 'BigInt'
           ClientHeight = 420
           ClientWidth = 653
-          object Panel9: TPanel
+          object pnlBigIntA: TPanel
             Left = 0
             Height = 120
             Top = 0
             Width = 653
             Align = alTop
             BevelOuter = bvNone
-            Caption = 'Panel9'
+            Caption = 'pnlBigIntA'
             ClientHeight = 120
             ClientWidth = 653
-            Constraints.MinHeight = 120
             TabOrder = 0
             object mmoBigIntA: TMemo
               Left = 32
@@ -1042,19 +1044,18 @@ object FormMain: TFormMain
             Top = 120
             Width = 653
             Align = alTop
+            AutoSnap = False
             ResizeAnchor = akTop
           end
-          object Panel10: TPanel
+          object pnlBigIntB: TPanel
             Left = 0
             Height = 120
             Top = 125
             Width = 653
             Align = alTop
             BevelOuter = bvNone
-            Caption = 'Panel10'
             ClientHeight = 120
             ClientWidth = 653
-            Constraints.MinHeight = 120
             TabOrder = 2
             object mmoBigIntB: TMemo
               Left = 32
@@ -1079,21 +1080,20 @@ object FormMain: TFormMain
               TabOrder = 1
             end
           end
-          object Panel11: TPanel
+          object pnlBigIntC: TPanel
             Left = 0
-            Height = 175
-            Top = 245
+            Height = 170
+            Top = 250
             Width = 653
             Align = alClient
             BevelOuter = bvNone
-            Caption = 'Panel11'
-            ClientHeight = 175
+            ClientHeight = 170
             ClientWidth = 653
             Constraints.MinHeight = 120
             TabOrder = 3
             object tbBigInt: TToolBar
               Left = 0
-              Height = 24
+              Height = 22
               Top = 0
               Width = 653
               AutoSize = True
@@ -1104,8 +1104,8 @@ object FormMain: TFormMain
               Transparent = True
               object ToolButton23: TToolButton
                 Left = 1
-                Height = 5
-                Top = 2
+                Height = 22
+                Top = 0
                 Enabled = False
                 Style = tbsDivider
               end
@@ -1113,7 +1113,7 @@ object FormMain: TFormMain
                 Tag = 101
                 Left = 6
                 Hint = 'Add'
-                Top = 2
+                Top = 0
                 ImageIndex = 0
                 OnClick = btnBigIntAddClick
               end
@@ -1121,7 +1121,7 @@ object FormMain: TFormMain
                 Tag = 102
                 Left = 29
                 Hint = 'Subtract'
-                Top = 2
+                Top = 0
                 ImageIndex = 1
                 OnClick = btnBigIntAddClick
               end
@@ -1129,7 +1129,7 @@ object FormMain: TFormMain
                 Tag = 103
                 Left = 52
                 Hint = 'mult'
-                Top = 2
+                Top = 0
                 ImageIndex = 2
                 OnClick = btnBigIntAddClick
               end
@@ -1137,7 +1137,7 @@ object FormMain: TFormMain
                 Tag = 104
                 Left = 75
                 Hint = 'div'
-                Top = 2
+                Top = 0
                 ImageIndex = 3
                 OnClick = btnBigIntAddClick
               end
@@ -1145,7 +1145,7 @@ object FormMain: TFormMain
                 Tag = 106
                 Left = 121
                 Hint = 'sqrt'
-                Top = 2
+                Top = 0
                 ImageIndex = 4
                 OnClick = btnBigIntAddClick
               end
@@ -1153,7 +1153,7 @@ object FormMain: TFormMain
                 Tag = 105
                 Left = 98
                 Hint = 'mod'
-                Top = 2
+                Top = 0
                 ImageIndex = 13
                 OnClick = btnBigIntAddClick
               end
@@ -1161,7 +1161,7 @@ object FormMain: TFormMain
                 Tag = 201
                 Left = 236
                 Hint = 'random'
-                Top = 2
+                Top = 0
                 ImageIndex = 17
                 OnClick = btnBigIntAddClick
               end
@@ -1169,7 +1169,7 @@ object FormMain: TFormMain
                 Tag = 108
                 Left = 167
                 Hint = 'pow'
-                Top = 2
+                Top = 0
                 ImageIndex = 6
                 OnClick = btnBigIntAddClick
               end
@@ -1177,7 +1177,7 @@ object FormMain: TFormMain
                 Tag = 109
                 Left = 190
                 Hint = 'Factorial'
-                Top = 2
+                Top = 0
                 ImageIndex = 15
                 OnClick = btnBigIntAddClick
               end
@@ -1185,7 +1185,7 @@ object FormMain: TFormMain
                 Tag = 110
                 Left = 213
                 Hint = 'Greatest Common Divisor'
-                Top = 2
+                Top = 0
                 ImageIndex = 16
                 OnClick = btnBigIntAddClick
               end
@@ -1193,15 +1193,15 @@ object FormMain: TFormMain
                 Tag = 107
                 Left = 144
                 Hint = 'N root'
-                Top = 2
+                Top = 0
                 ImageIndex = 14
                 OnClick = btnBigIntAddClick
               end
               object btnBigIntPrime: TToolButton
                 Tag = 203
                 Left = 282
-                Hint = 'primes from A-B'
-                Top = 2
+                Hint = 'primes between A-B'
+                Top = 0
                 ImageIndex = 19
                 OnClick = btnBigIntAddClick
               end
@@ -1209,45 +1209,45 @@ object FormMain: TFormMain
                 Tag = 202
                 Left = 259
                 Hint = 'Febocera series'
-                Top = 2
+                Top = 0
                 ImageIndex = 18
                 OnClick = btnBigIntAddClick
               end
               object ToolButton25: TToolButton
                 Left = 355
-                Height = 8
-                Top = 2
+                Height = 22
+                Top = 0
                 Enabled = False
                 Style = tbsSeparator
               end
               object btnBigIntElapsed: TToolButton
                 Left = 363
-                Top = 2
+                Top = 0
               end
               object ToolButton24: TToolButton
                 Left = 386
-                Height = 8
-                Top = 2
+                Height = 22
+                Top = 0
                 Enabled = False
                 Style = tbsSeparator
               end
               object btnBigIntHint: TToolButton
                 Left = 394
-                Top = 2
+                Top = 0
               end
               object chkBigIntComma: TCheckBox
                 Left = 425
                 Height = 21
                 Hint = 'show comma in result'
-                Top = 2
+                Top = 0
                 Width = 62
                 Caption = 'comma'
                 TabOrder = 0
               end
               object ToolButton27: TToolButton
                 Left = 417
-                Height = 8
-                Top = 2
+                Height = 22
+                Top = 0
                 Caption = 'ToolButton27'
                 Style = tbsSeparator
               end
@@ -1255,7 +1255,7 @@ object FormMain: TFormMain
                 Tag = 300
                 Left = 305
                 Hint = 'base convert'
-                Top = 2
+                Top = 0
                 Caption = 'Base'
                 Enabled = False
                 OnClick = btnBigIntAddClick
@@ -1266,8 +1266,8 @@ object FormMain: TFormMain
             end
             object StaticText7: TStaticText
               Left = 0
-              Height = 151
-              Top = 24
+              Height = 148
+              Top = 22
               Width = 32
               Align = alLeft
               Alignment = taCenter
@@ -1276,8 +1276,8 @@ object FormMain: TFormMain
             end
             object mmoBigIntC: TMemo
               Left = 32
-              Height = 151
-              Top = 24
+              Height = 148
+              Top = 22
               Width = 621
               Align = alClient
               OnMouseUp = mmoBigIntCMouseUp
@@ -1286,16 +1286,178 @@ object FormMain: TFormMain
               TabOrder = 2
             end
           end
+          object Splitter5: TSplitter
+            Cursor = crVSplit
+            Left = 0
+            Height = 5
+            Top = 245
+            Width = 653
+            Align = alTop
+            AutoSnap = False
+            ResizeAnchor = akTop
+          end
         end
       end
     end
-    object tsCalc: TTabSheet
-      Caption = 'Calc'
+    object tsBuffer: TTabSheet
+      Caption = 'Buffer'
+      ClientHeight = 450
+      ClientWidth = 661
+      object pnlBufferStr: TPanel
+        Left = 0
+        Height = 217
+        Top = 206
+        Width = 661
+        Align = alClient
+        BevelOuter = bvNone
+        ClientHeight = 217
+        ClientWidth = 661
+        TabOrder = 0
+        object StaticText1: TStaticText
+          Left = 0
+          Height = 217
+          Top = 0
+          Width = 65
+          Align = alLeft
+          Alignment = taCenter
+          Caption = #13#10'String'
+          TabOrder = 0
+        end
+        object mmoBufferStr: TMemo
+          Left = 65
+          Height = 217
+          Top = 0
+          Width = 596
+          Align = alClient
+          ScrollBars = ssAutoVertical
+          TabOrder = 1
+        end
+      end
+      object Splitter4: TSplitter
+        Cursor = crVSplit
+        Left = 0
+        Height = 5
+        Top = 98
+        Width = 661
+        Align = alTop
+        AutoSnap = False
+        ResizeAnchor = akTop
+      end
+      object pnlBufferHEX: TPanel
+        Left = 0
+        Height = 98
+        Top = 103
+        Width = 661
+        Align = alTop
+        BevelOuter = bvNone
+        ClientHeight = 98
+        ClientWidth = 661
+        TabOrder = 2
+        object StaticText8: TStaticText
+          Left = 0
+          Height = 98
+          Top = 0
+          Width = 65
+          Align = alLeft
+          Alignment = taCenter
+          Caption = #13#10'HEX'
+          TabOrder = 0
+        end
+        object mmoBufferHEX: TMemo
+          Left = 65
+          Height = 98
+          Top = 0
+          Width = 596
+          Align = alClient
+          ScrollBars = ssAutoVertical
+          TabOrder = 1
+        end
+      end
+      object pnlBufferPython: TPanel
+        Left = 0
+        Height = 98
+        Top = 0
+        Width = 661
+        Align = alTop
+        BevelOuter = bvNone
+        ClientHeight = 98
+        ClientWidth = 661
+        TabOrder = 3
+        object StaticText9: TStaticText
+          Left = 0
+          Height = 98
+          Top = 0
+          Width = 65
+          Align = alLeft
+          Alignment = taCenter
+          Caption = #13#10'python'
+          TabOrder = 0
+        end
+        object mmoBufferPython: TMemo
+          Left = 65
+          Height = 98
+          Top = 0
+          Width = 596
+          Align = alClient
+          ScrollBars = ssAutoVertical
+          TabOrder = 1
+        end
+      end
+      object Splitter6: TSplitter
+        Cursor = crVSplit
+        Left = 0
+        Height = 5
+        Top = 201
+        Width = 661
+        Align = alTop
+        AutoSnap = False
+        ResizeAnchor = akTop
+      end
+      object Panel1: TPanel
+        Left = 0
+        Height = 27
+        Top = 423
+        Width = 661
+        Align = alBottom
+        AutoSize = True
+        BevelOuter = bvNone
+        ClientHeight = 27
+        ClientWidth = 661
+        TabOrder = 5
+        object Panel2: TPanel
+          Left = 559
+          Height = 27
+          Top = 0
+          Width = 102
+          Align = alRight
+          AutoSize = True
+          BevelOuter = bvNone
+          ClientHeight = 27
+          ClientWidth = 102
+          TabOrder = 0
+          object btnBufferConvert: TBitBtn
+            Left = 0
+            Height = 27
+            Top = 0
+            Width = 102
+            AutoSize = True
+            Caption = 'Convert'
+            Images = ImageList
+            ImageIndex = 11
+            OnClick = btnBufferConvertClick
+            TabOrder = 0
+          end
+        end
+      end
+    end
+    object tsPCalc: TTabSheet
+      Caption = 'pCalc'
     end
     object tsConstant: TTabSheet
       Caption = 'constant'
       ClientHeight = 450
       ClientWidth = 661
+      ImageIndex = 10
       object PageControl1: TPageControl
         Left = 0
         Height = 450
@@ -1399,22 +1561,74 @@ object FormMain: TFormMain
       Caption = 'Option'
       ClientHeight = 450
       ClientWidth = 661
+      Font.CharSet = ANSI_CHARSET
+      Font.Color = clBlack
+      Font.Height = -14
+      Font.Name = 'Courier New'
+      Font.Pitch = fpFixed
+      Font.Quality = fqDraft
+      Font.Style = [fsBold]
+      ParentFont = False
       object GroupBox1: TGroupBox
         Left = 16
         Height = 272
         Top = 8
         Width = 280
-        Caption = 'Option1'
-        ClientHeight = 250
+        Caption = 'Option'
+        ClientHeight = 251
         ClientWidth = 276
         TabOrder = 0
         object btnOptionSelectFont: TBitBtn
           Left = 184
-          Height = 30
+          Height = 27
           Top = 56
-          Width = 83
+          Width = 81
           Caption = 'Font'
-          Enabled = False
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -14
+          Font.Name = 'Courier New'
+          Font.Pitch = fpFixed
+          Font.Quality = fqDraft
+          Font.Style = [fsBold]
+          Glyph.Data = {
+            36040000424D3604000000000000360000002800000010000000100000000100
+            2000000000000004000064000000640000000000000000000000FFFFFFFF858A
+            88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A
+            88FF858A88FF858A88FF858A88FF858A88FF858A88FFFFFFFFFF858A88FFFFFF
+            FEFFFCFCFCFFFCFCFCFFFCFCFCFFFCFCFCFFFCFCFCFFFCFCFCFFFAFAFAFFFAFA
+            FAFFFAFAFAFFF6F6F6FFF6F6F6FFF6F6F6FFEFEFEFFF858A88FF858A88FFFFFF
+            FEFFEAEAEBFFF2F2F2FFF4F4F4FFF6F6F6FFF8F8F8FF555555FF2D2D2DFF2121
+            21FF030303FF000000FF4C4C4CFFF7F7F7FFEFEFEFFF858A88FF858A88FFFFFF
+            FEFFEBEBEAFFF2F2F2FFF4F4F4FFF6F6F6FFF7F7F7FF494949FF000000FF7878
+            78FFF7F7F7FF5E5E5EFF000000FFADADADFFEFEFEFFF858A88FF858A88FFFFFF
+            FEFFEBEBEBFFF1F1F1FFF3F3F3FFF4F4F4FFF6F6F6FF484848FF050505FFF1F1
+            F1FFFBFBFBFFD3D3D3FF000000FF757575FFEFEFEFFF858A88FF858A88FFFFFF
+            FEFFEAEBEAFFF0F0F0FFF2F2F2FFF3F3F3FFF5F5F5FF484848FF040404FFF3F3
+            F3FFF9F9F9FFDBDBDBFF000000FF7B7B7BFFEFEFEFFF858A88FF858A88FFFFFF
+            FEFFE9E9EAFFEFEFEFFFF0F0F0FFF2F2F2FFF3F3F3FF474747FF000000FF7575
+            75FFF2F2F2FF656565FF000000FFB1B1B1FFEFEFEFFF858A88FF858A88FFFFFF
+            FEFFE8E8E8FFEDEDEDFFEFEFEFFFF0F0F0FFF1F1F1FF474747FF1F1F1FFF3333
+            33FF000000FF000000FF616161FFF2F2F2FFF6F6F6FF858A88FF858A88FFFFFF
+            FEFFE6E6E6FFECECECFFEDEDEDFFEEEEEEFFEFEFEFFF464646FF2B2B2BFFF0F0
+            F0FFEFEFEFFFEEEEEEFFEBECECFFEAE9E9FFF8F8F8FF858A88FF858A88FFFFFF
+            FEFFE4E4E4FF2E2E2EFF2E2E2EFF2E2E2EFFB8B9B8FF4A4A4AFF2E2E2EFFECED
+            ECFFECEBECFFEBEBEAFFE9E9E9FFE6E7E7FFFBFBFBFF858A88FF858A88FFFFFF
+            FEFFE3E3E3FF2E2E2EFFD3D3D3FFBFBFBFFF2E2E2EFFE9E9E9FFE9E9E9FFE9E9
+            EAFFE9E9E8FFE7E7E8FFE6E6E6FFE4E5E4FFFBFBFBFF858A88FF858A88FFFFFF
+            FEFFE3E3E3FFB1B1B1FF2E2E2EFF737373FF2E2E2EFFE6E6E6FFE6E7E6FFE6E6
+            E6FFE5E6E5FFE5E4E4FFE4E3E4FFE3E3E3FFFDFDFDFF858A88FF858A88FFFFFF
+            FEFFE3E3E3FFE2E2E2FFDBDBDBFFCECECEFF2E2E2EFFE3E3E3FFE8E8E8FFE9E9
+            E9FFE8E8E8FFE8E8E8FFE3E3E3FFE3E3E3FFFDFDFDFF858A88FF858A88FFFFFF
+            FEFFE3E3E3FFA7A7A7FF828282FF2E2E2EFF2E2E2EFFE3E3E3FFE6E6E6FFE6E6
+            E6FFE6E6E6FFE6E6E6FFE3E3E3FFE3E3E3FFFDFDFDFF858A88FF858A88FFFFFF
+            FEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFF
+            FEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFFFFFFFEFF858A88FFFFFFFFFF858A
+            88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A88FF858A
+            88FF858A88FF858A88FF858A88FF858A88FF858A88FFFFFFFFFF
+          }
+          OnClick = btnOptionSelectFontClick
+          ParentFont = False
           TabOrder = 0
         end
         object lbOptFont: TStaticText
@@ -1423,20 +1637,27 @@ object FormMain: TFormMain
           Top = 8
           Width = 249
           Caption = ' '
+          Font.CharSet = ANSI_CHARSET
+          Font.Color = clBlack
+          Font.Height = -14
+          Font.Name = 'Courier New'
+          Font.Pitch = fpFixed
+          Font.Quality = fqDraft
+          ParentFont = False
           TabOrder = 1
         end
         object ComboBox1: TComboBox
           Left = 16
-          Height = 25
+          Height = 24
           Top = 136
           Width = 249
-          ItemHeight = 17
+          ItemHeight = 16
           Style = csDropDownList
           TabOrder = 2
         end
         object Label3: TLabel
           Left = 16
-          Height = 17
+          Height = 16
           Top = 104
           Width = 64
           Caption = 'Language'
@@ -1613,6 +1834,9 @@ object FormMain: TFormMain
                   ''
                   'Big Float function from'
                   'http://www.delphiforfun.org.ws034.alentus.com/Programs/Library/bigfloat.htm'
+                  ''
+                  'ArtFormula'
+                  'https://torry.net/authorsmore.php?id=5916'
                 )
                 ParentFont = False
                 ReadOnly = True
@@ -6103,8 +6327,9 @@ object FormMain: TFormMain
     end
   end
   object dlgFont: TFontDialog
-    MinFontSize = 0
-    MaxFontSize = 0
+    MinFontSize = 7
+    MaxFontSize = 24
+    Options = [fdEffects, fdWysiwyg, fdLimitSize]
     left = 16
     top = 200
   end
@@ -6112,7 +6337,7 @@ object FormMain: TFormMain
     left = 16
     top = 256
     Bitmap = {
-      4C69090000001000000010000000D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
+      4C690C0000001000000010000000D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
@@ -6400,7 +6625,103 @@ object FormMain: TFormMain
       3EFF905A38FF905C3BFF976647FF915F3EFF895330FF8A5331FF905639FF965B
       41FF000001000000010000000100000001000000010000000100000001000000
       0100000001000000010000000100000001000000010000000100000001000000
-      0100000001000000010000000100
+      0100000001000000010000000100000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000FF000000FF000000FF0000
+      0000000000000000000000000000000000FF0000000000000000000000000000
+      00FF0000000000000000000000FF000000000000000000000000000000FF0000
+      00000000000000000000000000FF000000FF0000000000000000000000FF0000
+      00FF00000000000000FF000000FF00000000000000FF000000FF000000FF0000
+      0000000000000000000000000000000000FF00000000000000FF000000000000
+      00FF0000000000000000000000FF000000000000000000000000000000FF0000
+      0000000000000000000000000000000000FF00000000000000FF000000000000
+      00FF0000000000000000000000FF000000000000000000000000000000FF0000
+      0000000000000000000000000000000000FF00000000000000FF000000FF0000
+      00FF0000000000000000000000FF00000000000000FF000000FF000000FF0000
+      0000000000FF0000000000000000000000FF0000000000000000000000000000
+      00FF0000000000000000000000FF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000000000000000000FF000000FF000000FF0000
+      0000000000FF000000FF000000FF000000FF00000000000000FF000000FF0000
+      00FF00000000000000FF000000FF00000000000000FF00000000000000000000
+      0000000000FF0000000000000000000000FF0000000000000000000000000000
+      00FF00000000000000FF0000000000000000000000FF000000FF000000FF0000
+      0000000000FF000000FF000000FF000000FF00000000000000FF000000FF0000
+      00FF00000000000000FF000000FF000000000000000000000000000000FF0000
+      0000000000000000000000000000000000FF00000000000000FF000000000000
+      000000000000000000FF00000000000000000000000000000000000000FF0000
+      0000000000000000000000000000000000FF00000000000000FF000000000000
+      000000000000000000FF0000000000000000000000FF000000FF000000FF0000
+      0000000000FF000000FF000000FF000000FF00000000000000FF000000FF0000
+      00FF00000000000000FF000000FF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000545454FF545454FF5454
+      54FF545454FF0000000000000000000000000000000000000000000000005454
+      54FF545454FF545454FF0000000000000000545454FF545454FF545454FF5454
+      54FF545454FF545454FF00000000000000000000000000000000545454FF5454
+      54FF545454FF545454FF545454FF00000000545454FF545454FF000000000000
+      0000545454FF545454FF00000000000000000000000000000000545454FF5454
+      54FF00000000545454FF545454FF00000000545454FF545454FF000000000000
+      0000545454FF545454FF00000000000000000000000000000000545454FF5454
+      54FF00000000545454FF545454FF00000000545454FF545454FF000000000000
+      0000545454FF545454FF00000000000000000000000000000000000000005454
+      54FF545454FF545454FF0000000000000000545454FF545454FF545454FF5454
+      54FF545454FF545454FF00000000000000000000000000000000545454FF5454
+      54FF545454FF545454FF545454FF0000000000000000545454FF545454FF5454
+      54FF545454FF545454FF00000000000000000000000000000000545454FF5454
+      54FF00000000545454FF545454FF000000000000000000000000000000000000
+      0000545454FF545454FF00000000000000000000000000000000545454FF5454
+      54FF00000000545454FF545454FF00000000545454FF545454FF000000000000
+      0000545454FF545454FF00000000000000000000000000000000545454FF5454
+      54FF00000000545454FF545454FF00000000545454FF545454FF545454FF5454
+      54FF545454FF545454FF00000000131313FF131313FF00000000545454FF5454
+      54FF545454FF545454FF545454FF0000000000000000545454FF545454FF5454
+      54FF545454FF0000000000000000131313FF131313FF00000000000000005454
+      54FF545454FF545454FF00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000080002200800022008000220080
+      0022000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000800022008000FF008000FF0080
+      0022008000220080002200000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000800022008000FF00FF00FF0080
+      00FF008000FF0080002200800022008000220000000000000000000000000000
+      00000000000000000000000000000000000000800022008000FF00FF00FF00FF
+      00FF00FF00FF008000FF008000FF008000220080002200800022000000000000
+      00000000000000000000000000000000000000800022008000FF00FF00FF00FF
+      00FF00FF00FF00FF00FF00FF00FF008000FF008000FF00800022008000220080
+      00220000000000000000000000000000000000800022008000FF00FF00FF00FF
+      00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF008000FF008000FF0080
+      00220080002200800022000000000000000000800022008000FF00FF00FF00FF
+      00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0080
+      00FF008000FF00800022000000000000000000800022008000FF00FF00FF00FF
+      00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF0080
+      00FF008000FF00800022000000000000000000800022008000FF00FF00FF00FF
+      00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF00FF008000FF008000FF0080
+      00220080002200800022000000000000000000800022008000FF00FF00FF00FF
+      00FF00FF00FF00FF00FF00FF00FF008000FF008000FF00800022008000220080
+      00220000000000000000000000000000000000800022008000FF00FF00FF00FF
+      00FF00FF00FF008000FF008000FF008000220080002200800022000000000000
+      00000000000000000000000000000000000000800022008000FF00FF00FF0080
+      00FF008000FF0080002200800022008000220000000000000000000000000000
+      00000000000000000000000000000000000000800022008000FF008000FF0080
+      0022008000220080002200000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000080002200800022008000220080
+      0022000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000
     }
   end
   object tmrAlpha: TTimer

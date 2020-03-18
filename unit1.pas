@@ -8,6 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   ExtCtrls, Buttons, Grids, lclintf, DateUtils,
   Clipbrd, Menus,
+  SynEdit,
   UBigFloatV3,
   //UBigIntsForFloatV4,
   UBigIntsV5,
@@ -25,6 +26,7 @@ type
   { TFormMain }
 
   TFormMain = class(TForm)
+    btnBufferConvert: TBitBtn;
     btnBigIntAdd: TToolButton;
     btnBigIntDiv: TToolButton;
     btnBigIntFib: TToolButton;
@@ -65,6 +67,9 @@ type
     Label2: TLabel;
     Label3: TLabel;
     lbVer: TLabel;
+    mmoBufferStr: TMemo;
+    mmoBufferHEX: TMemo;
+    mmoBufferPython: TMemo;
     mmoAboutReadme: TMemo;
     mmoAboutChangeLog: TMemo;
     MenuItem1: TMenuItem;
@@ -81,16 +86,21 @@ type
     PageControl1: TPageControl;
     PageControl2: TPageControl;
     Panel1: TPanel;
-    Panel10: TPanel;
-    Panel11: TPanel;
     Panel2: TPanel;
-    Panel3: TPanel;
+    pnlBigFloatA: TPanel;
+    pnlBigIntB: TPanel;
+    pnlBigIntC: TPanel;
+    pnlBufferStr: TPanel;
+    pnlBufferHEX: TPanel;
+    pnlBufferPython: TPanel;
+    pnlBigFloatB: TPanel;
+    pnlBigFloatC: TPanel;
     Panel4: TPanel;
     Panel5: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
     Panel8: TPanel;
-    Panel9: TPanel;
+    pnlBigIntA: TPanel;
     pcDigit: TPageControl;
     pcMain: TPageControl;
     pmBitIntBase: TPopupMenu;
@@ -105,21 +115,28 @@ type
     rbCrc4bits: TRadioButton;
     rbLittleBytes: TRadioButton;
     sgBytes: TStringGrid;
-    sgDigit: TStringGrid;
+    sgBase: TStringGrid;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
     lbOptFont: TStaticText;
     sgConstantMath: TStringGrid;
+    Splitter4: TSplitter;
+    Splitter5: TSplitter;
+    Splitter6: TSplitter;
+    StaticText1: TStaticText;
     StaticText2: TStaticText;
     StaticText3: TStaticText;
     StaticText4: TStaticText;
     StaticText5: TStaticText;
     StaticText6: TStaticText;
     StaticText7: TStaticText;
+    StaticText8: TStaticText;
+    StaticText9: TStaticText;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
+    tsBuffer: TTabSheet;
     tbBigInt: TToolBar;
     tmrLogo: TTimer;
     ToolButton23: TToolButton;
@@ -150,7 +167,7 @@ type
     btnBigFloatSqrt: TToolButton;
     btnBigFloatE: TToolButton;
     btnBigFloatElapsed: TToolButton;
-    tsCalc: TTabSheet;
+    tsPCalc: TTabSheet;
     tsBytes: TTabSheet;
     tbByteErr: TToolButton;
     ToolBar3: TToolBar;
@@ -210,9 +227,9 @@ type
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
+    procedure btnBufferConvertClick(Sender: TObject);
     procedure btnBigFloatAddClick(Sender: TObject);
     procedure btnBigIntAddClick(Sender: TObject);
-    procedure btnCrc1wireClick(Sender: TObject);
     procedure btnCrcCalcClick(Sender: TObject);
     procedure btnCrc_CRC16_CCITTClick(Sender: TObject);
     procedure btnCrc_CRC16_DNPClick(Sender: TObject);
@@ -233,6 +250,7 @@ type
     procedure btnCrc_CRC8_ROHCClick(Sender: TObject);
     procedure btnOpenGITEEClick(Sender: TObject);
     procedure btnOpenGITHUBClick(Sender: TObject);
+    procedure btnOptionSelectFontClick(Sender: TObject);
     procedure edtBigFloatPrecEditingDone(Sender: TObject);
     procedure edtBytesNumChange(Sender: TObject);
     procedure edtCrcResultClick(Sender: TObject);
@@ -248,7 +266,7 @@ type
     procedure rbBigBytesChange(Sender: TObject);
     procedure sgBytesEditingDone(Sender: TObject);
     procedure sgConstantMathClick(Sender: TObject);
-    procedure sgDigitEditingDone(Sender: TObject);
+    procedure sgBaseEditingDone(Sender: TObject);
     procedure tmrAlphaTimer(Sender: TObject);
     procedure btnCrc_CRC4_ITUClick(Sender: TObject);
     procedure btnCrc_CRC8_ITUClick(Sender: TObject);
@@ -260,7 +278,11 @@ type
     procedure setCrcBit(bit: integer);
     procedure bfCalc(Sender: TObject);
     procedure biCalc(Sender: TObject);
+    procedure saveFont;
   public
+    function BufferToStr(buf: TByteArray; N: integer): string;
+    function BufferToHEX(buf: TByteArray; N: integer): string;
+    function BufferToPyStr(buf: TByteArray; N: integer): string;
     function NumToBytes(d: int64; n: integer): string;
     function SingleToBytes(fd: single): string;
     function DoubleToBytes(fd: double): string;
@@ -288,7 +310,7 @@ var
 implementation
 
 uses
-  uCRC, udigit;
+  uCRC, uBase;
 
 {$R *.lfm}
 
@@ -301,7 +323,7 @@ begin
 
   lbVer.Caption := 'ver ' + VERSION;
 
-  tsCalc.TabVisible     := False;
+  tsPCalc.TabVisible    := False;
   tsConstant.TabVisible := False;
 
   // test inifile writeable
@@ -353,9 +375,13 @@ begin
 
     // BigFloat
     edtBigFloatPrec.Text := ini.ReadString('BigFloat', 'prec', '100');
+    pnlBigFloatA.Height  := ini.ReadInteger('BigFloat', 'PanelA', 80);
+    pnlBigFloatB.Height  := ini.ReadInteger('BigFloat', 'PanelB', 80);
 
     // BigInt
     chkBigIntComma.Checked := ini.ReadBool('BigInt', 'comma', False);
+    pnlBigIntA.Height      := ini.ReadInteger('BigInt', 'PanelA', 80);
+    pnlBigIntB.Height      := ini.ReadInteger('BigInt', 'PanelB', 80);
   except
 
   end;
@@ -402,9 +428,13 @@ begin
 
       // BigFloat
       ini.WriteString('BigFloat', 'prec', edtBigFloatPrec.Text);
+      ini.WriteInteger('BigFloat', 'PanelA', pnlBigFloatA.Height);
+      ini.WriteInteger('BigFloat', 'PanelB', pnlBigFloatB.Height);
 
       // BigInt
       ini.WriteBool('BigInt', 'comma', chkBigIntComma.Checked);
+      ini.WriteInteger('BigInt', 'PanelA', pnlBigIntA.Height);
+      ini.WriteInteger('BigInt', 'PanelB', pnlBigIntB.Height);
 
       ini.UpdateFile;
     end;
@@ -512,16 +542,153 @@ begin
   Clipboard.AsText := edtCrcResult.Text;
 end;
 
-procedure TFormMain.btnCrc1wireClick(Sender: TObject);
-begin
-  edtCrcInitV.Text   := '107';
-  rbCrc8bits.Checked := True;
-  edtCrcInitV.Text   := '0';
-end;
-
 procedure TFormMain.btnBigFloatAddClick(Sender: TObject);
 begin
   bfCalc(Sender);
+end;
+
+procedure TFormMain.btnBufferConvertClick(Sender: TObject);
+const
+  MaxLen = 256;
+var
+  i, j, bufN, len, d: integer;
+  buf: TByteArray;
+  s, ss, s1, s2, s3: string;
+begin
+
+  if mmoBufferPython.Modified then
+  begin
+    s1   := '';
+    s2   := '';
+    s3   := mmoBufferPython.Text;
+        mmoBufferStr.Text := '';
+    mmoBufferHEX.Text := '';
+    bufN := Length(s3);
+    i    := 1;
+    len  := 0;
+    while i <= bufN do
+    begin
+      if s3[i] = '\' then
+      begin
+        if i < bufN then
+        begin
+          case Ord(s3[i + 1]) of
+            Ord('\'): buf[len]  := Ord('\');
+            Ord('"'): buf[len]  := Ord('"');
+            Ord(''''): buf[len] := Ord('''');
+            Ord('a'): buf[len]  := 7;
+            Ord('b'): buf[len]  := 8;
+            Ord('t'): buf[len]  := 9;
+            Ord('v'): buf[len]  := 11;
+            Ord('f'): buf[len]  := 12;
+            Ord('n'): buf[len]  := 10;
+            Ord('r'): buf[len]  := 13;
+            Ord('x'): // hex number
+            begin
+              if i < bufN - 1 then
+                buf[len] := Chr2ToByte(s3[i + 2], s3[i + 3])
+              else
+                buf[len] := Chr2ToByte('0', s3[i + 2]);
+              i := i + 2;
+            end;
+            Ord('0')..Ord('7'): // Octal number
+            begin
+              j:=1;
+              if (Ord(s3[i+2])<=Ord('7'))and(Ord(s3[i+2])>=Ord('0')) then
+              begin
+                j:=2;
+                if (Ord(s3[i+3])<=Ord('7'))and(Ord(s3[i+3])>=Ord('0')) then
+                   j:=3;
+              end;
+              s:=Copy(s3,i+1,j);
+              d := StrToBase(s, 8, False, MaxInt);
+              if d>255 then
+              begin
+                beep;
+                Exit;
+                end;
+              buf[len] := d;
+              i:=i+j-1;
+            end
+            else
+              buf[len] := Ord(s3[i]);
+              len      := len + 1;
+              buf[len] := Ord(s3[i + 1]);
+          end;
+          i := i + 1;
+        end
+        else
+          buf[len] := 0;
+      end
+      else
+        buf[len] := Ord(s3[i]);
+      len := len + 1;
+      i   := i + 1;
+      if (len >= MaxLen) or (i >= bufN) then
+      begin
+        s1  := s1 + BufferToStr(buf, len);
+        s2  := s2 + BufferToHex(buf, len);
+        len := 0;
+      end;
+    end;
+    mmoBufferStr.Text := s1;
+    mmoBufferHEX.Text := s2;
+  end
+  else
+  begin
+    if mmoBufferHEX.Modified then
+    begin
+      s1 := '';
+      StrToByteBuf(mmoBufferHEX.Text, s2);
+      mmoBufferHEX.Text := s2;
+      s3   := '';
+      bufN := (Length(s2) + 2) div 3;
+      for i := 1 to (bufN div MaxLen) + 1 do
+      begin
+        if i * MaxLen < bufN then
+          len := MaxLen
+        else
+          len := bufN - (i - 1) * MaxLen;
+        StrToBytes(s2, len, buf);
+        Delete(s2, 1, len * 3);
+        s1 := s1 + BufferToStr(buf, len);
+        s3 := s3 + BufferToPyStr(buf, len);
+      end;
+      mmoBufferStr.Text    := s1;
+      mmoBufferPython.Text := s3;
+    end
+    else
+    begin
+      if mmoBufferStr.Modified then
+      begin
+        s1   := mmoBufferStr.Text;
+        s2   := '';
+        s3   := '';
+        bufN := Length(s1);
+        for i := 1 to (bufN div MaxLen) + 1 do
+        begin
+          if i * MaxLen < bufN then
+            len := MaxLen
+          else
+            len := bufN - (i - 1) * 256;
+          for j := 0 to len - 1 do
+          begin
+            buf[j] := Ord(s1[j + 1]);
+          end;
+          s2 := s2 + BufferToHEX(buf, len);
+          s3 := s3 + BufferToPyStr(buf, len);
+          Delete(s1, 1, len);
+        end;
+        mmoBufferHEX.Text    := s2;
+        mmoBufferPython.Text := s3;
+      end;
+    end;
+  end;
+
+  mmoBufferPython.Modified := False;
+  mmoBufferStr.Modified    := False;
+  mmoBufferHEX.Modified    := False;
+
 end;
 
 procedure TFormMain.btnBigIntAddClick(Sender: TObject);
@@ -659,16 +826,16 @@ begin
   Clipboard.AsText := TStringGrid(Sender).Cells[sx, sy];
 end;
 
-procedure TFormMain.sgDigitEditingDone(Sender: TObject);
+procedure TFormMain.sgBaseEditingDone(Sender: TObject);
 var
   sx, sy: integer;
   dat, base: integer;
   s: string;
   neg: boolean;
 begin
-  sx := sgDigit.Selection.Location.x;
-  sy := sgDigit.Selection.Location.y;
-  s  := sgDigit.Cells[sx, sy];
+  sx := sgBase.Selection.Location.x;
+  sy := sgBase.Selection.Location.y;
+  s  := sgBase.Cells[sx, sy];
 
   s := Trim(s);
   if s = '' then
@@ -699,10 +866,10 @@ begin
 
   dat := StrToBase(s, base, neg, MaxInt);
 
-  sgDigit.Cells[1, 1] := BaseToStr(dat, 1, 2, neg, '0');
-  sgDigit.Cells[1, 2] := BaseToStr(dat, 1, 8, neg, '0');
-  sgDigit.Cells[1, 3] := BaseToStr(dat, 1, 10, neg, '0');
-  sgDigit.Cells[1, 4] := BaseToStr(dat, 1, 16, neg, '0');
+  sgBase.Cells[1, 1] := BaseToStr(dat, 1, 2, neg, '0');
+  sgBase.Cells[1, 2] := BaseToStr(dat, 1, 8, neg, '0');
+  sgBase.Cells[1, 3] := BaseToStr(dat, 1, 10, neg, '0');
+  sgBase.Cells[1, 4] := BaseToStr(dat, 1, 16, neg, '0');
 
 end;
 
@@ -801,6 +968,22 @@ begin
   OpenURL(GITHUB_URL);
 end;
 
+procedure TFormMain.btnOptionSelectFontClick(Sender: TObject);
+begin
+  dlgFont.Font := Font;
+
+  if dlgFont.Execute then
+  begin
+    Font := dlgFont.Font;
+    if fsBold in Font.Style then
+      lbOptFont.Caption := ', Bold'
+    else
+      lbOptFont.Caption := '';
+    lbOptFont.Caption := Format('%s, %d', [Font.Name, Font.Size]) + lbOptFont.Caption;
+    saveFont;
+  end;
+end;
+
 procedure TFormMain.edtBigFloatPrecEditingDone(Sender: TObject);
 
 begin
@@ -881,7 +1064,8 @@ end;
 
 procedure TFormMain.tmrLogoTimer(Sender: TObject);
 begin
-  imgLogo.Visible := not imgLogo.Visible;
+  if pcMain.ActivePage = tsAbout then
+    imgLogo.Visible := not imgLogo.Visible;
 end;
 
 function TFormMain.getCrcBit: integer;
@@ -1130,12 +1314,14 @@ begin
           sa := '';
           repeat
             biB.Getnextprime;
-            if biA.Compare(biB) = 1 then
+            if biA.Compare(biB) = 1 then    // A > B
               sa := sa + biB.ConvertToDecimalString(chkBigIntComma.Checked) + #13#10
             else
               break;
           until False;
           mmoBigIntC.Text := sa;
+          if mmoBigIntC.Text = '' then
+            mmoBigIntC.Text := '-';
         end;
         300: // base
         begin
@@ -1152,6 +1338,53 @@ begin
       btnBigIntElapsed.Caption := Format('%d ms', [MilliSecondsBetween(T2, T1)]);
       btnBigIntHint.Caption := IntToStr(Length(mmoBigIntC.Text));
     end;
+end;
+
+procedure TFormMain.saveFont;
+begin
+  if writeable then
+  begin
+    ini.WriteString('Option', 'FontName', Font.Name);
+    ini.WriteInteger('Option', 'FontSize', Font.Size);
+    ini.WriteBool('Option', 'FontBold', fsBold in Font.Style);
+    ini.UpdateFile;
+  end;
+end;
+
+function TFormMain.BufferToStr(buf: TByteArray; N: integer): string;
+var
+  i: integer;
+begin
+  Result := '';
+  for i := 0 to N - 1 do
+  begin
+    if (buf[i] < 128) and (buf[i] > 31) then
+      Result := Result + Chr(buf[i])
+    else
+      Result := Result + '.';
+  end;
+end;
+
+function TFormMain.BufferToHEX(buf: TByteArray; N: integer): string;
+var
+  i: integer;
+begin
+  Result := '';
+  for i := 0 to N - 1 do
+  begin
+    Result := Result + Format('%.02X ', [buf[i]]);
+  end;
+end;
+
+function TFormMain.BufferToPyStr(buf: TByteArray; N: integer): string;
+var
+  i: integer;
+begin
+  Result := '';
+  for i := 0 to N - 1 do
+  begin
+    Result := Result + Format('\x%.02X', [buf[i]]);
+  end;
 end;
 
 function TFormMain.NumToBytes(d: int64; n: integer): string;
