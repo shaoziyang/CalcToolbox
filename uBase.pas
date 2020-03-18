@@ -1,4 +1,4 @@
-unit udigit;
+unit uBase;
 
 {$mode objfpc}{$H+}
 
