@@ -1359,8 +1359,8 @@ begin
  AddUserConstant('BAND','&&');
  AddUserConstant('BOR','||');
  AddUserConstant('BNOT','!!');
- AddUserConstant('SHR','<<');
- AddUserConstant('SHL','>>');
+ AddUserConstant('SHR','>>');
+ AddUserConstant('SHL','<<');
  AddUserConstant('BEGIN','BLOCK(');
  AddUserConstant('END',')');
  AddUserConstant('ENDD','))');
