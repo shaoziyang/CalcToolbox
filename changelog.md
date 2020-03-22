@@ -8,3 +8,8 @@
 
 - add **Big Integer** and **Big Float** feature.
 
+## v0.4
+
+- add Buffer convert
+- add Programmable calculator
+- add Option dialog
