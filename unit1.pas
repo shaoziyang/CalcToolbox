@@ -6,18 +6,20 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
-  ExtCtrls, Buttons, Grids, lclintf, DateUtils,
-  Clipbrd, Menus,
-  SynEdit,
+  LCLType,
+  ExtCtrls, Buttons, Grids, lclintf, DateUtils, Math,
+  Clipbrd, Menus, ValEdit,
+  SynEdit, SynHighlighterPas,
   UBigFloatV3,
   //UBigIntsForFloatV4,
   UBigIntsV5,
+  formula,
   IniFiles;
 
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '0.4';
+  VERSION = '0.5';
 
 type
   SingleBytes = array[0..3] of byte;
@@ -26,6 +28,7 @@ type
   { TFormMain }
 
   TFormMain = class(TForm)
+    ApplicationProperties: TApplicationProperties;
     btnBufferConvert: TBitBtn;
     btnBigIntAdd: TToolButton;
     btnBigIntDiv: TToolButton;
@@ -43,11 +46,22 @@ type
     btnBigIntSub: TToolButton;
     btnOpenGITEE: TSpeedButton;
     btnOpenGITHUB: TSpeedButton;
-    btnOptionSelectFont: TBitBtn;
+    btnOpenGITHUB1: TSpeedButton;
+    btnOpenGITHUB2: TSpeedButton;
+    btnPCalcDemo1: TToolButton;
+    btnPCalcDemo2: TToolButton;
+    btnPCalcDemo3: TToolButton;
+    btnPCalcDemo4: TToolButton;
+    btnPCalcDemo5: TToolButton;
+    btnPCalcHelp: TToolButton;
+    btnPCalcNewFile: TToolButton;
+    btnPCalcOpenFile: TToolButton;
+    btnPCalcRun: TToolButton;
+    btnPCalcSaveFile: TToolButton;
     chkBigIntComma: TCheckBox;
     chkCrcInvOut: TCheckBox;
     chkCrcInvIn: TCheckBox;
-    ComboBox1: TComboBox;
+    cbbPCalc: TComboBox;
     Edit1: TEdit;
     edtBigFloatPrec: TEdit;
     edtBytesNum: TEdit;
@@ -55,27 +69,32 @@ type
     edtCrcResult: TEdit;
     edtCrcPolygon: TEdit;
     edtCrcInitV: TEdit;
-    dlgFont: TFontDialog;
     edtNumericNum: TEdit;
-    GroupBox1: TGroupBox;
-    ImageList: TImageList;
+    ilMain: TImageList;
     ilDigit: TImageList;
+    ilOption: TImageList;
+    ilTray: TImageList;
+    ilAB: TImageList;
     imgLaz: TImage;
     imgLogo: TImage;
     imgLogo1: TImage;
     Label1: TLabel;
     Label2: TLabel;
-    Label3: TLabel;
+    lbFont: TLabel;
     lbVer: TLabel;
+    dlgOpenPCalc: TOpenDialog;
+    pnlPCalcVLE: TPanel;
+    pnlPCalcFile: TPanel;
+    pmTrayShow: TMenuItem;
+    miTrayOption: TMenuItem;
+    miTrayExit: TMenuItem;
+    N1: TMenuItem;
+    mmoPCalc: TMemo;
     mmoBufferStr: TMemo;
     mmoBufferHEX: TMemo;
     mmoBufferPython: TMemo;
     mmoAboutReadme: TMemo;
     mmoAboutChangeLog: TMemo;
-    MenuItem1: TMenuItem;
-    MenuItem2: TMenuItem;
-    MenuItem3: TMenuItem;
-    MenuItem4: TMenuItem;
     mmoBigFloatA: TMemo;
     mmoBigIntA: TMemo;
     mmoBigFloatB: TMemo;
@@ -87,6 +106,7 @@ type
     PageControl2: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
+    pnlPCalc: TPanel;
     pnlBigFloatA: TPanel;
     pnlBigIntB: TPanel;
     pnlBigIntC: TPanel;
@@ -95,7 +115,6 @@ type
     pnlBufferPython: TPanel;
     pnlBigFloatB: TPanel;
     pnlBigFloatC: TPanel;
-    Panel4: TPanel;
     Panel5: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
@@ -103,7 +122,7 @@ type
     pnlBigIntA: TPanel;
     pcDigit: TPageControl;
     pcMain: TPageControl;
-    pmBitIntBase: TPopupMenu;
+    pmTray: TPopupMenu;
     rbBigBytes: TRadioButton;
     rbCrc7bits: TRadioButton;
     rbCrc6bits: TRadioButton;
@@ -114,17 +133,22 @@ type
     rbCrc5bits: TRadioButton;
     rbCrc4bits: TRadioButton;
     rbLittleBytes: TRadioButton;
+    dlgSavePCalc: TSaveDialog;
     sgBytes: TStringGrid;
     sgBase: TStringGrid;
+    Shape1: TShape;
+    btnShowOption: TSpeedButton;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
-    lbOptFont: TStaticText;
     sgConstantMath: TStringGrid;
     Splitter4: TSplitter;
     Splitter5: TSplitter;
     Splitter6: TSplitter;
+    Splitter7: TSplitter;
+    Splitter8: TSplitter;
     StaticText1: TStaticText;
+    lbPCalcVarCount: TStaticText;
     StaticText2: TStaticText;
     StaticText3: TStaticText;
     StaticText4: TStaticText;
@@ -133,9 +157,18 @@ type
     StaticText7: TStaticText;
     StaticText8: TStaticText;
     StaticText9: TStaticText;
+    SynPasSyn: TSynPasSyn;
+    synPCalc: TSynEdit;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
+    ToolBar7: TToolBar;
+    btnPCalcSaveAsFile: TToolButton;
+    btnPCalcClearOutput: TToolButton;
+    btnPCalcStop: TToolButton;
+    ToolButton32: TToolButton;
+    ToolButton33: TToolButton;
+    TrayIcon: TTrayIcon;
     tsBuffer: TTabSheet;
     tbBigInt: TToolBar;
     tmrLogo: TTimer;
@@ -218,7 +251,6 @@ type
     tsConstantMath: TTabSheet;
     tsContantPhysics: TTabSheet;
     tsConstantChemistry: TTabSheet;
-    tsOption: TTabSheet;
     tmrAlpha: TTimer;
     ToolBar1: TToolBar;
     ToolBar2: TToolBar;
@@ -227,6 +259,8 @@ type
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
+    vlePCalc: TValueListEditor;
+    procedure ApplicationPropertiesMinimize(Sender: TObject);
     procedure btnBufferConvertClick(Sender: TObject);
     procedure btnBigFloatAddClick(Sender: TObject);
     procedure btnBigIntAddClick(Sender: TObject);
@@ -250,7 +284,20 @@ type
     procedure btnCrc_CRC8_ROHCClick(Sender: TObject);
     procedure btnOpenGITEEClick(Sender: TObject);
     procedure btnOpenGITHUBClick(Sender: TObject);
-    procedure btnOptionSelectFontClick(Sender: TObject);
+    procedure btnPCalcClearOutputClick(Sender: TObject);
+    procedure btnPCalcDemo1Click(Sender: TObject);
+    procedure btnPCalcHelpClick(Sender: TObject);
+    procedure btnPCalcNewFileClick(Sender: TObject);
+    procedure btnPCalcOpenFileClick(Sender: TObject);
+    procedure btnPCalcRunClick(Sender: TObject);
+    procedure btnPCalcSaveAsFileClick(Sender: TObject);
+    procedure btnPCalcSaveFileClick(Sender: TObject);
+    procedure btnPCalcStopClick(Sender: TObject);
+    procedure btnShowOptionClick(Sender: TObject);
+    procedure cbbPCalcDblClick(Sender: TObject);
+    procedure cbbPCalcKeyPress(Sender: TObject; var Key: char);
+    procedure cbbPCalcMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: integer);
     procedure edtBigFloatPrecEditingDone(Sender: TObject);
     procedure edtBytesNumChange(Sender: TObject);
     procedure edtCrcResultClick(Sender: TObject);
@@ -259,29 +306,40 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure imgLazClick(Sender: TObject);
+    procedure miTrayExitClick(Sender: TObject);
     procedure mmoBigFloatCMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure mmoBigIntCMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure mmoBufferPythonMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
+    procedure mmoPCalcChange(Sender: TObject);
     procedure rbBigBytesChange(Sender: TObject);
     procedure sgBytesEditingDone(Sender: TObject);
     procedure sgConstantMathClick(Sender: TObject);
     procedure sgBaseEditingDone(Sender: TObject);
+    procedure synPCalcChange(Sender: TObject);
     procedure tmrAlphaTimer(Sender: TObject);
     procedure btnCrc_CRC4_ITUClick(Sender: TObject);
     procedure btnCrc_CRC8_ITUClick(Sender: TObject);
     procedure btnCrc_CRC16_CCITT_FALSEClick(Sender: TObject);
     procedure btnCrc_CRC32_MPEG2Click(Sender: TObject);
     procedure tmrLogoTimer(Sender: TObject);
+    procedure TrayIconClick(Sender: TObject);
   private
+    PCalcVars: array of string;
+    PCalcVals: TCalcArray;
+    PCalcVarNum: integer;
+    procedure LoadPCalcVar;
+    procedure SavePCalcVar;
+    procedure SetPCalcVar;
     function getCrcBit: integer;
     procedure setCrcBit(bit: integer);
     procedure bfCalc(Sender: TObject);
     procedure biCalc(Sender: TObject);
     procedure saveFont;
   public
+    MinimizeToTray, CloseToTray: boolean;
     function BufferToStr(buf: TByteArray; N: integer): string;
     function BufferToHEX(buf: TByteArray; N: integer): string;
     function BufferToPyStr(buf: TByteArray; N: integer): string;
@@ -308,24 +366,77 @@ var
   bfA, bfB: TBigFloat;
   biA, biB: TInteger;
   bfPrec: integer;
+  fl: TArtFormula;
+
+function PCalc_print(var Calc: TFormulaCalc): TCalcItem;
 
 implementation
 
 uses
-  uCRC, uBase;
+  uCRC, uBase, unit2, unit3;
+
 
 {$R *.lfm}
+
+const
+{$I PCalc_demo.pp}
+
+
+function PCalc_puts(var Calc: TFormulaCalc): TCalcItem;
+var
+  s: string;
+  n: integer;
+begin
+  n := FormMain.mmoPCalc.Lines.Count;
+  if n > 0 then
+    n := n - 1;
+  s   := FormMain.mmoPCalc.Lines[n];
+  s   := s + Calc.TopS;
+  FormMain.mmoPCalc.Lines[n] := s;
+  setS(Result, '');
+end;
+
+function PCalc_print(var Calc: TFormulaCalc): TCalcItem;
+begin
+  FormMain.mmoPCalc.Lines.Add(Calc.TopS);
+  setS(Result, '');
+end;
+
+function PCalc_clear(var Calc: TFormulaCalc): TCalcItem;
+begin
+  FormMain.mmoPCalc.Lines.Clear;
+  setS(Result, '');
+end;
+
+function PCalc_sleep(var Calc: TFormulaCalc): TCalcItem;
+begin
+  Sleep(Round(Calc.TopN));
+  setS(Result, '');
+end;
+
+function PCalc_beep(var Calc: TFormulaCalc): TCalcItem;
+begin
+  beep;
+  setS(Result, '');
+end;
+
 
 { TFormMain }
 
 procedure TFormMain.FormCreate(Sender: TObject);
+var
+  i: integer;
+  s: string;
 begin
+  {$IFDEF WINDOWS}
+  cbbPCalc.AutoDropDown:=True;
+  {$ENDIF}
+
   path := ExtractFilePath(Application.ExeName);
   ini  := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
 
   lbVer.Caption := 'ver ' + VERSION;
 
-  tsPCalc.TabVisible    := False;
   tsConstant.TabVisible := False;
 
   // test inifile writeable
@@ -349,23 +460,34 @@ begin
     pcMain.PageIndex := ini.ReadInteger('Last', 'Page', 0);
 
     // option
-    lbOptFont.Font.Name := ini.ReadString('Option', 'FontName', Font.Name);
-    lbOptFont.Font.Size := ini.ReadInteger('Option', 'FontSize', Font.Size);
-    if lbOptFont.Font.Size < 7 then
-      lbOptFont.Font.Size := 7
-    else if lbOptFont.Font.Size > 24 then
-      lbOptFont.Font.Size := 24;
+    lbFont.Font.Name := ini.ReadString('Option', 'FontName', Font.Name);
+    lbFont.Font.Size := ini.ReadInteger('Option', 'FontSize', Font.Size);
+    lbFont.Font.Size := max(min(lbFont.Font.Size, 24), 7);
     if ini.ReadBool('Option', 'FontBold', False) then
     begin
-      lbOptFont.Font.Style := [fsBold];
-      lbOptFont.Caption    := ', Bold';
+      lbFont.Font.Style := [fsBold];
     end;
-    Font := lbOptFont.Font;
-    lbOptFont.Caption := Format('%s, %d', [Font.Name, Font.Size]) + lbOptFont.Caption;
+    Font := lbFont.Font;
+
+    TrayIcon.Visible := ini.ReadBool('Option', 'TrayIcon', True);
+    MinimizeToTray   := ini.ReadBool('Option', 'MinimizeToTray', True);
+    CloseToTray      := ini.ReadBool('Option', 'CloseToTray', True);
+
+    // visible
+    tsCRC.TabVisible      := ini.ReadBool('Option', 'CRC_Enabled', True);
+    tsBytes.TabVisible    := ini.ReadBool('Option', 'Bytes_Enabled', True);
+    tsBase.TabVisible     := ini.ReadBool('Option', 'Base_Enabled', True);
+    tsBigFloat.TabVisible := ini.ReadBool('Option', 'BigFloat_Enabled', True);
+    tsBigInt.TabVisible   := ini.ReadBool('Option', 'BigInt_Enabled', True);
+    tsBuffer.TabVisible   := ini.ReadBool('Option', 'Buffer_Enabled', True);
+    tsPCalc.TabVisible    := ini.ReadBool('Option', 'pCalc_Enabled', True);
 
     // Digit
     rbBigBytes.Checked      := ini.ReadBool('Digit', 'BigBytes', True);
     pcDigit.ActivePageIndex := ini.ReadInteger('Digit', 'Page', 0);
+    tsDigit.TabVisible      :=
+      tsBytes.TabVisible or tsBase.TabVisible or tsBigFloat.TabVisible or
+      tsBigInt.TabVisible;
 
     // crc
     edtCrcPolygon.Text   := ini.ReadString('CRC', 'poly', '1021');
@@ -396,6 +518,18 @@ begin
     mmoBufferHex.Text      := '';
     mmoBufferStr.Text      := '';
 
+    // PCalc
+    LoadPCalcVar;
+    vlePCalc.Modified     := False;
+    pnlPCalcVLE.Width     := ini.ReadInteger('PCalc', 'VAR_Width', 160);
+    vlePCalc.ColWidths[0] := ini.ReadInteger('PCalc', 'VAR_Width_0', 60);
+    pnlPCalcFile.Height   := ini.ReadInteger('PCalc', 'File', 180);
+    for i := 1 to 12 do
+    begin
+      s := ini.ReadString('PCalcHis', IntToStr(i), '');
+      if s <> '' then
+        cbbPCalc.Items.Add(s);
+    end;
   except
 
   end;
@@ -416,9 +550,31 @@ begin
     tsBigInt.TabVisible := False;
   end;
 
+  try
+    fl := TArtFormula.Create(self);
+    fl.CaseSensitive := True;
+    fl.AutoCreateVars := True;
+    fl.AddUserFunction('print', 1, @PCalc_print);
+    fl.AddUserFunction('puts', 1, @PCalc_puts);
+    fl.AddUserFunction('clear', 0, @PCalc_clear);
+    fl.AddUserFunction('sleep', 1, @PCalc_sleep);
+    fl.AddUserFunction('beep', 0, @PCalc_beep);
+
+  except
+    tsPCalc.TabVisible := False;
+  end;
+
+  try
+    SetLength(PCalcVars, vlePCalc.RowCount - 1);
+    SetLength(PCalcVals, vlePCalc.RowCount - 1);
+    SetPCalcVar;
+  except
+  end;
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
+var
+  i: integer;
 begin
   try
     if writeable then
@@ -457,13 +613,33 @@ begin
       ini.WriteInteger('Buffer', 'PanelPython', pnlBufferPython.Height);
       ini.WriteInteger('Buffer', 'PanelHex', pnlBufferHex.Height);
 
+      // PCalc
+      if vlePCalc.Modified then
+        SetPCalcVar;
+      SavePCalcVar;
+
+      ini.WriteInteger('PCalc', 'VAR_Width', pnlPCalcVLE.Width);
+      ini.WriteInteger('PCalc', 'VAR_Width_0', vlePCalc.ColWidths[0]);
+      ini.WriteInteger('PCalc', 'File', pnlPCalcFile.Height);
+      ini.EraseSection('PCalcHis');
+      for i := 1 to min(12, cbbPCalc.Items.Count) do
+      begin
+        ini.WriteString('PCalcHis', IntToStr(i), cbbPCalc.Items[i - 1]);
+      end;
       ini.UpdateFile;
     end;
   finally
-    bfA.Free;
-    bfB.Free;
-    biA.Free;
-    biB.Free;
+    if bfA <> nil then
+      bfA.Free;
+    if bfB <> nil then
+      bfB.Free;
+    if biA <> nil then
+      biA.Free;
+    if biB <> nil then
+      biB.Free;
+
+    if fl <> nil then
+      fl.Free;
 
     ini.Free;
   end;
@@ -478,6 +654,12 @@ end;
 procedure TFormMain.imgLazClick(Sender: TObject);
 begin
   OpenURL('http://www.lazarus-ide.org/');
+end;
+
+procedure TFormMain.miTrayExitClick(Sender: TObject);
+begin
+  TrayIcon.Visible := False;
+  Close;
 end;
 
 procedure TFormMain.mmoBigFloatCMouseUp(Sender: TObject; Button: TMouseButton;
@@ -514,6 +696,17 @@ procedure TFormMain.mmoBufferPythonMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
   Clipboard.AsText := TMemo(Sender).Text;
+end;
+
+procedure TFormMain.mmoPCalcChange(Sender: TObject);
+var
+  i: integer;
+begin
+  if mmoPCalc.Lines.Count > 10240 then
+  begin
+    for i := 1 to 1024 do
+      mmoPCalc.Lines.Delete(0);
+  end;
 end;
 
 procedure TFormMain.rbBigBytesChange(Sender: TObject);
@@ -718,6 +911,12 @@ begin
 
 end;
 
+procedure TFormMain.ApplicationPropertiesMinimize(Sender: TObject);
+begin
+  if TrayIcon.Visible and MinimizeToTray then
+    Hide;
+end;
+
 procedure TFormMain.btnBigIntAddClick(Sender: TObject);
 begin
   biCalc(Sender);
@@ -777,9 +976,17 @@ end;
 
 procedure TFormMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
-  CanClose     := tmrAlpha.Tag = 4;
-  tmrAlpha.Tag := 3;
-  tmrAlpha.Enabled := True;
+  if TrayIcon.Visible and CloseToTray then
+  begin
+    CanClose := False;
+    Hide;
+  end
+  else
+  begin
+    CanClose     := tmrAlpha.Tag = 4;
+    tmrAlpha.Tag := 3;
+    tmrAlpha.Enabled := True;
+  end;
 end;
 
 
@@ -900,6 +1107,12 @@ begin
 
 end;
 
+procedure TFormMain.synPCalcChange(Sender: TObject);
+begin
+  btnPCalcSaveFile.Enabled   := True;
+  btnPCalcSaveAsFile.Enabled := True;
+end;
+
 procedure TFormMain.tmrAlphaTimer(Sender: TObject);
 begin
   case tmrAlpha.Tag of
@@ -916,7 +1129,10 @@ begin
       else
         AlphaBlendValue := AlphaBlendValue + 5;
       if AlphaBlendValue = 255 then
+      begin
+        FormMain.OnShow  := nil;
         tmrAlpha.Enabled := False;
+      end;
     end;
     3:
     begin
@@ -995,24 +1211,197 @@ begin
   OpenURL(GITHUB_URL);
 end;
 
-procedure TFormMain.btnOptionSelectFontClick(Sender: TObject);
+procedure TFormMain.btnPCalcClearOutputClick(Sender: TObject);
 begin
-  dlgFont.Font := Font;
+  mmoPCalc.Lines.Clear;
+end;
 
-  if dlgFont.Execute then
+procedure TFormMain.btnPCalcDemo1Click(Sender: TObject);
+begin
+  synPCalc.Text := PCalc_Demos[TToolButton(Sender).Tag];
+  synPCalc.Modified     := True;
+  btnPCalcSaveFile.Enabled := True;
+  btnPCalcSaveAsFile.Enabled := True;
+end;
+
+procedure TFormMain.btnPCalcHelpClick(Sender: TObject);
+begin
+  FormPCalcHelp.Show;
+end;
+
+procedure TFormMain.btnPCalcNewFileClick(Sender: TObject);
+begin
+  synPCalc.Lines.Clear;
+  dlgSavePCalc.FileName := '';
+  synPCalc.Modified     := False;
+  btnPCalcSaveFile.Enabled := False;
+  btnPCalcSaveAsFile.Enabled := False;
+end;
+
+procedure TFormMain.btnPCalcOpenFileClick(Sender: TObject);
+begin
+  if dlgOpenPCalc.Execute then
   begin
-    Font := dlgFont.Font;
-    if fsBold in Font.Style then
-      lbOptFont.Caption := ', Bold'
-    else
-      lbOptFont.Caption := '';
-    lbOptFont.Caption := Format('%s, %d', [Font.Name, Font.Size]) + lbOptFont.Caption;
-    saveFont;
+    synPCalc.Lines.LoadFromFile(dlgOpenPCalc.FileName);
+    synPCalc.Modified := False;
+    btnPCalcSaveFile.Enabled := False;
+    btnPCalcSaveAsFile.Enabled := False;
+  end;
+end;
+
+procedure TFormMain.btnPCalcRunClick(Sender: TObject);
+begin
+  if vlePCalc.Modified then
+  begin
+    vlePCalc.Modified := False;
+    SetPCalcVar;
+  end;
+
+  fl.Step := True;
+  btnPCalcRun.Enabled := False;
+  btnPCalcStop.Enabled := True;
+  Application.ProcessMessages;
+  try
+    fl.ComputeStr(synPCalc.Text, PCalcVarNum, @PCalcVars, @PCalcVals);
+  except
+    on E: Exception do
+    begin
+      Application.MessageBox(PChar(E.Message), PChar('Error'), MB_ICONSTOP);
+      ActiveControl     := synPCalc;
+      synPCalc.SelStart := fl.ErrStrPos;
+    end;
+  end;
+  btnPCalcRun.Enabled  := True;
+  btnPCalcStop.Enabled := False;
+end;
+
+procedure TFormMain.btnPCalcSaveAsFileClick(Sender: TObject);
+begin
+  if dlgSavePCalc.Execute then
+  begin
+    try
+      if ExtractFileExt(dlgSavePCalc.FileName) ='' then
+       dlgSavePCalc.FileName:=ChangeFileExt(dlgSavePCalc.FileName, dlgSavePCalc.DefaultExt);
+      synPCalc.Lines.SaveToFile(dlgSavePCalc.FileName);
+      synPCalc.Modified := False;
+      btnPCalcSaveFile.Enabled := False;
+      btnPCalcSaveAsFile.Enabled := False;
+    except
+
+    end;
+  end;
+end;
+
+procedure TFormMain.btnPCalcSaveFileClick(Sender: TObject);
+begin
+  if dlgSavePCalc.FileName = '' then
+  begin
+    if not dlgSavePCalc.Execute then
+      Exit;
+    if ExtractFileExt(dlgSavePCalc.FileName) ='' then
+       dlgSavePCalc.FileName:=ChangeFileExt(dlgSavePCalc.FileName, dlgSavePCalc.DefaultExt);
+  end;
+
+  try
+    synPCalc.Lines.SaveToFile(dlgSavePCalc.FileName);
+    synPCalc.Modified := False;
+    btnPCalcSaveFile.Enabled := False;
+    btnPCalcSaveAsFile.Enabled := False;
+  except
+
+  end;
+
+end;
+
+procedure TFormMain.btnPCalcStopClick(Sender: TObject);
+begin
+  fl.Stop := True;
+  btnPCalcRun.Enabled := True;
+  btnPCalcStop.Enabled := False;
+end;
+
+procedure TFormMain.btnShowOptionClick(Sender: TObject);
+begin
+  if FormOption.ShowModal = mrOk then
+  begin
+
+    TrayIcon.Visible := FormOption.chkShowTray.Checked;
+    MinimizeToTray   := FormOption.chkMinimizeToTray.Checked;
+    CloseToTray      := FormOption.chkCloseToTray.Checked;
+
+    ini.WriteBool('Option', 'TrayIcon', TrayIcon.Visible);
+    ini.WriteBool('Option', 'MinimizeToTray', MinimizeToTray);
+    ini.WriteBool('Option', 'CloseToTray', CloseToTray);
+
+    FormOption.cgOptFunctionItemClick(nil, 0);
+    if FormOption.dlgFont.Tag = 2 then
+    begin
+      Font := FormOption.Font;
+      saveFont;
+    end;
+  end;
+end;
+
+procedure TFormMain.cbbPCalcDblClick(Sender: TObject);
+const
+  cbbPCalcHis_MAX = 12;
+var
+  s, r: string;
+  n: integer;
+begin
+  if vlePCalc.Modified then
+  begin
+    vlePCalc.Modified := False;
+    SetPCalcVar;
+  end;
+
+  try
+    s := Trim(cbbPCalc.Text);
+    r := fl.ComputeStr(s, PCalcVarNum, @PCalcVars, @PCalcVals);
+    if (r <> '') then
+    begin
+      mmoPCalc.Lines.Append('> ' + cbbPCalc.Text);
+      mmoPCalc.Lines.Append('= ' + r);
+      mmoPCalc.Lines.Append('');
+
+      // input history
+      n := cbbPCalc.Items.IndexOf(s);
+      if n = -1 then
+      begin
+        cbbPCalc.Items.Add(s);
+        if cbbPCalc.Items.Count > cbbPCalcHis_MAX then
+          cbbPCalc.Items.Delete(0);
+      end
+      else
+      begin
+        cbbPCalc.Items.Move(n, cbbPCalc.Items.Count - 1);
+      end;
+    end;
+  except
+
+  end;
+end;
+
+procedure TFormMain.cbbPCalcKeyPress(Sender: TObject; var Key: char);
+begin
+  if Key = #13 then
+  begin
+    Key := #0;
+    cbbPCalcDblClick(Sender);
+  end;
+end;
+
+procedure TFormMain.cbbPCalcMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: integer);
+begin
+  if (Shift = [ssShift, ssLeft]) then
+  begin
+    cbbPCalc.Items.Clear;
+    beep;
   end;
 end;
 
 procedure TFormMain.edtBigFloatPrecEditingDone(Sender: TObject);
-
 begin
   if not TryStrToInt(edtBigFloatPrec.Text, bfPrec) then
   begin
@@ -1091,8 +1480,75 @@ end;
 
 procedure TFormMain.tmrLogoTimer(Sender: TObject);
 begin
+  ilTray.Tag := ilTray.Tag + 1;
+  if ilTray.Tag > 0 then
+    ilTray.GetIcon((ilTray.Tag div 5) mod ilTray.Count, TrayIcon.Icon);
+
   if pcMain.ActivePage = tsAbout then
-    imgLogo.Visible := not imgLogo.Visible;
+  begin
+    tmrLogo.Tag := (tmrLogo.Tag + 1) mod ilOption.Count;
+    btnShowOption.ImageIndex := tmrLogo.Tag;
+    if tmrLogo.Tag mod 5 = 0 then
+    begin
+      imgLogo.Visible := not imgLogo.Visible;
+    end;
+  end;
+end;
+
+procedure TFormMain.TrayIconClick(Sender: TObject);
+begin
+  if FormMain.WindowState = wsMinimized then
+    FormMain.WindowState := wsNormal;
+  Show;
+end;
+
+procedure TFormMain.LoadPCalcVar;
+var
+  i, num: integer;
+begin
+  num := ini.ReadInteger('PCalcVar', 'Num', 0);
+  for i := 1 to num do
+  begin
+    vlePCalc.Cells[0, i] := ini.ReadString('PCalcVar', 'var' + IntToStr(i), '');
+    vlePCalc.Cells[1, i] := ini.ReadString('PCalcVar', 'val' + IntToStr(i), '');
+  end;
+end;
+
+procedure TFormMain.SavePCalcVar;
+var
+  i: integer;
+begin
+  ini.EraseSection('PCalcVar');
+  ini.WriteInteger('PCalcVar', 'Num', PCalcVarNum);
+  for i := 1 to PCalcVarNum do
+  begin
+    ini.WriteString('PCalcVar', 'var' + IntToStr(i), PCalcVars[i - 1]);
+    ini.WriteString('PCalcVar', 'val' + IntToStr(i), PCalcVals[i - 1].str);
+  end;
+end;
+
+procedure TFormMain.SetPCalcVar;
+var
+  i, num: integer;
+begin
+  num := 0;
+  for i := 1 to vlePCalc.RowCount - 1 do
+  begin
+    if (Trim(vlePCalc.Cells[0, i]) <> '') and (Trim(vlePCalc.Cells[1, i]) <> '') then
+    begin
+      PCalcVars[num] := Trim(vlePCalc.Cells[0, i]);
+      setS(PCalcVals[num], Trim(vlePCalc.Cells[1, i]));
+      num := num + 1;
+    end;
+  end;
+  PCalcVarNum := num;
+  lbPCalcVarCount.Caption := 'Var: ' + IntToStr(num);
+  vlePCalc.Clean([gzNormal]);
+  for i := 0 to num - 1 do
+  begin
+    vlePCalc.Cells[0, i + 1] := PCalcVars[i];
+    vlePCalc.Cells[1, i + 1] := PCalcVals[i].str;
+  end;
 end;
 
 function TFormMain.getCrcBit: integer;
