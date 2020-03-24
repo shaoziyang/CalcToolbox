@@ -8,7 +8,7 @@ object FormPCalcHelp: TFormPCalcHelp
   ClientHeight = 558
   ClientWidth = 567
   Position = poOwnerFormCenter
-  LCLVersion = '2.0.4.0'
+  LCLVersion = '2.0.6.0'
   object Panel1: TPanel
     Left = 0
     Height = 558
@@ -34,7 +34,7 @@ object FormPCalcHelp: TFormPCalcHelp
       Font.Quality = fqDraft
       Lines.Strings = (
         'Programmable Calculator Simple Help'
-        '(from TArtFormula)'
+        '(Part from TArtFormula)'
         ''
         '============================================================'
         'Computes symbolic expressions and provides runtime scripting'
@@ -196,8 +196,14 @@ object FormPCalcHelp: TFormPCalcHelp
         '    msg(''5! = ''+val(''n''),''result'',0);'
         '  end'
         ''
+        '========================================='
         ''
+        'Addtional function'
         ''
+        '  print, print a string, express, var etc.'
+        '  puts, just like print, but without new line'
+        '  sleep, sleep millisecond'
+        '  beep, sound the system bell, not work in Linux.'
         ''
       )
       ParentFont = False
