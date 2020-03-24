@@ -1,15 +1,21 @@
 # Change Log
 
-## v0.2
 
-- 2020.3, first release. 
+## v0.5
+
+- add Programmable calculator
+- Tray Icon
+- More Option
+
+## v0.4
+
+- add Buffer convert
+- add Option dialog
 
 ## v0.3
 
 - add **Big Integer** and **Big Float** feature.
 
-## v0.4
+## v0.2
 
-- add Buffer convert
-- add Programmable calculator
-- add Option dialog
+- 2020.3, first release. 
