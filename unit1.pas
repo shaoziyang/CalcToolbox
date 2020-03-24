@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   LCLType,
   ExtCtrls, Buttons, Grids, lclintf, DateUtils, Math,
-  Clipbrd, Menus, ValEdit,
+  Clipbrd, Menus, ValEdit, EditBtn,
   SynEdit, SynHighlighterPas,
   UBigFloatV3,
   //UBigIntsForFloatV4,
@@ -62,7 +62,9 @@ type
     chkCrcInvOut: TCheckBox;
     chkCrcInvIn: TCheckBox;
     cbbPCalc: TComboBox;
+    DateEdit1: TDateEdit;
     Edit1: TEdit;
+    Edit2: TEdit;
     edtBigFloatPrec: TEdit;
     edtBytesNum: TEdit;
     edtCrcXOROUT: TEdit;
@@ -80,9 +82,13 @@ type
     imgLogo1: TImage;
     Label1: TLabel;
     Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
     lbFont: TLabel;
     lbVer: TLabel;
     dlgOpenPCalc: TOpenDialog;
+    pcConvert: TPageControl;
     pnlPCalcVLE: TPanel;
     pnlPCalcFile: TPanel;
     pmTrayShow: TMenuItem;
@@ -162,6 +168,9 @@ type
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
+    TimeEdit1: TTimeEdit;
+    tsConvertTime: TTabSheet;
+    tsConvert: TTabSheet;
     ToolBar7: TToolBar;
     btnPCalcSaveAsFile: TToolButton;
     btnPCalcClearOutput: TToolButton;
@@ -429,7 +438,7 @@ var
   s: string;
 begin
   {$IFDEF WINDOWS}
-  cbbPCalc.AutoDropDown:=True;
+  cbbPCalc.AutoDropDown := True;
   {$ENDIF}
 
   path := ExtractFilePath(Application.ExeName);
@@ -668,7 +677,8 @@ begin
   if mmoBigFloatC.SelLength = 0 then
   begin
     btnBigFloatHint.Caption := IntToStr(Length(mmoBigFloatC.Text));
-    Clipboard.AsText := mmoBigFloatC.Text;
+    if mmoBigFloatC.Text <> '' then
+      Clipboard.AsText := mmoBigFloatC.Text;
   end
   else
   begin
@@ -683,7 +693,8 @@ begin
   if mmoBigIntC.SelLength = 0 then
   begin
     btnBigIntHint.Caption := IntToStr(Length(mmoBigIntC.Text));
-    Clipboard.AsText      := mmoBigIntC.Text;
+    if mmoBigIntC.Text <> '' then
+      Clipboard.AsText := mmoBigIntC.Text;
   end
   else
   begin
@@ -759,7 +770,8 @@ end;
 
 procedure TFormMain.edtCrcResultClick(Sender: TObject);
 begin
-  Clipboard.AsText := edtCrcResult.Text;
+  if edtCrcResult.Text <> '' then
+    Clipboard.AsText := edtCrcResult.Text;
 end;
 
 procedure TFormMain.btnBigFloatAddClick(Sender: TObject);
@@ -1006,7 +1018,7 @@ begin
 
   try
     case sy of
-      1..4:
+      1..4:// int8-int64
       begin
         if rbBigBytes.Checked then
           ss := BigBytes(ss);
@@ -1021,9 +1033,8 @@ begin
         nd := StrToInt64('0x' + s);
         edtBytesNum.Text := IntToStr(nd);
       end;
-      6:
+      6:// float32
       begin
-        ;
         try
           StrToBytes(ss, 4, pb);
           ps := @pb;
@@ -1033,7 +1044,7 @@ begin
 
         end;
       end;
-      8:
+      8:// float64
       begin
         try
           StrToBytes(ss, 8, pb);
@@ -1044,8 +1055,25 @@ begin
 
         end;
       end;
+      11: // hex
+      begin
+        StrToByteBuf(ss, s);
+        sgBytes.Cells[1, 11] := s;
+        i := (Length(s) + 2) div 3;
+        StrToBytes(s, i, pb);
+        sgBytes.Cells[1, 12] := BufferToStr(pb, i);
+      end;
+      12: // string
+      begin
+        s := '';
+        for i := 1 to Length(ss) do
+          s     := s + Format('%.02X ', [Ord(ss[i])]);
+        sgBytes.Cells[1, 11] := s;
+        Caption := ss + ' > ' + s;
+      end;
     end;
-    edtBytesNumChange(Sender);
+    if sy <= 8 then
+      edtBytesNumChange(Sender);
   except
 
   end;
@@ -1057,7 +1085,8 @@ var
 begin
   sx := TStringGrid(Sender).Selection.Location.x;
   sy := TStringGrid(Sender).Selection.Location.y;
-  Clipboard.AsText := TStringGrid(Sender).Cells[sx, sy];
+  if TStringGrid(Sender).Cells[sx, sy] <> '' then
+    Clipboard.AsText := TStringGrid(Sender).Cells[sx, sy];
 end;
 
 procedure TFormMain.sgBaseEditingDone(Sender: TObject);
@@ -1218,8 +1247,8 @@ end;
 
 procedure TFormMain.btnPCalcDemo1Click(Sender: TObject);
 begin
-  synPCalc.Text := PCalc_Demos[TToolButton(Sender).Tag];
-  synPCalc.Modified     := True;
+  synPCalc.Text     := PCalc_Demos[TToolButton(Sender).Tag];
+  synPCalc.Modified := True;
   btnPCalcSaveFile.Enabled := True;
   btnPCalcSaveAsFile.Enabled := True;
 end;
@@ -1280,8 +1309,9 @@ begin
   if dlgSavePCalc.Execute then
   begin
     try
-      if ExtractFileExt(dlgSavePCalc.FileName) ='' then
-       dlgSavePCalc.FileName:=ChangeFileExt(dlgSavePCalc.FileName, dlgSavePCalc.DefaultExt);
+      if ExtractFileExt(dlgSavePCalc.FileName) = '' then
+        dlgSavePCalc.FileName :=
+          ChangeFileExt(dlgSavePCalc.FileName, dlgSavePCalc.DefaultExt);
       synPCalc.Lines.SaveToFile(dlgSavePCalc.FileName);
       synPCalc.Modified := False;
       btnPCalcSaveFile.Enabled := False;
@@ -1298,8 +1328,9 @@ begin
   begin
     if not dlgSavePCalc.Execute then
       Exit;
-    if ExtractFileExt(dlgSavePCalc.FileName) ='' then
-       dlgSavePCalc.FileName:=ChangeFileExt(dlgSavePCalc.FileName, dlgSavePCalc.DefaultExt);
+    if ExtractFileExt(dlgSavePCalc.FileName) = '' then
+      dlgSavePCalc.FileName :=
+        ChangeFileExt(dlgSavePCalc.FileName, dlgSavePCalc.DefaultExt);
   end;
 
   try
@@ -1480,23 +1511,42 @@ end;
 
 procedure TFormMain.tmrLogoTimer(Sender: TObject);
 begin
+  // change Tray Icon
   ilTray.Tag := ilTray.Tag + 1;
   if ilTray.Tag > 0 then
     ilTray.GetIcon((ilTray.Tag div 5) mod ilTray.Count, TrayIcon.Icon);
 
+  // change time interval
+  ilOption.Tag := ilOption.Tag + 1;
+  if ilOption.Tag > 600 then
+  begin
+    ilOption.Tag     := 0;
+    tmrLogo.Interval := Random(15) * 10 + 50;
+  end;
+
   if pcMain.ActivePage = tsAbout then
   begin
-    tmrLogo.Tag := (tmrLogo.Tag + 1) mod ilOption.Count;
+    // option animation
+    tmrLogo.Tag := (tmrLogo.Tag + btnShowOption.Tag) mod ilOption.Count;
     btnShowOption.ImageIndex := tmrLogo.Tag;
     if tmrLogo.Tag mod 5 = 0 then
     begin
+      // change logo
       imgLogo.Visible := not imgLogo.Visible;
+
+      // option animation dir
+      if (SecondOf(Now) mod 10) = 0 then
+        if Random(2) = 0 then
+          btnShowOption.Tag := 1
+        else
+          btnShowOption.Tag := ilOption.Count - 1;
     end;
   end;
 end;
 
 procedure TFormMain.TrayIconClick(Sender: TObject);
 begin
+  // resotre main form
   if FormMain.WindowState = wsMinimized then
     FormMain.WindowState := wsNormal;
   Show;
@@ -2041,7 +2091,7 @@ var
   b: byte;
 begin
   Result := '';
-  if Length(s) < Len then
+  if Length(s) < Len * 3 - 1 then
     Len := Length(s);
   for i := 1 to Len do
   begin
