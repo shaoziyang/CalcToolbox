@@ -1,6 +1,6 @@
 # CalcToolbox
 
-A small cross platform software for engineer calculation.
+A small cross platform calculation software for engineer calculation.
 
 
 ## Screenshot
@@ -22,10 +22,11 @@ Linux screenshot
   - CRC8
   - CRC16
   - CRC32
-- Multiple base conversion
+- Multiple base number conversion
 - Multiple types of numbers to byte buffer conversion
 - Big Float calculation
 - Big Integer calculation
+- Programmable calculator
 - Constants display
 - more
 
