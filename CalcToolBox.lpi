@@ -28,7 +28,7 @@
     </RunParams>
     <RequiredPackages Count="4">
       <Item1>
-        <PackageName Value="TurboPowerIPro"/>
+        <PackageName Value="DateTimeCtrls"/>
       </Item1>
       <Item2>
         <PackageName Value="SynEdit"/>
@@ -84,8 +84,7 @@
     </SearchPaths>
     <CodeGeneration>
       <SmartLinkUnit Value="True"/>
-      <RelocatableUnit Value="True"/>
-      <TargetOS Value="linux"/>
+      <SmallerCode Value="True"/>
     </CodeGeneration>
     <Linking>
       <Debugging>

@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   LCLType,
   ExtCtrls, Buttons, Grids, lclintf, DateUtils, Math,
-  Clipbrd, Menus, ValEdit, EditBtn,
+  Clipbrd, Menus, ValEdit,
   SynEdit, SynHighlighterPas,
   UBigFloatV3,
   //UBigIntsForFloatV4,
@@ -19,7 +19,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '0.5';
+  VERSION = '0.6';
 
 type
   SingleBytes = array[0..3] of byte;
@@ -47,7 +47,7 @@ type
     btnOpenGITEE: TSpeedButton;
     btnOpenGITHUB: TSpeedButton;
     btnOpenGITHUB1: TSpeedButton;
-    btnOpenGITHUB2: TSpeedButton;
+    btnExit: TSpeedButton;
     btnPCalcDemo1: TToolButton;
     btnPCalcDemo2: TToolButton;
     btnPCalcDemo3: TToolButton;
@@ -62,9 +62,16 @@ type
     chkCrcInvOut: TCheckBox;
     chkCrcInvIn: TCheckBox;
     cbbPCalc: TComboBox;
-    DateEdit1: TDateEdit;
     Edit1: TEdit;
-    Edit2: TEdit;
+    edtConvertTimeWeek: TLabeledEdit;
+    edtConvertTimeYHour: TLabeledEdit;
+    edtConvertTimeYMin: TLabeledEdit;
+    edtConvertTimeYSec: TLabeledEdit;
+    edtConvertTimeYWeek: TLabeledEdit;
+    edtConvertTimeYDay: TLabeledEdit;
+    edtPythonConvertTime: TEdit;
+    edtConvertTime: TEdit;
+    edtConvertTimeUTC: TEdit;
     edtBigFloatPrec: TEdit;
     edtBytesNum: TEdit;
     edtCrcXOROUT: TEdit;
@@ -84,6 +91,12 @@ type
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
+    edtConvertTimeYear: TLabeledEdit;
+    edtConvertTimeMonth: TLabeledEdit;
+    edtConvertTimeDay: TLabeledEdit;
+    edtConvertTimeHour: TLabeledEdit;
+    edtConvertTimeMin: TLabeledEdit;
+    edtConvertTimeSec: TLabeledEdit;
     Label5: TLabel;
     lbFont: TLabel;
     lbVer: TLabel;
@@ -109,7 +122,7 @@ type
     mmoCRC: TMemo;
     mmoBigFloatC: TMemo;
     PageControl1: TPageControl;
-    PageControl2: TPageControl;
+    pcAbout: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
     pnlPCalc: TPanel;
@@ -129,6 +142,7 @@ type
     pcDigit: TPageControl;
     pcMain: TPageControl;
     pmTray: TPopupMenu;
+    pmPCalcHis: TPopupMenu;
     rbBigBytes: TRadioButton;
     rbCrc7bits: TRadioButton;
     rbCrc6bits: TRadioButton;
@@ -144,6 +158,7 @@ type
     sgBase: TStringGrid;
     Shape1: TShape;
     btnShowOption: TSpeedButton;
+    btnConvertTimeRun: TSpeedButton;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
@@ -166,9 +181,10 @@ type
     SynPasSyn: TSynPasSyn;
     synPCalc: TSynEdit;
     TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
-    TabSheet3: TTabSheet;
-    TimeEdit1: TTimeEdit;
+    ToolButton14: TToolButton;
+    btnPCalcFile: TToolButton;
+    tsChangeLog: TTabSheet;
+    tsReadme: TTabSheet;
     tsConvertTime: TTabSheet;
     tsConvert: TTabSheet;
     ToolBar7: TToolBar;
@@ -273,6 +289,7 @@ type
     procedure btnBufferConvertClick(Sender: TObject);
     procedure btnBigFloatAddClick(Sender: TObject);
     procedure btnBigIntAddClick(Sender: TObject);
+    procedure btnConvertTimeRunClick(Sender: TObject);
     procedure btnCrcCalcClick(Sender: TObject);
     procedure btnCrc_CRC16_CCITTClick(Sender: TObject);
     procedure btnCrc_CRC16_DNPClick(Sender: TObject);
@@ -309,12 +326,17 @@ type
       Shift: TShiftState; X, Y: integer);
     procedure edtBigFloatPrecEditingDone(Sender: TObject);
     procedure edtBytesNumChange(Sender: TObject);
+    procedure edtConvertTimeEditingDone(Sender: TObject);
+    procedure edtConvertTimeUTCEditingDone(Sender: TObject);
+    procedure edtConvertTimeYearEditingDone(Sender: TObject);
     procedure edtCrcResultClick(Sender: TObject);
+    procedure edtPythonConvertTimeEditingDone(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure imgLazClick(Sender: TObject);
+    procedure lbVerClick(Sender: TObject);
     procedure miTrayExitClick(Sender: TObject);
     procedure mmoBigFloatCMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
@@ -336,12 +358,16 @@ type
     procedure tmrLogoTimer(Sender: TObject);
     procedure TrayIconClick(Sender: TObject);
   private
+    DateTimefmt: TFormatSettings;
     PCalcVars: array of string;
     PCalcVals: TCalcArray;
     PCalcVarNum: integer;
     procedure LoadPCalcVar;
     procedure SavePCalcVar;
     procedure SetPCalcVar;
+    procedure AddPCalcHisFile(fname: string);
+    procedure LoadPCalcFile(fname: string);
+    procedure miPCalcHisFileOnClick(Sender: TObject);
     function getCrcBit: integer;
     procedure setCrcBit(bit: integer);
     procedure bfCalc(Sender: TObject);
@@ -364,6 +390,7 @@ type
     function StrBytesToChrs(s: string; Len: integer): string;
     procedure setCrcMode(bit: integer; poly: longword; v0: longword;
       XOROUT: longword; InvIn: boolean; InvOut: boolean);
+    procedure updateTime(d: TDateTime);
   end;
 
 
@@ -447,6 +474,12 @@ begin
   lbVer.Caption := 'ver ' + VERSION;
 
   tsConstant.TabVisible := False;
+
+  DateTimefmt.ShortDateFormat := 'yyyy-mm-dd';
+  DateTimefmt.DateSeparator   := '-';
+  DateTimefmt.TimeSeparator   := ':';
+  DateTimefmt.LongTimeFormat  := 'hh:nn:ss';
+
 
   // test inifile writeable
   try
@@ -532,13 +565,24 @@ begin
     vlePCalc.Modified     := False;
     pnlPCalcVLE.Width     := ini.ReadInteger('PCalc', 'VAR_Width', 160);
     vlePCalc.ColWidths[0] := ini.ReadInteger('PCalc', 'VAR_Width_0', 60);
-    pnlPCalcFile.Height   := ini.ReadInteger('PCalc', 'File', 180);
+    pnlPCalcFile.Height   := ini.ReadInteger('PCalc', 'FileHeight', 180);
     for i := 1 to 12 do
     begin
-      s := ini.ReadString('PCalcHis', IntToStr(i), '');
+      s := ini.ReadString('PCalcCmdHis', IntToStr(i), '');
       if s <> '' then
         cbbPCalc.Items.Add(s);
     end;
+
+    for i := 1 to 8 do
+    begin
+      s := ini.ReadString('PCalcHisFile', IntToStr(i), '');
+      if s <> '' then
+        AddPCalcHisFile(s);
+    end;
+
+    // Convert Time
+    btnConvertTimeRunClick(nil);
+
   except
 
   end;
@@ -629,12 +673,19 @@ begin
 
       ini.WriteInteger('PCalc', 'VAR_Width', pnlPCalcVLE.Width);
       ini.WriteInteger('PCalc', 'VAR_Width_0', vlePCalc.ColWidths[0]);
-      ini.WriteInteger('PCalc', 'File', pnlPCalcFile.Height);
-      ini.EraseSection('PCalcHis');
+      ini.WriteInteger('PCalc', 'FileHeight', pnlPCalcFile.Height);
+      ini.EraseSection('PCalcCmdHis');
       for i := 1 to min(12, cbbPCalc.Items.Count) do
       begin
-        ini.WriteString('PCalcHis', IntToStr(i), cbbPCalc.Items[i - 1]);
+        ini.WriteString('PCalcCmdHis', IntToStr(i), cbbPCalc.Items[i - 1]);
       end;
+
+      ini.EraseSection('PCalcHisFile');
+      for i := 1 to min(8, pmPCalcHis.Items.Count) do
+      begin
+        ini.WriteString('PCalcHisFile', IntToStr(i), pmPCalcHis.Items[i - 1].Caption);
+      end;
+
       ini.UpdateFile;
     end;
   finally
@@ -663,6 +714,11 @@ end;
 procedure TFormMain.imgLazClick(Sender: TObject);
 begin
   OpenURL('http://www.lazarus-ide.org/');
+end;
+
+procedure TFormMain.lbVerClick(Sender: TObject);
+begin
+  pcAbout.ActivePageIndex := TLabel(Sender).Tag;
 end;
 
 procedure TFormMain.miTrayExitClick(Sender: TObject);
@@ -768,10 +824,90 @@ begin
 
 end;
 
+procedure TFormMain.edtConvertTimeEditingDone(Sender: TObject);
+var
+  d: TDateTime;
+begin
+  if TryStrToDateTime(edtConvertTime.Text, d, DateTimefmt) then
+    updateTime(d);
+end;
+
+procedure TFormMain.edtConvertTimeUTCEditingDone(Sender: TObject);
+var
+  d: TDateTime;
+  n: int64;
+begin
+  try
+    if TryStrToInt64(edtConvertTimeUTC.Text, n) then
+    begin
+      d := UnixToDateTime(n);
+      updateTime(d);
+    end;
+  except
+  end;
+end;
+
+procedure TFormMain.edtConvertTimeYearEditingDone(Sender: TObject);
+var
+  d: TDateTime;
+  year, mon, day, hour, min, sec: dword;
+begin
+  year := 0;
+  mon  := 0;
+  day  := 0;
+  hour := 0;
+  min  := 0;
+  sec  := 0;
+  TryStrToDWord(edtConvertTimeYear.Text, year);
+  TryStrToDWord(edtConvertTimeMonth.Text, mon);
+  TryStrToDWord(edtConvertTimeDay.Text, day);
+  TryStrToDWord(edtConvertTimeHour.Text, hour);
+  TryStrToDWord(edtConvertTimeMin.Text, min);
+  TryStrToDWord(edtConvertTimeSec.Text, sec);
+  if TryEncodeDateTime(year, mon, day, hour, min, sec, 0, d) then
+    updateTime(d);
+end;
+
 procedure TFormMain.edtCrcResultClick(Sender: TObject);
 begin
   if edtCrcResult.Text <> '' then
     Clipboard.AsText := edtCrcResult.Text;
+end;
+
+procedure TFormMain.edtPythonConvertTimeEditingDone(Sender: TObject);
+var
+  d: TDateTime;
+  ss: TStringList;
+  i: integer;
+  year, mon, day, hour, min, sec: dword;
+begin
+  ss := TStringList.Create;
+  try
+    try
+      if ExtractStrings([','], [' ', '(', ')'], PChar(edtPythonConvertTime.Text),
+        ss) > 5 then
+      begin
+        year := 0;
+        mon  := 0;
+        day  := 0;
+        hour := 0;
+        min  := 0;
+        sec  := 0;
+        TryStrToDWord(ss[0], year);
+        TryStrToDWord(ss[1], mon);
+        TryStrToDWord(ss[2], day);
+        TryStrToDWord(ss[3], hour);
+        TryStrToDWord(ss[4], min);
+        TryStrToDWord(ss[5], sec);
+        if TryEncodeDateTime(year, mon, day, hour, min, sec, 0, d) then
+          updateTime(d);
+      end;
+    except
+
+    end
+  finally
+    ss.Free;
+  end;
 end;
 
 procedure TFormMain.btnBigFloatAddClick(Sender: TObject);
@@ -932,6 +1068,11 @@ end;
 procedure TFormMain.btnBigIntAddClick(Sender: TObject);
 begin
   biCalc(Sender);
+end;
+
+procedure TFormMain.btnConvertTimeRunClick(Sender: TObject);
+begin
+  updateTime(Now);
 end;
 
 procedure TFormMain.btnCrcCalcClick(Sender: TObject);
@@ -1265,16 +1406,15 @@ begin
   synPCalc.Modified     := False;
   btnPCalcSaveFile.Enabled := False;
   btnPCalcSaveAsFile.Enabled := False;
+  btnPCalcFile.Caption  := '';
 end;
 
 procedure TFormMain.btnPCalcOpenFileClick(Sender: TObject);
 begin
   if dlgOpenPCalc.Execute then
   begin
-    synPCalc.Lines.LoadFromFile(dlgOpenPCalc.FileName);
-    synPCalc.Modified := False;
-    btnPCalcSaveFile.Enabled := False;
-    btnPCalcSaveAsFile.Enabled := False;
+    LoadPCalcFile(dlgOpenPCalc.FileName);
+    AddPCalcHisFile(dlgOpenPCalc.FileName);
   end;
 end;
 
@@ -1316,6 +1456,7 @@ begin
       synPCalc.Modified := False;
       btnPCalcSaveFile.Enabled := False;
       btnPCalcSaveAsFile.Enabled := False;
+      AddPCalcHisFile(dlgSavePCalc.FileName);
     except
 
     end;
@@ -1331,6 +1472,7 @@ begin
     if ExtractFileExt(dlgSavePCalc.FileName) = '' then
       dlgSavePCalc.FileName :=
         ChangeFileExt(dlgSavePCalc.FileName, dlgSavePCalc.DefaultExt);
+    AddPCalcHisFile(dlgSavePCalc.FileName);
   end;
 
   try
@@ -1599,6 +1741,51 @@ begin
     vlePCalc.Cells[0, i + 1] := PCalcVars[i];
     vlePCalc.Cells[1, i + 1] := PCalcVals[i].str;
   end;
+end;
+
+procedure TFormMain.AddPCalcHisFile(fname: string);
+var
+  mi: TMenuItem;
+  i: integer;
+begin
+  i := pmPCalcHis.Items.IndexOfCaption(fname);
+  if i >= 0 then
+  begin
+    pmPCalcHis.Items[i].MenuIndex := 0;
+    Exit;
+  end;
+
+  if pmPCalcHis.Items.Count > 8 then
+    pmPCalcHis.Items.Delete(7);
+
+  mi := TMenuItem.Create(pmPCalcHis);
+  mi.Caption := fname;
+  mi.OnClick := @miPCalcHisFileOnClick;
+  pmPCalcHis.Items.Insert(0, mi);
+end;
+
+procedure TFormMain.LoadPCalcFile(fname: string);
+begin
+  try
+    synPCalc.Lines.LoadFromFile(fname);
+    synPCalc.Modified    := False;
+    btnPCalcSaveFile.Enabled := False;
+    btnPCalcSaveAsFile.Enabled := False;
+    btnPCalcFile.Caption := fname;
+  except
+
+  end;
+end;
+
+procedure TFormMain.miPCalcHisFileOnClick(Sender: TObject);
+var
+  n: integer;
+  s: string;
+begin
+  s := TMenuItem(Sender).Caption;
+  LoadPCalcFile(s);
+  n := pmPCalcHis.Items.IndexOfCaption(s);
+  pmPCalcHis.Items[n].MenuIndex := 0;
 end;
 
 function TFormMain.getCrcBit: integer;
@@ -2114,6 +2301,31 @@ begin
   chkCrcInvOut.Checked := InvOut;
 
   btnCrcCalcClick(nil);
+end;
+
+procedure TFormMain.updateTime(d: TDateTime);
+begin
+  try
+    edtConvertTime.Text      := DateTimeToStr(d, DateTimefmt);
+    edtConvertTimeYear.Text  := IntToStr(YearOf(d));
+    edtConvertTimeMonth.Text := IntToStr(MonthOf(d));
+    edtConvertTimeDay.Text   := IntToStr(DayOf(d));
+    edtConvertTimeHour.Text  := IntToStr(HourOf(d));
+    edtConvertTimeMin.Text   := IntToStr(MinuteOf(d));
+    edtConvertTimeSec.Text   := IntToStr(SecondOf(d));
+    edtConvertTimeWeek.Text  := IntToStr(DayOfTheWeek(d));
+    edtConvertTimeYWeek.Text := IntToStr(WeekOf(d));
+    edtConvertTimeYDay.Text  := IntToStr(DayOfTheYear(d));
+    edtConvertTimeYHour.Text := IntToStr(HourOfTheYear(d));
+    edtConvertTimeYMin.Text  := IntToStr(MinuteOfTheYear(d));
+    edtConvertTimeYSec.Text  := IntToStr(SecondOfTheYear(d));
+    edtConvertTimeUTC.Text   := IntToStr(DateTimeToUnix(d));
+    edtPythonConvertTime.Text :=
+      Format('(%d, %d, %d, %d, %d, %d, %d, %d, %d)',
+      [YearOf(d), MonthOf(d), DayOf(d), HourOf(d), MinuteOf(d),
+      SecondOf(d), DayOfTheWeek(d) - 1, DayOfTheYear(d), 0]);
+  except
+  end;
 end;
 
 end.
