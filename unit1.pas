@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   LCLType,
   ExtCtrls, Buttons, Grids, lclintf, DateUtils, Math,
-  Clipbrd, Menus, ValEdit,
+  Clipbrd, Menus, ValEdit, Spin,
   SynEdit, SynHighlighterPas,
   UBigFloatV3,
   //UBigIntsForFloatV4,
@@ -62,7 +62,6 @@ type
     chkCrcInvOut: TCheckBox;
     chkCrcInvIn: TCheckBox;
     cbbPCalc: TComboBox;
-    Edit1: TEdit;
     edtConvertTimeWeek: TLabeledEdit;
     edtConvertTimeYHour: TLabeledEdit;
     edtConvertTimeYMin: TLabeledEdit;
@@ -78,7 +77,6 @@ type
     edtCrcResult: TEdit;
     edtCrcPolygon: TEdit;
     edtCrcInitV: TEdit;
-    edtNumericNum: TEdit;
     ilMain: TImageList;
     ilDigit: TImageList;
     ilOption: TImageList;
@@ -159,6 +157,7 @@ type
     Shape1: TShape;
     btnShowOption: TSpeedButton;
     btnConvertTimeRun: TSpeedButton;
+    edtBaseCustom: TSpinEdit;
     Splitter1: TSplitter;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
@@ -230,7 +229,6 @@ type
     tbByteErr: TToolButton;
     ToolBar3: TToolBar;
     ToolBar6: TToolBar;
-    ToolButton17: TToolButton;
     ToolButton18: TToolButton;
     ToolButton5: TToolButton;
     ToolButton6: TToolButton;
@@ -349,6 +347,7 @@ type
     procedure sgBytesEditingDone(Sender: TObject);
     procedure sgConstantMathClick(Sender: TObject);
     procedure sgBaseEditingDone(Sender: TObject);
+    procedure edtBaseCustomChange(Sender: TObject);
     procedure synPCalcChange(Sender: TObject);
     procedure tmrAlphaTimer(Sender: TObject);
     procedure btnCrc_CRC4_ITUClick(Sender: TObject);
@@ -1248,24 +1247,13 @@ begin
   neg := s[1] = '-';
 
   case sy of
-    1:
-    begin
-      base := 2;
-    end;
-    2:
-    begin
-      base := 8;
-    end;
-    3:
-    begin
-      base := 10;
-    end;
-    4:
-    begin
-      base := 16;
-    end;
+    1:      base := 2;
+    2:      base := 8;
+    3:      base := 10;
+    4:      base := 16;
+    5:      base:= edtBaseCustom.Value;
     else
-
+      Exit;
   end;
 
   dat := StrToBase(s, base, neg, MaxInt);
@@ -1274,7 +1262,15 @@ begin
   sgBase.Cells[1, 2] := BaseToStr(dat, 1, 8, neg, '0');
   sgBase.Cells[1, 3] := BaseToStr(dat, 1, 10, neg, '0');
   sgBase.Cells[1, 4] := BaseToStr(dat, 1, 16, neg, '0');
+  sgBase.Cells[1, 5] := BaseToStr(dat, 1, edtBaseCustom.Value, neg, '0');
 
+end;
+
+procedure TFormMain.edtBaseCustomChange(Sender: TObject);
+begin
+  sgBase.Cells[0,5]:='custom['+IntToStr(edtBaseCustom.Value)+']';
+  sgBase.Selection:=Rect(1,5,1,5);
+  sgBaseEditingDone(Sender);
 end;
 
 procedure TFormMain.synPCalcChange(Sender: TObject);
@@ -1734,7 +1730,7 @@ begin
     end;
   end;
   PCalcVarNum := num;
-  lbPCalcVarCount.Caption := 'Var: ' + IntToStr(num);
+  lbPCalcVarCount.Caption := 'Var: ' + IntToStr(num) + '/'+IntToStr(vlePCalc.RowCount-1);
   vlePCalc.Clean([gzNormal]);
   for i := 0 to num - 1 do
   begin
@@ -1993,8 +1989,25 @@ begin
         end;
         201: // random
         begin
-          biB.Assign(sa);
-          biA.Random(biB);
+          biA.Assign(sa);
+          biB.Assign(sb);
+          // biA > biB
+          if biA.Compare(biB) = 1 then
+          begin
+            biA.Assign(sa);
+            biB.Assign(sb);
+          end
+          else
+          begin
+            biA.Assign(sb);
+            biB.Assign(sa);
+          end;
+          biFib1 := TInteger.Create;
+          biA.Subtract(biB);  // A=A-B
+          biFib1.Random(biA); // Random(A-B)
+          biFib1.Add(biB);    // Random(A-B)+B
+          biA.Assign(biFib1);
+          biFib1.Free;
         end;
         202: // Febocera series
         begin

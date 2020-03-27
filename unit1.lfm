@@ -444,10 +444,10 @@ object FormMain: TFormMain
     Height = 520
     Top = 0
     Width = 640
-    ActivePage = tsCRC
+    ActivePage = tsDigit
     Align = alClient
     MultiLine = True
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
     Options = [nboMultiLine]
     object tsCRC: TTabSheet
@@ -879,9 +879,9 @@ object FormMain: TFormMain
         Height = 490
         Top = 0
         Width = 632
-        ActivePage = tsBigInt
+        ActivePage = tsBase
         Align = alClient
-        TabIndex = 3
+        TabIndex = 1
         TabOrder = 0
         object tsBytes: TTabSheet
           Caption = 'Bytes'
@@ -967,7 +967,7 @@ object FormMain: TFormMain
             OnEditingDone = sgBytesEditingDone
             ColWidths = (
               159
-              444
+              461
             )
             Cells = (
               12
@@ -1022,7 +1022,9 @@ object FormMain: TFormMain
             Align = alClient
             AutoFillColumns = True
             ColCount = 2
+            DefaultColWidth = 80
             Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goSmoothScroll]
+            RowCount = 6
             TabOrder = 0
             TitleFont.CharSet = ANSI_CHARSET
             TitleFont.Color = clBlack
@@ -1033,11 +1035,11 @@ object FormMain: TFormMain
             OnClick = sgConstantMathClick
             OnEditingDone = sgBaseEditingDone
             ColWidths = (
-              87
-              516
+              99
+              521
             )
             Cells = (
-              5
+              6
               0
               1
               '2'
@@ -1050,6 +1052,9 @@ object FormMain: TFormMain
               0
               4
               '16'
+              0
+              5
+              'custom(3)'
               1
               0
               'number'
@@ -1067,36 +1072,21 @@ object FormMain: TFormMain
             ShowCaptions = True
             TabOrder = 1
             Transparent = True
-            Visible = False
-            object ToolButton17: TToolButton
+            object ToolButton18: TToolButton
               Left = 1
               Top = 0
-              Caption = 'Decimal Number '
+              Caption = 'custom base '
             end
-            object edtNumericNum: TEdit
-              Left = 129
+            object edtBaseCustom: TSpinEdit
+              Left = 105
               Height = 25
               Top = 0
-              Width = 223
-              OnChange = edtBytesNumChange
+              Width = 74
+              MaxValue = 36
+              MinValue = 3
+              OnChange = edtBaseCustomChange
               TabOrder = 0
-              Text = '0'
-            end
-            object ToolButton18: TToolButton
-              Left = 352
-              Top = 0
-              Caption = ' custom '
-              Visible = False
-            end
-            object Edit1: TEdit
-              Left = 424
-              Height = 25
-              Top = 0
-              Width = 80
-              ReadOnly = True
-              TabOrder = 1
-              Text = '12'
-              Visible = False
+              Value = 3
             end
           end
         end
@@ -1133,7 +1123,7 @@ object FormMain: TFormMain
               Width = 32
               Align = alLeft
               Alignment = taCenter
-              Caption = #13#10'A'
+              Caption = #13#10'bfA'
               TabOrder = 1
             end
           end
@@ -1177,7 +1167,7 @@ object FormMain: TFormMain
               Width = 32
               Align = alLeft
               Alignment = taCenter
-              Caption = #13#10'B'
+              Caption = #13#10'bfB'
               TabOrder = 1
             end
           end
@@ -1350,7 +1340,7 @@ object FormMain: TFormMain
               end
               object ToolButton26: TToolButton
                 Left = 537
-                Height = 8
+                Height = 22
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1367,7 +1357,7 @@ object FormMain: TFormMain
               Width = 32
               Align = alLeft
               Alignment = taCenter
-              Caption = #13#10'C'
+              Caption = #13#10'bfC'
               TabOrder = 1
             end
             object mmoBigFloatC: TMemo
@@ -1417,7 +1407,7 @@ object FormMain: TFormMain
               Width = 32
               Align = alLeft
               Alignment = taCenter
-              Caption = #13#10'A'
+              Caption = #13#10'biA'
               TabOrder = 1
             end
           end
@@ -1461,7 +1451,7 @@ object FormMain: TFormMain
               Width = 32
               Align = alLeft
               Alignment = taCenter
-              Caption = #13#10'B'
+              Caption = #13#10'biB'
               TabOrder = 1
             end
           end
@@ -1489,7 +1479,7 @@ object FormMain: TFormMain
               Transparent = True
               object ToolButton23: TToolButton
                 Left = 1
-                Height = 5
+                Height = 22
                 Top = 0
                 Enabled = False
                 Style = tbsDivider
@@ -1545,7 +1535,7 @@ object FormMain: TFormMain
               object btnBigIntRandom: TToolButton
                 Tag = 201
                 Left = 236
-                Hint = 'random'
+                Hint = 'random number between A-B'
                 Top = 0
                 ImageIndex = 17
                 OnClick = btnBigIntAddClick
@@ -1600,7 +1590,7 @@ object FormMain: TFormMain
               end
               object ToolButton25: TToolButton
                 Left = 355
-                Height = 8
+                Height = 22
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1611,7 +1601,7 @@ object FormMain: TFormMain
               end
               object ToolButton24: TToolButton
                 Left = 386
-                Height = 8
+                Height = 22
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1631,7 +1621,7 @@ object FormMain: TFormMain
               end
               object ToolButton27: TToolButton
                 Left = 417
-                Height = 8
+                Height = 22
                 Top = 0
                 Caption = 'ToolButton27'
                 Style = tbsSeparator
@@ -1655,7 +1645,7 @@ object FormMain: TFormMain
               Width = 32
               Align = alLeft
               Alignment = taCenter
-              Caption = #13#10'C'
+              Caption = #13#10'biC'
               TabOrder = 1
             end
             object mmoBigIntC: TMemo
@@ -1918,8 +1908,8 @@ object FormMain: TFormMain
           TabOrder = 3
           inline synPCalc: TSynEdit
             Left = 0
-            Height = 91
-            Top = 24
+            Height = 93
+            Top = 22
             Width = 457
             Align = alClient
             Font.Height = -13
@@ -2419,10 +2409,11 @@ object FormMain: TFormMain
           end
           object ToolBar7: TToolBar
             Left = 0
-            Height = 24
+            Height = 22
             Top = 0
             Width = 457
             AutoSize = True
+            EdgeBorders = []
             Images = ilMain
             ShowCaptions = True
             TabOrder = 1
@@ -2430,14 +2421,14 @@ object FormMain: TFormMain
             object btnPCalcNewFile: TToolButton
               Left = 32
               Hint = 'new'
-              Top = 2
+              Top = 0
               ImageIndex = 13
               OnClick = btnPCalcNewFileClick
             end
             object btnPCalcOpenFile: TToolButton
               Left = 55
               Hint = 'open'
-              Top = 2
+              Top = 0
               DropdownMenu = pmPCalcHis
               ImageIndex = 14
               OnClick = btnPCalcOpenFileClick
@@ -2446,7 +2437,7 @@ object FormMain: TFormMain
             object btnPCalcSaveFile: TToolButton
               Left = 90
               Hint = 'save'
-              Top = 2
+              Top = 0
               Enabled = False
               ImageIndex = 15
               OnClick = btnPCalcSaveFileClick
@@ -2454,36 +2445,36 @@ object FormMain: TFormMain
             object btnPCalcRun: TToolButton
               Left = 144
               Hint = 'run'
-              Top = 2
+              Top = 0
               ImageIndex = 11
               OnClick = btnPCalcRunClick
             end
             object btnPCalcStop: TToolButton
               Left = 167
               Hint = 'stop'
-              Top = 2
+              Top = 0
               Enabled = False
               ImageIndex = 16
               OnClick = btnPCalcStopClick
             end
             object ToolButton32: TToolButton
               Left = 136
-              Height = 8
-              Top = 2
+              Height = 22
+              Top = 0
               Caption = 'ToolButton32'
               Style = tbsSeparator
             end
             object ToolButton33: TToolButton
               Left = 190
-              Height = 8
-              Top = 2
+              Height = 22
+              Top = 0
               Caption = 'ToolButton33'
               Style = tbsSeparator
             end
             object btnPCalcDemo1: TToolButton
               Left = 198
               Hint = 'demo 1'
-              Top = 2
+              Top = 0
               ImageIndex = 19
               OnClick = btnPCalcDemo1Click
             end
@@ -2491,7 +2482,7 @@ object FormMain: TFormMain
               Tag = 1
               Left = 221
               Hint = 'demo 2'
-              Top = 2
+              Top = 0
               ImageIndex = 20
               OnClick = btnPCalcDemo1Click
             end
@@ -2499,7 +2490,7 @@ object FormMain: TFormMain
               Tag = 2
               Left = 244
               Hint = 'demo 3'
-              Top = 2
+              Top = 0
               ImageIndex = 21
               OnClick = btnPCalcDemo1Click
             end
@@ -2507,7 +2498,7 @@ object FormMain: TFormMain
               Tag = 3
               Left = 267
               Hint = 'demo 4'
-              Top = 2
+              Top = 0
               ImageIndex = 22
               OnClick = btnPCalcDemo1Click
             end
@@ -2515,20 +2506,20 @@ object FormMain: TFormMain
               Tag = 4
               Left = 290
               Hint = 'demo 5'
-              Top = 2
+              Top = 0
               ImageIndex = 23
               OnClick = btnPCalcDemo1Click
             end
             object btnPCalcHelp: TToolButton
               Left = 313
               Hint = 'help'
-              Top = 2
+              Top = 0
               ImageIndex = 28
               OnClick = btnPCalcHelpClick
             end
             object btnPCalcSaveAsFile: TToolButton
               Left = 113
-              Top = 2
+              Top = 0
               Enabled = False
               ImageIndex = 29
               OnClick = btnPCalcSaveAsFileClick
@@ -2536,20 +2527,20 @@ object FormMain: TFormMain
             object btnPCalcClearOutput: TToolButton
               Left = 1
               Hint = 'Clear Output'
-              Top = 2
+              Top = 0
               ImageIndex = 30
               OnClick = btnPCalcClearOutputClick
             end
             object ToolButton14: TToolButton
               Left = 24
-              Height = 8
-              Top = 2
+              Height = 22
+              Top = 0
               Caption = 'ToolButton14'
               Style = tbsSeparator
             end
             object btnPCalcFile: TToolButton
               Left = 336
-              Top = 2
+              Top = 0
               AutoSize = True
             end
           end
@@ -2700,7 +2691,6 @@ object FormMain: TFormMain
           Top = 0
           Width = 170
           Align = alTop
-          BorderStyle = sbsSunken
           Caption = '0'
           TabOrder = 1
         end
@@ -3012,7 +3002,7 @@ object FormMain: TFormMain
               end            
               item
                 Title.Caption = 'Description'
-                Width = 343
+                Width = 360
               end>
             DefaultColWidth = 64
             FixedCols = 0
@@ -3028,7 +3018,7 @@ object FormMain: TFormMain
             ColWidths = (
               80
               180
-              343
+              360
             )
             Cells = (
               8
