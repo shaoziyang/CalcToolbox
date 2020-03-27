@@ -316,7 +316,7 @@ object FormOption: TFormOption
   OnShow = FormShow
   ParentFont = True
   Position = poOwnerFormCenter
-  LCLVersion = '2.0.4.0'
+  LCLVersion = '2.0.6.0'
   object Panel1: TPanel
     Left = 0
     Height = 48
@@ -440,9 +440,9 @@ object FormOption: TFormOption
     Height = 329
     Top = 0
     Width = 523
-    ActivePage = tsOptionGeneral
+    ActivePage = tsOptionFunction
     Align = alClient
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 1
     object tsOptionGeneral: TTabSheet
       Caption = 'General'
@@ -573,7 +573,7 @@ object FormOption: TFormOption
       ClientWidth = 515
       object cgOptFunction: TCheckGroup
         Left = 0
-        Height = 224
+        Height = 248
         Top = 0
         Width = 515
         Align = alTop
@@ -587,21 +587,22 @@ object FormOption: TFormOption
         ChildSizing.ShrinkVertical = crsScaleChilds
         ChildSizing.Layout = cclLeftToRightThenTopToBottom
         ChildSizing.ControlsPerLine = 1
-        ClientHeight = 202
+        ClientHeight = 226
         ClientWidth = 511
         Items.Strings = (
-          'CRC'
-          'Bytes'
-          'Base'
-          'BigFloat'
-          'BigInt'
-          'Buffer'
-          'pCalc'
+          'CRC  '
+          'Bytes  '
+          'Base  '
+          'BigFloat  '
+          'BigInt  '
+          'Buffer  '
+          'pCalc  '
+          'Pascal  '
         )
         OnItemClick = cgOptFunctionItemClick
         TabOrder = 0
         Data = {
-          0700000002020202020202
+          080000000202020202020202
         }
       end
     end

@@ -78,6 +78,10 @@ begin
     FormMain.tsDigit.TabVisible    :=
       cgOptFunction.Checked[1] or cgOptFunction.Checked[2] or
       cgOptFunction.Checked[3] or cgOptFunction.Checked[4];
+    FormMain.tsPascalScript.TabVisible := cgOptFunction.Checked[7];
+    FormMain.tsScript.TabVisible   := cgOptFunction.Checked[7];
+
+
     if cgOptFunction.Checked[1] then
       FormMain.pcDigit.ActivePageIndex := 0
     else if cgOptFunction.Checked[2] then
@@ -96,6 +100,7 @@ begin
       ini.WriteBool('Option', 'BigInt_Enabled', cgOptFunction.Checked[4]);
       ini.WriteBool('Option', 'Buffer_Enabled', cgOptFunction.Checked[5]);
       ini.WriteBool('Option', 'pCalc_Enabled', cgOptFunction.Checked[6]);
+      ini.WriteBool('Option', 'PascalScript_Enabled', cgOptFunction.Checked[7]);
       ini.UpdateFile;
     end;
   end;
@@ -104,7 +109,7 @@ end;
 procedure TFormOption.chkShowTrayChange(Sender: TObject);
 begin
   chkMinimizeToTray.Enabled := chkShowTray.Checked;
-  chkCloseToTray.Enabled := chkShowTray.Checked;
+  chkCloseToTray.Enabled    := chkShowTray.Checked;
 end;
 
 procedure TFormOption.FormShow(Sender: TObject);
@@ -119,6 +124,7 @@ begin
   chkMinimizeToTray.Checked := FormMain.MinimizeToTray;
   chkCloseToTray.Checked := FormMain.CloseToTray;
 
+  // Tab Function
   cgOptFunction.Checked[0] := FormMain.tsCRC.TabVisible;
   cgOptFunction.Checked[1] := FormMain.tsBytes.TabVisible;
   cgOptFunction.Checked[2] := FormMain.tsBase.TabVisible;
@@ -126,7 +132,7 @@ begin
   cgOptFunction.Checked[4] := FormMain.tsBigInt.TabVisible;
   cgOptFunction.Checked[5] := FormMain.tsBuffer.TabVisible;
   cgOptFunction.Checked[6] := FormMain.tsPCalc.TabVisible;
-
+  cgOptFunction.Checked[7] := FormMain.tsPascalScript.TabVisible;
 end;
 
 procedure TFormOption.showFont;
