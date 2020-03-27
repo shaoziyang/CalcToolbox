@@ -27,6 +27,7 @@ Linux screenshot
 - Big Float calculation
 - Big Integer calculation
 - Programmable calculator
+- Pascal Script
 - Constants display
 - more
 
