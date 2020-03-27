@@ -1,5 +1,12 @@
 # Change Log
 
+## v0.7, 2020.3
+
+- add Pascal Script
+- Adjust interface
+- Optimize
+- Fix bug 
+
 ## v0.6, 2020.3
 
 - Time convert
