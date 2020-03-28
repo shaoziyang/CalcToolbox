@@ -401,6 +401,7 @@ type
     procedure tmrLogoTimer(Sender: TObject);
     procedure TrayIconClick(Sender: TObject);
   private
+    PascalScriptModified:Boolean;
     DateTimefmt: TFormatSettings;
     PCalcVars: array of string;
     PCalcVals: TCalcArray;
@@ -731,7 +732,7 @@ begin
       if s <> '' then
         AddPascalScriptHisFile(s);
     end;
-
+    PascalScriptModified:=True;
     PascalScriptInit;
 
   except
@@ -1462,6 +1463,7 @@ end;
 
 procedure TFormMain.SynEditPascalScriptChange(Sender: TObject);
 begin
+  PascalScriptModified:=True;
   btnPascalScriptSave.Enabled   := SynEditPascalScript.Modified;
   btnPascalScriptSaveAs.Enabled := SynEditPascalScript.Modified;
 end;
@@ -1589,6 +1591,7 @@ begin
     btnPascalScriptSaveAs.Enabled   := False;
     btnPascalScriptSaveAs.Enabled   := False;
     btnPascalScriptFileName.Caption := fname;
+    PascalScriptModified:=True;
   except
 
   end;
@@ -1640,6 +1643,7 @@ begin
   btnPascalScriptFileName.Caption := '';
   btnPascalScriptSave.Enabled     := False;
   btnPascalScriptSaveAs.Enabled   := False;
+  PascalScriptModified:=True;
 end;
 
 procedure TFormMain.btnPascalScriptOpenClick(Sender: TObject);
@@ -1660,6 +1664,8 @@ begin
   btnPascalScriptRun.Enabled  := False;
   try
     try
+      if PascalScriptModified then
+      begin
       // compile
       PSScript.Script.Text := SynEditPascalScript.Text;
       res := PSScript.Compile;
@@ -1669,9 +1675,14 @@ begin
       Application.ProcessMessages;
 
       if not res then
+      begin
         if PSScript.CompilerMessageCount > 0 then
           for i := 0 to PSScript.CompilerMessageCount - 1 do
             mmoPascalScript.Lines.add(PSScript.CompilerErrorToStr(i));
+      end
+      else
+      PascalScriptModified:=False;
+      end;
 
       Application.ProcessMessages;
       // run
@@ -2024,7 +2035,7 @@ begin
     tmrLogo.Interval := Random(15) * 10 + 50;
   end;
 
-  if pcMain.ActivePage = tsAbout then
+  if (pcMain.ActivePage = tsAbout) and visible then
   begin
     // option animation
     tmrLogo.Tag := (tmrLogo.Tag + btnShowOption.Tag) mod ilOption.Count;
