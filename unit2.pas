@@ -84,6 +84,10 @@ begin
   ini.WriteBool('Option', 'Script_Enabled', tvFunctions.Items[9].StateIndex=1);
   ini.WriteBool('Option', 'Pascal_Enabled', tvFunctions.Items[10].StateIndex=1);
   ini.WriteBool('Option', 'micropython_Enabled', tvFunctions.Items[11].StateIndex=1);
+  ini.WriteBool('Option', 'Constant_Enabled', tvFunctions.Items[12].StateIndex=1);
+  ini.WriteBool('Option', 'ConstantMath_Enabled', tvFunctions.Items[13].StateIndex=1);
+  ini.WriteBool('Option', 'ConstantPhysics_Enabled', tvFunctions.Items[14].StateIndex=1);
+
   FormMain.updateTabVisible;
 end;
 
@@ -120,7 +124,9 @@ begin
   tvSetCheck(tvFunctions.Items[9], ini.ReadBool('Option', 'Script_Enabled', True));
   tvSetCheck(tvFunctions.Items[10], ini.ReadBool('Option', 'Pascal_Enabled', True));
   tvSetCheck(tvFunctions.Items[11], ini.ReadBool('Option', 'micropython_Enabled', True));
-
+  tvSetCheck(tvFunctions.Items[12], ini.ReadBool('Option', 'Constant_Enabled', True));
+  tvSetCheck(tvFunctions.Items[13], ini.ReadBool('Option', 'ConstantMath_Enabled', True));
+  tvSetCheck(tvFunctions.Items[14], ini.ReadBool('Option', 'ConstantPhysics_Enabled', True));
 end;
 
 procedure TFormOption.tvFunctionsClick(Sender: TObject);
