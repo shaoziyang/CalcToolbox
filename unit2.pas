@@ -78,13 +78,12 @@ begin
   ini.WriteBool('Option', 'Base_Enabled', tvFunctions.Items[3].StateIndex=1);
   ini.WriteBool('Option', 'BigFloat_Enabled', tvFunctions.Items[4].StateIndex=1);
   ini.WriteBool('Option', 'BigInt_Enabled', tvFunctions.Items[5].StateIndex=1);
-  ini.WriteBool('Option', 'Buffer_Enabled', tvFunctions.Items[6].StateIndex=1);
-  ini.WriteBool('Option', 'Convert_Enabled', tvFunctions.Items[7].StateIndex=1);
-  ini.WriteBool('Option', 'Time_Enabled', tvFunctions.Items[8].StateIndex=1);
-  ini.WriteBool('Option', 'Calc_Enabled', tvFunctions.Items[9].StateIndex=1);
-  ini.WriteBool('Option', 'Script_Enabled', tvFunctions.Items[10].StateIndex=1);
-  ini.WriteBool('Option', 'Pascal_Enabled', tvFunctions.Items[11].StateIndex=1);
-  ini.WriteBool('Option', 'micropython_Enabled', tvFunctions.Items[12].StateIndex=1);
+  ini.WriteBool('Option', 'Convert_Enabled', tvFunctions.Items[6].StateIndex=1);
+  ini.WriteBool('Option', 'Time_Enabled', tvFunctions.Items[7].StateIndex=1);
+  ini.WriteBool('Option', 'Calc_Enabled', tvFunctions.Items[8].StateIndex=1);
+  ini.WriteBool('Option', 'Script_Enabled', tvFunctions.Items[9].StateIndex=1);
+  ini.WriteBool('Option', 'Pascal_Enabled', tvFunctions.Items[10].StateIndex=1);
+  ini.WriteBool('Option', 'micropython_Enabled', tvFunctions.Items[11].StateIndex=1);
   FormMain.updateTabVisible;
 end;
 
@@ -115,13 +114,12 @@ begin
   tvSetCheck(tvFunctions.Items[3], ini.ReadBool('Option', 'Base_Enabled', True));
   tvSetCheck(tvFunctions.Items[4], ini.ReadBool('Option', 'BigFloat_Enabled', True));
   tvSetCheck(tvFunctions.Items[5], ini.ReadBool('Option', 'BigInt_Enabled', True));
-  tvSetCheck(tvFunctions.Items[6], ini.ReadBool('Option', 'Buffer_Enabled', True));
-  tvSetCheck(tvFunctions.Items[7], ini.ReadBool('Option', 'Convert_Enabled', True));
-  tvSetCheck(tvFunctions.Items[8], ini.ReadBool('Option', 'Time_Enabled', True));
-  tvSetCheck(tvFunctions.Items[9], ini.ReadBool('Option', 'Calc_Enabled', True));
-  tvSetCheck(tvFunctions.Items[10], ini.ReadBool('Option', 'Script_Enabled', True));
-  tvSetCheck(tvFunctions.Items[11], ini.ReadBool('Option', 'Pascal_Enabled', True));
-  tvSetCheck(tvFunctions.Items[12], ini.ReadBool('Option', 'micropython_Enabled', True));
+  tvSetCheck(tvFunctions.Items[6], ini.ReadBool('Option', 'Convert_Enabled', True));
+  tvSetCheck(tvFunctions.Items[7], ini.ReadBool('Option', 'Time_Enabled', True));
+  tvSetCheck(tvFunctions.Items[8], ini.ReadBool('Option', 'Calc_Enabled', True));
+  tvSetCheck(tvFunctions.Items[9], ini.ReadBool('Option', 'Script_Enabled', True));
+  tvSetCheck(tvFunctions.Items[10], ini.ReadBool('Option', 'Pascal_Enabled', True));
+  tvSetCheck(tvFunctions.Items[11], ini.ReadBool('Option', 'micropython_Enabled', True));
 
 end;
 
