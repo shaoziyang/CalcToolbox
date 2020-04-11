@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, Buttons,
-  ComCtrls, StdCtrls;
+  LCLType, ComCtrls, StdCtrls;
 
 type
 
@@ -16,24 +16,30 @@ type
     btnOptionCancel: TBitBtn;
     btnOptionOK: TBitBtn;
     btnOptionSelectFont: TBitBtn;
-    cgOptFunction: TCheckGroup;
     chkShowTray: TCheckBox;
     chkMinimizeToTray: TCheckBox;
     chkCloseToTray: TCheckBox;
     ComboBox1: TComboBox;
     dlgFont: TFontDialog;
     Image1: TImage;
+    ilCheckBox: TImageList;
     Label3: TLabel;
     lbOptFont: TStaticText;
     PageControl1: TPageControl;
     Panel1: TPanel;
+    TabSheet1: TTabSheet;
+    tvFunctions: TTreeView;
     tsOptionGeneral: TTabSheet;
-    tsOptionFunction: TTabSheet;
+    procedure btnOptionOKClick(Sender: TObject);
     procedure btnOptionSelectFontClick(Sender: TObject);
-    procedure cgOptFunctionItemClick(Sender: TObject; Index: integer);
     procedure chkShowTrayChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure tvFunctionsClick(Sender: TObject);
+    procedure tvFunctionsKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
+
+    procedure tvSetCheck(node: TTreeNode; check:Boolean=True);
 
   public
     procedure showFont;
@@ -64,46 +70,22 @@ begin
 
 end;
 
-procedure TFormOption.cgOptFunctionItemClick(Sender: TObject; Index: integer);
+procedure TFormOption.btnOptionOKClick(Sender: TObject);
 begin
-  if Sender = nil then
-  begin
-    FormMain.tsCRC.TabVisible      := cgOptFunction.Checked[0];
-    FormMain.tsBytes.TabVisible    := cgOptFunction.Checked[1];
-    FormMain.tsBase.TabVisible     := cgOptFunction.Checked[2];
-    FormMain.tsBigFloat.TabVisible := cgOptFunction.Checked[3];
-    FormMain.tsBigInt.TabVisible   := cgOptFunction.Checked[4];
-    FormMain.tsBuffer.TabVisible   := cgOptFunction.Checked[5];
-    FormMain.tsPCalc.TabVisible    := cgOptFunction.Checked[6];
-    FormMain.tsDigit.TabVisible    :=
-      cgOptFunction.Checked[1] or cgOptFunction.Checked[2] or
-      cgOptFunction.Checked[3] or cgOptFunction.Checked[4];
-    FormMain.tsPascalScript.TabVisible := cgOptFunction.Checked[7];
-    FormMain.tsScript.TabVisible   := cgOptFunction.Checked[7];
-
-
-    if cgOptFunction.Checked[1] then
-      FormMain.pcDigit.ActivePageIndex := 0
-    else if cgOptFunction.Checked[2] then
-      FormMain.pcDigit.ActivePageIndex := 1
-    else if cgOptFunction.Checked[3] then
-      FormMain.pcDigit.ActivePageIndex := 2
-    else
-      FormMain.pcDigit.ActivePageIndex := 3;
-
-    if writeable then
-    begin
-      ini.WriteBool('Option', 'CRC_Enabled', cgOptFunction.Checked[0]);
-      ini.WriteBool('Option', 'Bytes_Enabled', cgOptFunction.Checked[1]);
-      ini.WriteBool('Option', 'Base_Enabled', cgOptFunction.Checked[2]);
-      ini.WriteBool('Option', 'BigFloat_Enabled', cgOptFunction.Checked[3]);
-      ini.WriteBool('Option', 'BigInt_Enabled', cgOptFunction.Checked[4]);
-      ini.WriteBool('Option', 'Buffer_Enabled', cgOptFunction.Checked[5]);
-      ini.WriteBool('Option', 'pCalc_Enabled', cgOptFunction.Checked[6]);
-      ini.WriteBool('Option', 'PascalScript_Enabled', cgOptFunction.Checked[7]);
-      ini.UpdateFile;
-    end;
-  end;
+  ini.WriteBool('Option', 'CRC_Enabled', tvFunctions.Items[0].StateIndex=1);
+  ini.WriteBool('Option', 'Dital_Enabled', tvFunctions.Items[1].StateIndex=1);
+  ini.WriteBool('Option', 'Bytes_Enabled', tvFunctions.Items[2].StateIndex=1);
+  ini.WriteBool('Option', 'Base_Enabled', tvFunctions.Items[3].StateIndex=1);
+  ini.WriteBool('Option', 'BigFloat_Enabled', tvFunctions.Items[4].StateIndex=1);
+  ini.WriteBool('Option', 'BigInt_Enabled', tvFunctions.Items[5].StateIndex=1);
+  ini.WriteBool('Option', 'Buffer_Enabled', tvFunctions.Items[6].StateIndex=1);
+  ini.WriteBool('Option', 'Convert_Enabled', tvFunctions.Items[7].StateIndex=1);
+  ini.WriteBool('Option', 'Time_Enabled', tvFunctions.Items[8].StateIndex=1);
+  ini.WriteBool('Option', 'Calc_Enabled', tvFunctions.Items[9].StateIndex=1);
+  ini.WriteBool('Option', 'Script_Enabled', tvFunctions.Items[10].StateIndex=1);
+  ini.WriteBool('Option', 'Pascal_Enabled', tvFunctions.Items[11].StateIndex=1);
+  ini.WriteBool('Option', 'micropython_Enabled', tvFunctions.Items[12].StateIndex=1);
+  FormMain.updateTabVisible;
 end;
 
 procedure TFormOption.chkShowTrayChange(Sender: TObject);
@@ -113,6 +95,9 @@ begin
 end;
 
 procedure TFormOption.FormShow(Sender: TObject);
+var
+  node:TTreeNode;
+  i:integer;
 begin
   Font := FormMain.Font;
   showFont;
@@ -124,15 +109,40 @@ begin
   chkMinimizeToTray.Checked := FormMain.MinimizeToTray;
   chkCloseToTray.Checked := FormMain.CloseToTray;
 
-  // Tab Function
-  cgOptFunction.Checked[0] := FormMain.tsCRC.TabVisible;
-  cgOptFunction.Checked[1] := FormMain.tsBytes.TabVisible;
-  cgOptFunction.Checked[2] := FormMain.tsBase.TabVisible;
-  cgOptFunction.Checked[3] := FormMain.tsBigFloat.TabVisible;
-  cgOptFunction.Checked[4] := FormMain.tsBigInt.TabVisible;
-  cgOptFunction.Checked[5] := FormMain.tsBuffer.TabVisible;
-  cgOptFunction.Checked[6] := FormMain.tsPCalc.TabVisible;
-  cgOptFunction.Checked[7] := FormMain.tsPascalScript.TabVisible;
+  tvSetCheck(tvFunctions.Items[0], ini.ReadBool('Option', 'CRC_Enabled', True));
+  tvSetCheck(tvFunctions.Items[1], ini.ReadBool('Option', 'Dital_Enabled', True));
+  tvSetCheck(tvFunctions.Items[2], ini.ReadBool('Option', 'Bytes_Enabled', True));
+  tvSetCheck(tvFunctions.Items[3], ini.ReadBool('Option', 'Base_Enabled', True));
+  tvSetCheck(tvFunctions.Items[4], ini.ReadBool('Option', 'BigFloat_Enabled', True));
+  tvSetCheck(tvFunctions.Items[5], ini.ReadBool('Option', 'BigInt_Enabled', True));
+  tvSetCheck(tvFunctions.Items[6], ini.ReadBool('Option', 'Buffer_Enabled', True));
+  tvSetCheck(tvFunctions.Items[7], ini.ReadBool('Option', 'Convert_Enabled', True));
+  tvSetCheck(tvFunctions.Items[8], ini.ReadBool('Option', 'Time_Enabled', True));
+  tvSetCheck(tvFunctions.Items[9], ini.ReadBool('Option', 'Calc_Enabled', True));
+  tvSetCheck(tvFunctions.Items[10], ini.ReadBool('Option', 'Script_Enabled', True));
+  tvSetCheck(tvFunctions.Items[11], ini.ReadBool('Option', 'Pascal_Enabled', True));
+  tvSetCheck(tvFunctions.Items[12], ini.ReadBool('Option', 'micropython_Enabled', True));
+
+end;
+
+procedure TFormOption.tvFunctionsClick(Sender: TObject);
+begin
+  tvSetCheck(tvFunctions.Selected, tvFunctions.Selected.StateIndex=0);
+end;
+
+procedure TFormOption.tvFunctionsKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Key = VK_SPACE then
+     tvSetCheck(tvFunctions.Selected, tvFunctions.Selected.StateIndex=0);
+end;
+
+procedure TFormOption.tvSetCheck(node: TTreeNode; check: Boolean);
+begin
+  if check then
+    node.StateIndex:=1
+  else
+    node.StateIndex:=0;
 end;
 
 procedure TFormOption.showFont;
