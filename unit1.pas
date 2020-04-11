@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   LCLType, ExtCtrls, Buttons, Grids, lclintf, DateUtils, Math,
-  Clipbrd, Menus, ValEdit, Spin, process,
+  Clipbrd, Menus, Spin, process,
   IniFiles, Types,
   SynEdit, SynHighlighterPas, SynHighlighterCpp,
   uPSComponent,
@@ -38,7 +38,6 @@ type
 
   TFormMain = class(TForm)
     ApplicationProperties: TApplicationProperties;
-    btnBufferConvert: TBitBtn;
     btnBigIntAdd: TToolButton;
     btnBigIntDiv: TToolButton;
     btnBigIntFib: TToolButton;
@@ -142,9 +141,6 @@ type
     miTrayOption: TMenuItem;
     miTrayExit: TMenuItem;
     N1: TMenuItem;
-    mmoBufferStr: TMemo;
-    mmoBufferHEX: TMemo;
-    mmoBufferPython: TMemo;
     mmoBigFloatA: TMemo;
     mmoBigIntA: TMemo;
     mmoBigFloatB: TMemo;
@@ -154,14 +150,9 @@ type
     mmoBigFloatC: TMemo;
     PageControl1: TPageControl;
     pcAbout: TPageControl;
-    Panel1: TPanel;
-    Panel2: TPanel;
     pnlBigFloatA: TPanel;
     pnlBigIntB: TPanel;
     pnlBigIntC: TPanel;
-    pnlBufferStr: TPanel;
-    pnlBufferHEX: TPanel;
-    pnlBufferPython: TPanel;
     pnlBigFloatB: TPanel;
     pnlBigFloatC: TPanel;
     Panel5: TPanel;
@@ -207,19 +198,14 @@ type
     Splitter2: TSplitter;
     Splitter3: TSplitter;
     sgConstantMath: TStringGrid;
-    Splitter4: TSplitter;
     Splitter5: TSplitter;
-    Splitter6: TSplitter;
     Splitter9: TSplitter;
-    StaticText1: TStaticText;
     StaticText2: TStaticText;
     StaticText3: TStaticText;
     StaticText4: TStaticText;
     StaticText5: TStaticText;
     StaticText6: TStaticText;
     StaticText7: TStaticText;
-    StaticText8: TStaticText;
-    StaticText9: TStaticText;
     SynEditFunc_Calc: TSynEdit;
     SynEditPascalScript: TSynEdit;
     SynEditMPY: TSynEdit;
@@ -253,7 +239,6 @@ type
     tsConvertTime: TTabSheet;
     tsConvert: TTabSheet;
     TrayIcon: TTrayIcon;
-    tsBuffer: TTabSheet;
     tbBigInt: TToolBar;
     tmrLogo: TTimer;
     ToolButton24: TToolButton;
@@ -340,7 +325,6 @@ type
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
-    procedure btnBufferConvertClick(Sender: TObject);
     procedure btnBigFloatAddClick(Sender: TObject);
     procedure btnBigIntAddClick(Sender: TObject);
     procedure btnClear_CalcClick(Sender: TObject);
@@ -408,8 +392,6 @@ type
     procedure mmoBigFloatCMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure mmoBigIntCMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: integer);
-    procedure mmoBufferPythonMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure Script_PascalCompile(Sender: TPSScript);
     procedure rbBigBytesChange(Sender: TObject);
@@ -485,6 +467,8 @@ type
     function StrBytesToChrs(s: string; Len: integer): string;
     procedure setCrcMode(bit: integer; poly: longword; v0: longword;
       XOROUT: longword; InvIn: boolean; InvOut: boolean);
+    //function pyBytesTo
+
     procedure updateTime(d: TDateTime);
 
     procedure updateTabVisible;
@@ -745,20 +729,14 @@ begin
     mmoBigIntA.Text := '';
     mmoBigIntB.Text := '';
 
-    // Buffer
-    pnlBufferPython.Height := ini.ReadInteger('Buffer', 'PanelPython', 120);
-    pnlBufferHEX.Height    := ini.ReadInteger('Buffer', 'PanelHex', 120);
-    mmoBufferPython.Text   := '';
-    mmoBufferHex.Text      := '';
-    mmoBufferStr.Text      := '';
-
     // Calc
-    EditorAutoSaveFileName_calc :=      ExtractFilePath(Application.ExeName) + 'autosave.calc';
+    EditorAutoSaveFileName_calc :=
+      ExtractFilePath(Application.ExeName) + 'autosave.calc';
 
     if FileExists(EditorAutoSaveFileName_calc) then
       LoadFile_Calc(EditorAutoSaveFileName_calc)
     else
-    btnNew_CalcClick(Sender);
+      btnNew_CalcClick(Sender);
 
     for i := 1 to ini.ReadInteger('HisFile_Calc', 'Count', 0) do
       pmAddHis(pmHis_Calc, ini.ReadString('HisFile_Calc', IntToStr(i), ''));
@@ -865,10 +843,6 @@ begin
       ini.WriteBool('BigInt', 'comma', chkBigIntComma.Checked);
       ini.WriteInteger('BigInt', 'PanelA', pnlBigIntA.Height);
       ini.WriteInteger('BigInt', 'PanelB', pnlBigIntB.Height);
-
-      // Buffer
-      ini.WriteInteger('Buffer', 'PanelPython', pnlBufferPython.Height);
-      ini.WriteInteger('Buffer', 'PanelHex', pnlBufferHex.Height);
 
       // Calc
       SaveFile_Calc(EditorAutoSaveFileName_calc);
@@ -1031,12 +1005,6 @@ begin
     btnBigIntHint.Caption := IntToStr(mmoBigIntC.SelLength);
     Clipboard.AsText      := mmoBigIntC.SelText;
   end;
-end;
-
-procedure TFormMain.mmoBufferPythonMouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: integer);
-begin
-  Clipboard.AsText := TMemo(Sender).Text;
 end;
 
 procedure TFormMain.Script_PascalCompile(Sender: TPSScript);
@@ -1208,150 +1176,6 @@ begin
   bfCalc(Sender);
 end;
 
-procedure TFormMain.btnBufferConvertClick(Sender: TObject);
-const
-  MaxLen = 256;
-var
-  i, j, bufN, len, d: integer;
-  buf: TByteArray;
-  s, ss, s1, s2, s3: string;
-begin
-
-  if mmoBufferPython.Modified then
-  begin
-    s1   := '';
-    s2   := '';
-    s3   := mmoBufferPython.Text;
-    mmoBufferStr.Text := '';
-    mmoBufferHEX.Text := '';
-    bufN := Length(s3);
-    i    := 1;
-    len  := 0;
-    while i <= bufN do
-    begin
-      if s3[i] = '\' then
-      begin
-        if i < bufN then
-        begin
-          case Ord(s3[i + 1]) of
-            Ord('\'): buf[len]  := Ord('\');
-            Ord('"'): buf[len]  := Ord('"');
-            Ord(''''): buf[len] := Ord('''');
-            Ord('a'): buf[len]  := 7;
-            Ord('b'): buf[len]  := 8;
-            Ord('t'): buf[len]  := 9;
-            Ord('v'): buf[len]  := 11;
-            Ord('f'): buf[len]  := 12;
-            Ord('n'): buf[len]  := 10;
-            Ord('r'): buf[len]  := 13;
-            Ord('x'): // hex number
-            begin
-              if i < bufN - 1 then
-                buf[len] := Chr2ToByte(s3[i + 2], s3[i + 3])
-              else
-                buf[len] := Chr2ToByte('0', s3[i + 2]);
-              i := i + 2;
-            end;
-            Ord('0')..Ord('7'): // Octal number
-            begin
-              j := 1;
-              if (Ord(s3[i + 2]) <= Ord('7')) and (Ord(s3[i + 2]) >= Ord('0')) then
-              begin
-                j := 2;
-                if (Ord(s3[i + 3]) <= Ord('7')) and (Ord(s3[i + 3]) >= Ord('0')) then
-                  j := 3;
-              end;
-              s := Copy(s3, i + 1, j);
-              d := StrToBase(s, 8, False, system.MaxInt);
-              if d > 255 then
-              begin
-                beep;
-                Exit;
-              end;
-              buf[len] := d;
-              i := i + j - 1;
-            end
-            else
-              buf[len] := Ord(s3[i]);
-              len      := len + 1;
-              buf[len] := Ord(s3[i + 1]);
-          end;
-          i := i + 1;
-        end
-        else
-          buf[len] := 0;
-      end
-      else
-        buf[len] := Ord(s3[i]);
-      len := len + 1;
-      i   := i + 1;
-      if (len >= MaxLen) or (i >= bufN) then
-      begin
-        s1  := s1 + BufferToStr(buf, len);
-        s2  := s2 + BufferToHex(buf, len);
-        len := 0;
-      end;
-    end;
-    mmoBufferStr.Text := s1;
-    mmoBufferHEX.Text := s2;
-  end
-  else
-  begin
-    if mmoBufferHEX.Modified then
-    begin
-      s1 := '';
-      StrToByteBuf(mmoBufferHEX.Text, s2);
-      mmoBufferHEX.Text := s2;
-      s3   := '';
-      bufN := (Length(s2) + 2) div 3;
-      for i := 1 to (bufN div MaxLen) + 1 do
-      begin
-        if i * MaxLen < bufN then
-          len := MaxLen
-        else
-          len := bufN - (i - 1) * MaxLen;
-        StrToBytes(s2, len, buf);
-        Delete(s2, 1, len * 3);
-        s1 := s1 + BufferToStr(buf, len);
-        s3 := s3 + BufferToPyStr(buf, len);
-      end;
-      mmoBufferStr.Text    := s1;
-      mmoBufferPython.Text := s3;
-    end
-    else
-    begin
-      if mmoBufferStr.Modified then
-      begin
-        s1   := mmoBufferStr.Text;
-        s2   := '';
-        s3   := '';
-        bufN := Length(s1);
-        for i := 1 to (bufN div MaxLen) + 1 do
-        begin
-          if i * MaxLen < bufN then
-            len := MaxLen
-          else
-            len := bufN - (i - 1) * 256;
-          for j := 0 to len - 1 do
-          begin
-            buf[j] := Ord(s1[j + 1]);
-          end;
-          s2 := s2 + BufferToHEX(buf, len);
-          s3 := s3 + BufferToPyStr(buf, len);
-          Delete(s1, 1, len);
-        end;
-        mmoBufferHEX.Text    := s2;
-        mmoBufferPython.Text := s3;
-      end;
-    end;
-  end;
-
-  mmoBufferPython.Modified := False;
-  mmoBufferStr.Modified    := False;
-  mmoBufferHEX.Modified    := False;
-
-end;
-
 procedure TFormMain.btnBigIntAddClick(Sender: TObject);
 begin
   biCalc(Sender);
@@ -1446,10 +1270,13 @@ end;
 
 
 procedure TFormMain.sgBytesEditingDone(Sender: TObject);
+const
+  MaxLen = 256;
 var
-  i, j, sy: integer;
+  i, j, sy, len, d, bufN: integer;
+  buf: TByteArray;
   nd: int64;
-  s, ss: string;
+  s, ss, s1, s2: string;
   pb: TByteArray;
   ps: ^single;
   pd: ^double;
@@ -1505,13 +1332,117 @@ begin
         i := (Length(s) + 2) div 3;
         StrToBytes(s, i, pb);
         sgBytes.Cells[1, 12] := BufferToStr(pb, i);
+
+        StrToByteBuf(ss, s);
+        ss   := '';
+        bufN := (Length(s) + 2) div 3;
+        for i := 1 to (bufN div MaxLen) + 1 do
+        begin
+          if i * MaxLen < bufN then
+            len := MaxLen
+          else
+            len := bufN - (i - 1) * MaxLen;
+          StrToBytes(s, len, buf);
+          Delete(s, 1, len * 3);
+          ss := ss + BufferToPyStr(buf, len);
+        end;
+        sgBytes.Cells[1, 13] := ss;
       end;
       12: // string
       begin
         s := '';
         for i := 1 to Length(ss) do
-          s := s + Format('%.02X ', [Ord(ss[i])]);
+          s  := s + Format('%.02X ', [Ord(ss[i])]);
         sgBytes.Cells[1, 11] := s;
+        s    := '';
+        bufN := Length(ss);
+        for i := 1 to (bufN div MaxLen) + 1 do
+        begin
+          if i * MaxLen < bufN then
+            len := MaxLen
+          else
+            len := bufN - (i - 1) * MaxLen;
+          for j := 0 to len - 1 do
+          begin
+            buf[j] := Ord(ss[j + 1]);
+          end;
+          s := s + BufferToPyStr(buf, len);
+          Delete(ss, 1, len);
+        end;
+        sgBytes.Cells[1, 13] := s;
+      end;
+      13: // python
+      begin
+        bufN := Length(ss);
+        i    := 1;
+        len  := 0;
+        while i <= bufN do
+        begin
+          if ss[i] = '\' then
+          begin
+            if i < bufN then
+            begin
+              case Ord(ss[i + 1]) of
+                Ord('\'): buf[len]  := Ord('\');
+                Ord('"'): buf[len]  := Ord('"');
+                Ord(''''): buf[len] := Ord('''');
+                Ord('a'): buf[len]  := 7;
+                Ord('b'): buf[len]  := 8;
+                Ord('t'): buf[len]  := 9;
+                Ord('v'): buf[len]  := 11;
+                Ord('f'): buf[len]  := 12;
+                Ord('n'): buf[len]  := 10;
+                Ord('r'): buf[len]  := 13;
+                Ord('x'): // hex number
+                begin
+                  if i < bufN - 1 then
+                    buf[len] := Chr2ToByte(ss[i + 2], ss[i + 3])
+                  else
+                    buf[len] := Chr2ToByte('0', ss[i + 2]);
+                  i := i + 2;
+                end;
+                Ord('0')..Ord('7'): // Octal number
+                begin
+                  j := 1;
+                  if (Ord(ss[i + 2]) <= Ord('7')) and (Ord(ss[i + 2]) >= Ord('0')) then
+                  begin
+                    j := 2;
+                    if (Ord(ss[i + 3]) <= Ord('7')) and (Ord(ss[i + 3]) >= Ord('0')) then
+                      j := 3;
+                  end;
+                  s := Copy(ss, i + 1, j);
+                  d := StrToBase(s, 8, False, system.MaxInt);
+                  if d > 255 then
+                  begin
+                    beep;
+                    Exit;
+                  end;
+                  buf[len] := d;
+                  i := i + j - 1;
+                end
+                else
+                  buf[len] := Ord(ss[i]);
+                  len      := len + 1;
+                  buf[len] := Ord(ss[i + 1]);
+              end;
+              i := i + 1;
+            end
+            else
+              buf[len] := 0;
+          end
+          else
+            buf[len] := Ord(ss[i]);
+          len := len + 1;
+          i   := i + 1;
+          if (len >= MaxLen) or (i >= bufN) then
+          begin
+            s1  := s1 + BufferToStr(buf, len);
+            s2  := s2 + BufferToHex(buf, len);
+            len := 0;
+          end;
+        end;
+        sgBytes.Cells[1, 11] := s1;
+        sgBytes.Cells[1, 12] := s2;
       end;
     end;
     if sy <= 8 then
@@ -2867,7 +2798,6 @@ begin
   tsBase.TabVisible     := ini.ReadBool('Option', 'Base_Enabled', True);
   tsBigFloat.TabVisible := ini.ReadBool('Option', 'BigFloat_Enabled', True);
   tsBigInt.TabVisible   := ini.ReadBool('Option', 'BigInt_Enabled', True);
-  tsBuffer.TabVisible   := ini.ReadBool('Option', 'Buffer_Enabled', True);
   tsConvert.TabVisible  := ini.ReadBool('Option', 'Convert_Enabled', True);
   tsConvertTime.TabVisible := ini.ReadBool('Option', 'Time_Enabled', True);
   tsCalc.TabVisible     := ini.ReadBool('Option', 'Calc_Enabled', True);

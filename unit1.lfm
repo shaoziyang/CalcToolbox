@@ -447,10 +447,10 @@ object FormMain: TFormMain
     Height = 520
     Top = 0
     Width = 697
-    ActivePage = tsCalc
+    ActivePage = tsConvert
     Align = alClient
     MultiLine = True
-    TabIndex = 4
+    TabIndex = 2
     TabOrder = 0
     Options = [nboMultiLine]
     object tsCRC: TTabSheet
@@ -882,19 +882,19 @@ object FormMain: TFormMain
         Height = 490
         Top = 0
         Width = 689
-        ActivePage = tsBigInt
+        ActivePage = tsBytes
         Align = alClient
-        TabIndex = 3
+        TabIndex = 0
         TabOrder = 0
         object tsBytes: TTabSheet
           Caption = 'Bytes'
           ClientHeight = 460
-          ClientWidth = 624
+          ClientWidth = 681
           object ToolBar3: TToolBar
             Left = 0
             Height = 25
             Top = 0
-            Width = 624
+            Width = 681
             AutoSize = True
             Caption = 'ToolBar3'
             EdgeBorders = []
@@ -951,14 +951,14 @@ object FormMain: TFormMain
             Left = 0
             Height = 435
             Top = 25
-            Width = 624
+            Width = 681
             Align = alClient
             AutoFillColumns = True
             ColCount = 2
             DefaultColWidth = 120
             DefaultRowHeight = 24
             Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goSmoothScroll]
-            RowCount = 13
+            RowCount = 14
             TabOrder = 1
             TitleFont.CharSet = ANSI_CHARSET
             TitleFont.Color = clBlack
@@ -966,14 +966,13 @@ object FormMain: TFormMain
             TitleFont.Name = 'Courier New'
             TitleFont.Pitch = fpFixed
             TitleFont.Quality = fqDraft
-            OnClick = sgConstantMathClick
             OnEditingDone = sgBytesEditingDone
             ColWidths = (
               159
-              444
+              518
             )
             Cells = (
-              12
+              13
               0
               1
               'Int 8'
@@ -1003,10 +1002,13 @@ object FormMain: TFormMain
               'String (Float64)'
               0
               11
-              'Hex'
+              ' Hex'
               0
               12
-              'String'
+              ' String'
+              0
+              13
+              ' python'
               1
               0
               'bytes (hex)'
@@ -1666,163 +1668,6 @@ object FormMain: TFormMain
             AutoSnap = False
             ResizeAnchor = akTop
             ResizeStyle = rsLine
-          end
-        end
-      end
-    end
-    object tsBuffer: TTabSheet
-      Caption = 'Buffer'
-      ClientHeight = 490
-      ClientWidth = 689
-      object pnlBufferStr: TPanel
-        Left = 0
-        Height = 251
-        Top = 206
-        Width = 689
-        Align = alClient
-        BevelOuter = bvNone
-        ClientHeight = 251
-        ClientWidth = 689
-        TabOrder = 4
-        object StaticText1: TStaticText
-          Left = 0
-          Height = 251
-          Top = 0
-          Width = 65
-          Align = alLeft
-          Alignment = taCenter
-          Caption = #13#10'String'
-          TabOrder = 0
-        end
-        object mmoBufferStr: TMemo
-          Left = 65
-          Height = 251
-          Top = 0
-          Width = 624
-          Align = alClient
-          OnMouseUp = mmoBufferPythonMouseUp
-          ScrollBars = ssAutoVertical
-          TabOrder = 1
-        end
-      end
-      object Splitter4: TSplitter
-        Cursor = crVSplit
-        Left = 0
-        Height = 5
-        Top = 98
-        Width = 689
-        Align = alTop
-        AutoSnap = False
-        ResizeAnchor = akTop
-        ResizeStyle = rsLine
-      end
-      object pnlBufferHEX: TPanel
-        Left = 0
-        Height = 98
-        Top = 103
-        Width = 689
-        Align = alTop
-        BevelOuter = bvNone
-        ClientHeight = 98
-        ClientWidth = 689
-        TabOrder = 1
-        object StaticText8: TStaticText
-          Left = 0
-          Height = 98
-          Top = 0
-          Width = 65
-          Align = alLeft
-          Alignment = taCenter
-          Caption = #13#10'HEX'
-          TabOrder = 0
-        end
-        object mmoBufferHEX: TMemo
-          Left = 65
-          Height = 98
-          Top = 0
-          Width = 624
-          Align = alClient
-          OnMouseUp = mmoBufferPythonMouseUp
-          ScrollBars = ssAutoVertical
-          TabOrder = 1
-        end
-      end
-      object pnlBufferPython: TPanel
-        Left = 0
-        Height = 98
-        Top = 0
-        Width = 689
-        Align = alTop
-        BevelOuter = bvNone
-        ClientHeight = 98
-        ClientWidth = 689
-        TabOrder = 0
-        object StaticText9: TStaticText
-          Left = 0
-          Height = 98
-          Top = 0
-          Width = 65
-          Align = alLeft
-          Alignment = taCenter
-          Caption = #13#10'python'
-          TabOrder = 0
-        end
-        object mmoBufferPython: TMemo
-          Left = 65
-          Height = 98
-          Top = 0
-          Width = 624
-          Align = alClient
-          OnMouseUp = mmoBufferPythonMouseUp
-          ScrollBars = ssAutoVertical
-          TabOrder = 1
-        end
-      end
-      object Splitter6: TSplitter
-        Cursor = crVSplit
-        Left = 0
-        Height = 5
-        Top = 201
-        Width = 689
-        Align = alTop
-        AutoSnap = False
-        ResizeAnchor = akTop
-        ResizeStyle = rsLine
-      end
-      object Panel1: TPanel
-        Left = 0
-        Height = 33
-        Top = 457
-        Width = 689
-        Align = alBottom
-        AutoSize = True
-        BevelOuter = bvNone
-        ClientHeight = 33
-        ClientWidth = 689
-        TabOrder = 5
-        object Panel2: TPanel
-          Left = 581
-          Height = 33
-          Top = 0
-          Width = 108
-          Align = alRight
-          AutoSize = True
-          BevelOuter = bvNone
-          BorderWidth = 3
-          ClientHeight = 33
-          ClientWidth = 108
-          TabOrder = 0
-          object btnBufferConvert: TBitBtn
-            Left = 3
-            Height = 27
-            Top = 3
-            Width = 102
-            AutoSize = True
-            Caption = 'Convert'
-            Images = ilMain
-            ImageIndex = 11
-            OnClick = btnBufferConvertClick
-            TabOrder = 0
           end
         end
       end
