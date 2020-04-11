@@ -7,19 +7,28 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   LCLType, ExtCtrls, Buttons, Grids, lclintf, DateUtils, Math,
-  Clipbrd, Menus, ValEdit, Spin,
-  SynEdit, SynHighlighterPas,
+  Clipbrd, Menus, ValEdit, Spin, process,
+  IniFiles, Types,
+  SynEdit, SynHighlighterPas, SynHighlighterCpp,
   uPSComponent,
   UBigFloatV3,
   //UBigIntsForFloatV4,
   UBigIntsV5,
-  formula,
-  IniFiles;
+  SynEditTypes, SynHighlighterPython, RichMemo;
 
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '0.7';
+  VERSION = '0.9';
+  OUTPUT_MAX_LINES = 4096;
+
+{$ifdef Windows}
+  MICROPYTHON_BIN_NAME = '\micropython.exe';
+{$else}
+{$ifdef Linux}
+  MICROPYTHON_BIN_NAME = '/micropython';
+{$endif}
+{$endif}
 
 type
   SingleBytes = array[0..3] of byte;
@@ -44,24 +53,33 @@ type
     btnBigIntMod: TToolButton;
     btnBigIntSqrt: TToolButton;
     btnBigIntSub: TToolButton;
+    btnClear_Calc: TToolButton;
+    btnHelp_Calc: TToolButton;
+    btnNew_Calc: TToolButton;
     btnOpenGITEE: TSpeedButton;
     btnOpenGITHUB: TSpeedButton;
     btnOpenGITHUB1: TSpeedButton;
     btnExit: TSpeedButton;
-    btnPCalcDemo1: TToolButton;
-    btnPCalcDemo2: TToolButton;
-    btnPCalcDemo3: TToolButton;
-    btnPCalcDemo4: TToolButton;
-    btnPCalcDemo5: TToolButton;
-    btnPCalcHelp: TToolButton;
-    btnPCalcNewFile: TToolButton;
-    btnPCalcOpenFile: TToolButton;
-    btnPCalcRun: TToolButton;
-    btnPCalcSaveFile: TToolButton;
+    btnCaret_MPY: TToolButton;
+    btnClear_MPY: TToolButton;
+    btnHelp_MPY: TToolButton;
+    btnNew_MPY: TToolButton;
+    btnOpen_Calc: TToolButton;
+    btnOpen_MPY: TToolButton;
+    btnRun_Calc: TToolButton;
+    btnRun_MPY: TToolButton;
+    btnSaveAs_Calc: TToolButton;
+    btnSave_Calc: TToolButton;
+    btnSave_MPY: TToolButton;
+    btnSaveAs_MPY: TToolButton;
+    btnStop_Calc: TToolButton;
+    btnStop_MPY: TToolButton;
+    cbbCalc: TComboBox;
     chkBigIntComma: TCheckBox;
     chkCrcInvOut: TCheckBox;
     chkCrcInvIn: TCheckBox;
-    cbbPCalc: TComboBox;
+    dlgOpen_Calc: TOpenDialog;
+    dlgSave_Calc: TSaveDialog;
     edtConvertTimeWeek: TLabeledEdit;
     edtConvertTimeYHour: TLabeledEdit;
     edtConvertTimeYMin: TLabeledEdit;
@@ -85,7 +103,7 @@ type
     imgLaz: TImage;
     imgLogo: TImage;
     imgLogo1: TImage;
-    Label1: TLabel;
+    lbName: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -98,33 +116,35 @@ type
     Label5: TLabel;
     lbFont: TLabel;
     lbVer: TLabel;
-    dlgOpenPCalc: TOpenDialog;
+    miPascalScriptHelpDemo10: TMenuItem;
     miPascalScriptHelpDemo5: TMenuItem;
     miPascalScriptHelpDemo4: TMenuItem;
     miPascalScriptHelpDemo3: TMenuItem;
     miPascalScriptHelpDemo2: TMenuItem;
     miPascalScriptHelpDemo1: TMenuItem;
-    miPCalcHelpDemo1: TMenuItem;
-    miPCalcHelpDemo2: TMenuItem;
-    miPCalcHelpDemo3: TMenuItem;
-    miPCalcHelpDemo4: TMenuItem;
-    miPCalcHelpDemo5: TMenuItem;
-    mmoPascalScript: TMemo;
-    dlgOpenPascalScript: TOpenDialog;
-    PageControl2: TPageControl;
+    miPascalScriptHelpDemo6: TMenuItem;
+    miPascalScriptHelpDemo7: TMenuItem;
+    miPascalScriptHelpDemo8: TMenuItem;
+    miPascalScriptHelpDemo9: TMenuItem;
+    mmoOutCalc: TMemo;
+    mmoOutPascalScript: TMemo;
+    dlgOpen_PascalScript: TOpenDialog;
+    mmoOutMPY: TMemo;
+    mmoOut_Temp: TMemo;
+    dlgOpen_MPY: TOpenDialog;
+    Panel3: TPanel;
+    pmHelp_Calc: TPopupMenu;
+    pmHis_Calc: TPopupMenu;
+    pnlCalc: TPanel;
+    pcScript: TPageControl;
     pcConvert: TPageControl;
-    pnlPCalcVLE: TPanel;
-    pnlPCalcFile: TPanel;
     pmTrayShow: TMenuItem;
     miTrayOption: TMenuItem;
     miTrayExit: TMenuItem;
     N1: TMenuItem;
-    mmoPCalc: TMemo;
     mmoBufferStr: TMemo;
     mmoBufferHEX: TMemo;
     mmoBufferPython: TMemo;
-    mmoAboutReadme: TMemo;
-    mmoAboutChangeLog: TMemo;
     mmoBigFloatA: TMemo;
     mmoBigIntA: TMemo;
     mmoBigFloatB: TMemo;
@@ -136,7 +156,6 @@ type
     pcAbout: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
-    pnlPCalc: TPanel;
     pnlBigFloatA: TPanel;
     pnlBigIntB: TPanel;
     pnlBigIntC: TPanel;
@@ -153,11 +172,15 @@ type
     pcDigit: TPageControl;
     pcMain: TPageControl;
     pmTray: TPopupMenu;
-    pmPCalcHis: TPopupMenu;
-    pmPascalScriptHis: TPopupMenu;
-    pmPCalcHelp: TPopupMenu;
-    pmPascalScriptHelp: TPopupMenu;
-    PSScript: TPSScript;
+    pmHis_PascalScript: TPopupMenu;
+    pmHelp_PascalScript: TPopupMenu;
+    pmHis_MPY: TPopupMenu;
+    pmHelp_MPY: TPopupMenu;
+    ProcessMPY: TProcess;
+    dlgSave_MPY: TSaveDialog;
+    rmoAboutReadme: TRichMemo;
+    rmoAboutChangeLog: TRichMemo;
+    Script_Pascal: TPSScript;
     rbBigBytes: TRadioButton;
     rbCrc7bits: TRadioButton;
     rbCrc6bits: TRadioButton;
@@ -168,26 +191,27 @@ type
     rbCrc5bits: TRadioButton;
     rbCrc4bits: TRadioButton;
     rbLittleBytes: TRadioButton;
-    dlgSavePCalc: TSaveDialog;
-    dlgSavePascalScript: TSaveDialog;
+    dlgSave_PascalScript: TSaveDialog;
+    Script_Calc: TPSScript;
     sgBytes: TStringGrid;
     sgBase: TStringGrid;
-    Shape1: TShape;
+    sgVar_Calc: TStringGrid;
     btnShowOption: TSpeedButton;
     btnConvertTimeNow: TSpeedButton;
     edtBaseCustom: TSpinEdit;
+    Shape2: TShape;
     Splitter1: TSplitter;
+    Splitter10: TSplitter;
+    Splitter11: TSplitter;
+    Splitter12: TSplitter;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
     sgConstantMath: TStringGrid;
     Splitter4: TSplitter;
     Splitter5: TSplitter;
     Splitter6: TSplitter;
-    Splitter7: TSplitter;
-    Splitter8: TSplitter;
     Splitter9: TSplitter;
     StaticText1: TStaticText;
-    lbPCalcVarCount: TStaticText;
     StaticText2: TStaticText;
     StaticText3: TStaticText;
     StaticText4: TStaticText;
@@ -196,41 +220,42 @@ type
     StaticText7: TStaticText;
     StaticText8: TStaticText;
     StaticText9: TStaticText;
+    SynEditFunc_Calc: TSynEdit;
     SynEditPascalScript: TSynEdit;
+    SynEditMPY: TSynEdit;
     SynPasSyn: TSynPasSyn;
-    synPCalc: TSynEdit;
+    SynPythonSyn: TSynPythonSyn;
     TabSheet1: TTabSheet;
+    btnCaret_PascalScript: TToolButton;
+    ToolBar10: TToolBar;
+    ToolButton23: TToolButton;
+    ToolButton36: TToolButton;
+    tsCalc: TTabSheet;
+    ToolBar9: TToolBar;
+    ToolButton28: TToolButton;
+    ToolButton35: TToolButton;
+    tsMicropython: TTabSheet;
     ToolBar8: TToolBar;
-    btnPascalScriptNew: TToolButton;
-    btnPascalScriptOpen: TToolButton;
-    btnPascalScriptSave: TToolButton;
-    btnPascalScriptSaveAs: TToolButton;
-    btnPascalScriptRun: TToolButton;
-    btnPascalScriptClear: TToolButton;
+    btnNew_PascalScript: TToolButton;
+    btnOpen_PascalScript: TToolButton;
+    btnSave_PascalScript: TToolButton;
+    btnSaveAs_PascalScript: TToolButton;
+    btnRun_PascalScript: TToolButton;
+    btnClear_PascalScript: TToolButton;
     ToolButton17: TToolButton;
-    btnPascalScriptFileName: TToolButton;
     ToolButton34: TToolButton;
-    btnPascalScriptStop: TToolButton;
-    btnPascalScriptHelp: TToolButton;
+    btnStop_PascalScript: TToolButton;
+    btnHelp_PascalScript: TToolButton;
     tsPascalScript: TTabSheet;
     tsScript: TTabSheet;
-    ToolButton14: TToolButton;
-    btnPCalcFile: TToolButton;
     tsChangeLog: TTabSheet;
     tsReadme: TTabSheet;
     tsConvertTime: TTabSheet;
     tsConvert: TTabSheet;
-    ToolBar7: TToolBar;
-    btnPCalcSaveAsFile: TToolButton;
-    btnPCalcClearOutput: TToolButton;
-    btnPCalcStop: TToolButton;
-    ToolButton32: TToolButton;
-    ToolButton33: TToolButton;
     TrayIcon: TTrayIcon;
     tsBuffer: TTabSheet;
     tbBigInt: TToolBar;
     tmrLogo: TTimer;
-    ToolButton23: TToolButton;
     ToolButton24: TToolButton;
     ToolButton25: TToolButton;
     btnBigIntHint: TToolButton;
@@ -258,7 +283,6 @@ type
     btnBigFloatSqrt: TToolButton;
     btnBigFloatE: TToolButton;
     btnBigFloatElapsed: TToolButton;
-    tsPCalc: TTabSheet;
     tsBytes: TTabSheet;
     tbByteErr: TToolButton;
     ToolBar3: TToolBar;
@@ -316,11 +340,12 @@ type
     ToolButton2: TToolButton;
     ToolButton3: TToolButton;
     ToolButton4: TToolButton;
-    vlePCalc: TValueListEditor;
-    procedure ApplicationPropertiesMinimize(Sender: TObject);
     procedure btnBufferConvertClick(Sender: TObject);
     procedure btnBigFloatAddClick(Sender: TObject);
     procedure btnBigIntAddClick(Sender: TObject);
+    procedure btnClear_CalcClick(Sender: TObject);
+    procedure btnClear_MPYClick(Sender: TObject);
+    procedure btnClear_PascalScriptClick(Sender: TObject);
     procedure btnConvertTimeNowClick(Sender: TObject);
     procedure btnCrcCalcClick(Sender: TObject);
     procedure btnCrc_CRC16_CCITTClick(Sender: TObject);
@@ -340,28 +365,29 @@ type
     procedure btnCrc_CRC8Click(Sender: TObject);
     procedure btnCrc_CRC8_MAXIMClick(Sender: TObject);
     procedure btnCrc_CRC8_ROHCClick(Sender: TObject);
+    procedure btnNew_CalcClick(Sender: TObject);
+    procedure btnNew_MPYClick(Sender: TObject);
+    procedure btnNew_PascalScriptClick(Sender: TObject);
     procedure btnOpenGITEEClick(Sender: TObject);
     procedure btnOpenGITHUBClick(Sender: TObject);
-    procedure btnPascalScriptClearClick(Sender: TObject);
-    procedure btnPascalScriptNewClick(Sender: TObject);
-    procedure btnPascalScriptOpenClick(Sender: TObject);
-    procedure btnPascalScriptRunClick(Sender: TObject);
-    procedure btnPascalScriptSaveAsClick(Sender: TObject);
-    procedure btnPascalScriptSaveClick(Sender: TObject);
-    procedure btnPascalScriptStopClick(Sender: TObject);
-    procedure btnPCalcClearOutputClick(Sender: TObject);
-    procedure btnPCalcDemo1Click(Sender: TObject);
-    procedure btnPCalcHelpClick(Sender: TObject);
-    procedure btnPCalcNewFileClick(Sender: TObject);
-    procedure btnPCalcOpenFileClick(Sender: TObject);
-    procedure btnPCalcRunClick(Sender: TObject);
-    procedure btnPCalcSaveAsFileClick(Sender: TObject);
-    procedure btnPCalcSaveFileClick(Sender: TObject);
-    procedure btnPCalcStopClick(Sender: TObject);
+    procedure btnOpen_CalcClick(Sender: TObject);
+    procedure btnOpen_MPYClick(Sender: TObject);
+    procedure btnOpen_PascalScriptClick(Sender: TObject);
+    procedure btnRun_CalcClick(Sender: TObject);
+    procedure btnRun_MPYClick(Sender: TObject);
+    procedure btnRun_PascalScriptClick(Sender: TObject);
+    procedure btnSaveAs_CalcClick(Sender: TObject);
+    procedure btnSaveAs_MPYClick(Sender: TObject);
+    procedure btnSaveAs_PascalScriptClick(Sender: TObject);
+    procedure btnSave_CalcClick(Sender: TObject);
+    procedure btnSave_MPYClick(Sender: TObject);
+    procedure btnSave_PascalScriptClick(Sender: TObject);
+    procedure btnStop_CalcClick(Sender: TObject);
+    procedure btnStop_MPYClick(Sender: TObject);
+    procedure btnStop_PascalScriptClick(Sender: TObject);
     procedure btnShowOptionClick(Sender: TObject);
-    procedure cbbPCalcDblClick(Sender: TObject);
-    procedure cbbPCalcKeyPress(Sender: TObject; var Key: char);
-    procedure cbbPCalcMouseDown(Sender: TObject; Button: TMouseButton;
+    procedure cbbCalcKeyPress(Sender: TObject; var Key: char);
+    procedure cbbCalcMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure edtBigFloatPrecEditingDone(Sender: TObject);
     procedure edtBytesNumChange(Sender: TObject);
@@ -373,10 +399,11 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
+    procedure FormWindowStateChange(Sender: TObject);
     procedure imgLazClick(Sender: TObject);
     procedure lbVerClick(Sender: TObject);
-    procedure miPCalcHelpDemo1Click(Sender: TObject);
     procedure miTrayExitClick(Sender: TObject);
     procedure mmoBigFloatCMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
@@ -384,15 +411,18 @@ type
       Shift: TShiftState; X, Y: integer);
     procedure mmoBufferPythonMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
-    procedure mmoPCalcChange(Sender: TObject);
-    procedure PSScriptCompile(Sender: TPSScript);
+    procedure Script_PascalCompile(Sender: TPSScript);
     procedure rbBigBytesChange(Sender: TObject);
     procedure sgBytesEditingDone(Sender: TObject);
     procedure sgConstantMathClick(Sender: TObject);
     procedure sgBaseEditingDone(Sender: TObject);
     procedure edtBaseCustomChange(Sender: TObject);
+    procedure sgVar_CalcEditingDone(Sender: TObject);
+    procedure SynEditMPYChange(Sender: TObject);
+    procedure SynEditMPYStatusChange(Sender: TObject; Changes: TSynStatusChanges);
     procedure SynEditPascalScriptChange(Sender: TObject);
-    procedure synPCalcChange(Sender: TObject);
+    procedure SynEditPascalScriptStatusChange(Sender: TObject;
+      Changes: TSynStatusChanges);
     procedure tmrAlphaTimer(Sender: TObject);
     procedure btnCrc_CRC4_ITUClick(Sender: TObject);
     procedure btnCrc_CRC8_ITUClick(Sender: TObject);
@@ -401,26 +431,43 @@ type
     procedure tmrLogoTimer(Sender: TObject);
     procedure TrayIconClick(Sender: TObject);
   private
-    PascalScriptModified:Boolean;
+
+    winstat: TWindowState;
+
     DateTimefmt: TFormatSettings;
-    PCalcVars: array of string;
-    PCalcVals: TCalcArray;
-    PCalcVarNum: integer;
-    procedure LoadPCalcVar;
-    procedure SavePCalcVar;
-    procedure SetPCalcVar;
-    procedure AddPCalcHisFile(fname: string);
-    procedure LoadPCalcFile(fname: string);
-    procedure miPCalcHisFileOnClick(Sender: TObject);
     function getCrcBit: integer;
     procedure setCrcBit(bit: integer);
     procedure bfCalc(Sender: TObject);
     procedure biCalc(Sender: TObject);
     procedure saveFont;
-    procedure PascalScriptInit;
-    procedure LoadPascalScriptFile(fname: string);
-    procedure AddPascalScriptHisFile(fname: string);
-    procedure miPascalScriptHisFileOnClick(Sender: TObject);
+
+  private
+    Compiled_PascalScript: boolean;
+    EditorAutoSaveFileName_PascalScript: string;
+    EditorAutoSaveFileName_micropython: string;
+    EditorAutoSaveFileName_calc: string;
+
+    Script_Calc_CodeVar, Script_Calc_CodeFunc, Script_Calc_CodeMain: string;
+
+    procedure mmoOutAdd(var mmo: TMemo; msg: string);
+
+    function shortFileName(FileName: string): string;
+    procedure mmoOutAdd_PascalScript(msg: string);
+    procedure mmoOutAdd_MPY(msg: string);
+    procedure mmoOutAdd_Calc(msg: string);
+
+    procedure pmAddHis(var pm: TPopupMenu; FileName: string);
+    procedure pmHisClick_PascalScript(Sender: TObject);
+    procedure pmHisClick_MPY(Sender: TObject);
+    procedure pmHisClick_Calc(Sender: TObject);
+
+    procedure LoadFile_PascalScript(FileName: string);
+    procedure SaveFile_PascalScript(FileName: string);
+    procedure LoadFile_MPY(FileName: string);
+    procedure SaveFile_MPY(FileName: string);
+    procedure LoadFile_Calc(FileName: string);
+    procedure SaveFile_Calc(FileName: string);
+
   public
     MinimizeToTray, CloseToTray: boolean;
     function BufferToStr(buf: TByteArray; N: integer): string;
@@ -439,6 +486,8 @@ type
     procedure setCrcMode(bit: integer; poly: longword; v0: longword;
       XOROUT: longword; InvIn: boolean; InvOut: boolean);
     procedure updateTime(d: TDateTime);
+
+    procedure updateTabVisible;
   end;
 
 
@@ -450,23 +499,83 @@ var
   bfA, bfB: TBigFloat;
   biA, biB: TInteger;
   bfPrec: integer;
-  fl: TArtFormula;
 
-function PCalc_print(var Calc: TFormulaCalc): TCalcItem;
 
 implementation
 
 uses
-  uCRC, uBase, unit2, unit3;
+  uCRC, uBase, unit2;
 
 
 {$R *.lfm}
 
-const
-{$I PCalc_demo.pp}
+{$I NewFileTemplate.pas}
 
 { pascal script addon functions
 }
+
+procedure PSsprint_Calc(sep: string; v: array of variant);
+var
+  i: integer;
+  s, ss: string;
+begin
+  s := '';
+  for i := low(v) to high(v) do
+  begin
+    ss := v[i];
+    s  := s + ss;
+    if i < high(v) then
+      s := s + sep;
+  end;
+  FormMain.mmoOutAdd_Calc(s);
+  Application.ProcessMessages;
+end;
+
+procedure PSprint_Calc(v: array of variant);
+var
+  i: integer;
+  s, ss: string;
+begin
+  s := '';
+  for i := low(v) to high(v) do
+  begin
+    ss := v[i];
+    s  := s + ss;
+  end;
+  FormMain.mmoOutAdd_Calc(s);
+  Application.ProcessMessages;
+end;
+
+procedure PSWrite_Calc(const s: variant);
+var
+  ss: string;
+begin
+  ss := s;
+  FormMain.mmoOutAdd_Calc(ss);
+end;
+
+procedure PSWriteln_Calc(const s: variant);
+begin
+  PSWrite_Calc(s);
+  FormMain.mmoOutCalc.Lines.Add('');
+end;
+
+procedure PSsprint(sep: string; v: array of variant);
+var
+  i: integer;
+  s, ss: string;
+begin
+  s := '';
+  for i := low(v) to high(v) do
+  begin
+    ss := v[i];
+    s  := s + ss;
+    if i < high(v) then
+      s := s + sep;
+  end;
+  FormMain.mmoOutAdd_PascalScript(s);
+  Application.ProcessMessages;
+end;
 
 procedure PSprint(v: array of variant);
 var
@@ -477,9 +586,24 @@ begin
   for i := low(v) to high(v) do
   begin
     ss := v[i];
-    s  := s + ss + ' ';
+    s  := s + ss;
   end;
-  FormMain.mmoPascalScript.Lines.add(s);
+  FormMain.mmoOutAdd_PascalScript(s);
+  Application.ProcessMessages;
+end;
+
+procedure PSWrite(const s: variant);
+var
+  ss: string;
+begin
+  ss := s;
+  FormMain.mmoOutAdd_PascalScript(ss);
+end;
+
+procedure PSWriteln(const s: variant);
+begin
+  PSWrite(s);
+  FormMain.mmoOutPascalScript.Lines.Add('');
 end;
 
 function PSlog(x: extended): extended;
@@ -513,23 +637,6 @@ begin
   Result := Randomrange(x, y);
 end;
 
-procedure PSWriteln(const s: variant);
-begin
-  FormMain.mmoPascalScript.Lines.Add(s);
-end;
-
-procedure PSWrite(const s: variant);
-var
-  n: integer;
-  ss: string;
-begin
-  n := FormMain.mmoPascalScript.Lines.Count;
-  if n > 0 then
-    n := n - 1;
-  ss  := s;
-  FormMain.mmoPascalScript.Lines[n] := FormMain.mmoPascalScript.Lines[n] + ss;
-end;
-
 function PSReadln(const question: string): string;
 begin
   Result := InputBox(question, '', '');
@@ -537,7 +644,7 @@ end;
 
 procedure PSclear;
 begin
-  FormMain.mmoPascalScript.Lines.Clear;
+  FormMain.mmoOutPascalScript.Lines.Clear;
 end;
 
 procedure PSsleep(x: integer = 1000);
@@ -553,46 +660,6 @@ end;
 
 { pascal script end }
 
-{ PCalc addon }
-function PCalc_puts(var Calc: TFormulaCalc): TCalcItem;
-var
-  s: string;
-  n: integer;
-begin
-  n := FormMain.mmoPCalc.Lines.Count;
-  if n > 0 then
-    n := n - 1;
-  s   := FormMain.mmoPCalc.Lines[n];
-  s   := s + Calc.TopS;
-  FormMain.mmoPCalc.Lines[n] := s;
-  setS(Result, '');
-end;
-
-function PCalc_print(var Calc: TFormulaCalc): TCalcItem;
-begin
-  FormMain.mmoPCalc.Lines.Add(Calc.TopS);
-  setS(Result, '');
-end;
-
-function PCalc_clear(var Calc: TFormulaCalc): TCalcItem;
-begin
-  FormMain.mmoPCalc.Lines.Clear;
-  setS(Result, '');
-end;
-
-function PCalc_sleep(var Calc: TFormulaCalc): TCalcItem;
-begin
-  Sleep(Round(Calc.TopN));
-  setS(Result, '');
-end;
-
-function PCalc_beep(var Calc: TFormulaCalc): TCalcItem;
-begin
-  beep;
-  setS(Result, '');
-end;
-
-{ PCalc end }
 
 { TFormMain }
 
@@ -601,9 +668,6 @@ var
   i: integer;
   s: string;
 begin
-  {$IFDEF WINDOWS}
-  cbbPCalc.AutoDropDown := True;
-  {$ENDIF}
 
   path := ExtractFilePath(Application.ExeName);
   ini  := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
@@ -653,21 +717,11 @@ begin
     CloseToTray      := ini.ReadBool('Option', 'CloseToTray', True);
 
     // visible
-    tsCRC.TabVisible      := ini.ReadBool('Option', 'CRC_Enabled', True);
-    tsBytes.TabVisible    := ini.ReadBool('Option', 'Bytes_Enabled', True);
-    tsBase.TabVisible     := ini.ReadBool('Option', 'Base_Enabled', True);
-    tsBigFloat.TabVisible := ini.ReadBool('Option', 'BigFloat_Enabled', True);
-    tsBigInt.TabVisible   := ini.ReadBool('Option', 'BigInt_Enabled', True);
-    tsBuffer.TabVisible   := ini.ReadBool('Option', 'Buffer_Enabled', True);
-    tsPCalc.TabVisible    := ini.ReadBool('Option', 'pCalc_Enabled', True);
-    tsPascalScript.TabVisible:= ini.ReadBool('Option', 'PascalScript_Enabled', True);
+    updateTabVisible;
 
     // Digit
     rbBigBytes.Checked      := ini.ReadBool('Digit', 'BigBytes', True);
     pcDigit.ActivePageIndex := ini.ReadInteger('Digit', 'Page', 0);
-    tsDigit.TabVisible      :=
-      tsBytes.TabVisible or tsBase.TabVisible or tsBigFloat.TabVisible or
-      tsBigInt.TabVisible;
 
     // crc
     edtCrcPolygon.Text   := ini.ReadString('CRC', 'poly', '1021');
@@ -698,42 +752,56 @@ begin
     mmoBufferHex.Text      := '';
     mmoBufferStr.Text      := '';
 
-    // PCalc
-    LoadPCalcVar;
-    vlePCalc.Modified     := False;
-    pnlPCalcVLE.Width     := ini.ReadInteger('PCalc', 'VAR_Width', 160);
-    vlePCalc.ColWidths[0] := ini.ReadInteger('PCalc', 'VAR_Width_0', 60);
-    pnlPCalcFile.Height   := ini.ReadInteger('PCalc', 'FileHeight', 180);
-    for i := 1 to 12 do
-    begin
-      s := ini.ReadString('PCalcCmdHis', IntToStr(i), '');
-      if s <> '' then
-        cbbPCalc.Items.Add(s);
-    end;
+    // Calc
+    EditorAutoSaveFileName_calc :=      ExtractFilePath(Application.ExeName) + 'autosave.calc';
 
-    for i := 1 to 8 do
-    begin
-      s := ini.ReadString('PCalcHisFile', IntToStr(i), '');
-      if s <> '' then
-        AddPCalcHisFile(s);
-    end;
+    if FileExists(EditorAutoSaveFileName_calc) then
+      LoadFile_Calc(EditorAutoSaveFileName_calc)
+    else
+    btnNew_CalcClick(Sender);
+
+    for i := 1 to ini.ReadInteger('HisFile_Calc', 'Count', 0) do
+      pmAddHis(pmHis_Calc, ini.ReadString('HisFile_Calc', IntToStr(i), ''));
+
+    cbbCalc.Text      := ini.ReadString('calc', 'express', '');
+    pnlCalc.Width     := ini.ReadInteger('calc', 'width', 300);
+    sgVar_Calc.Height := ini.ReadInteger('calc', 'var', 128);
+    sgVar_Calc.ColWidths[0] := ini.ReadInteger('calc', 'col0', 40);
+    sgVar_Calc.ColWidths[2] := ini.ReadInteger('calc', 'col2', 80);
+    cbbCalc.Items.CommaText := ini.ReadString('calc', 'exphis', '');
 
     // Convert Time
     btnConvertTimeNowClick(nil);
 
     // Script
-    tsScript.TabVisible:=tsPascalScript.TabVisible;
+    tsScript.TabVisible := tsPascalScript.TabVisible;
 
     // pascal script
     SynEditPascalScript.Height := ini.ReadInteger('PascalScript', 'Height', 300);
-    for i := 1 to 8 do
-    begin
-      s := ini.ReadString('PascalScriptHisFile', IntToStr(i), '');
-      if s <> '' then
-        AddPascalScriptHisFile(s);
-    end;
-    PascalScriptModified:=True;
-    PascalScriptInit;
+    EditorAutoSaveFileName_PascalScript :=
+      ExtractFilePath(Application.ExeName) + 'autosave.pas';
+    if FileExists(EditorAutoSaveFileName_PascalScript) then
+      SynEditPascalScript.Lines.LoadFromFile(EditorAutoSaveFileName_PascalScript)
+    else
+      btnNew_PascalScriptClick(Sender);
+
+    for i := 1 to ini.ReadInteger('HisFile_PascalScript', 'Count', 0) do
+      pmAddHis(pmHis_PascalScript, ini.ReadString('HisFile_PascalScript',
+        IntToStr(i), ''));
+
+    Compiled_PascalScript := False;
+
+    // micropython
+    SynEditMPY.Height := ini.ReadInteger('micropython', 'Height', 300);
+    EditorAutoSaveFileName_micropython :=
+      ExtractFilePath(Application.ExeName) + 'autosave.py';
+    if FileExists(EditorAutoSaveFileName_micropython) then
+      SynEditMPY.Lines.LoadFromFile(EditorAutoSaveFileName_micropython)
+    else
+      btnNew_MPYClick(Sender);
+
+    for i := 1 to ini.ReadInteger('HisFile_micropython', 'Count', 0) do
+      pmAddHis(pmHis_MPY, ini.ReadString('HisFile_micropython', IntToStr(i), ''));
 
   except
 
@@ -755,26 +823,10 @@ begin
     tsBigInt.TabVisible := False;
   end;
 
-  try
-    fl := TArtFormula.Create(self);
-    fl.CaseSensitive := True;
-    fl.AutoCreateVars := True;
-    fl.AddUserFunction('print', 1, @PCalc_print);
-    fl.AddUserFunction('puts', 1, @PCalc_puts);
-    fl.AddUserFunction('clear', 0, @PCalc_clear);
-    fl.AddUserFunction('sleep', 1, @PCalc_sleep);
-    fl.AddUserFunction('beep', 0, @PCalc_beep);
+  SynEditFunc_Calc.Modified := True;
+  sgVar_Calc.Modified := True;
 
-  except
-    tsPCalc.TabVisible := False;
-  end;
-
-  try
-    SetLength(PCalcVars, vlePCalc.RowCount - 1);
-    SetLength(PCalcVals, vlePCalc.RowCount - 1);
-    SetPCalcVar;
-  except
-  end;
+  lbName.Tag := 1;
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
@@ -818,35 +870,46 @@ begin
       ini.WriteInteger('Buffer', 'PanelPython', pnlBufferPython.Height);
       ini.WriteInteger('Buffer', 'PanelHex', pnlBufferHex.Height);
 
-      // PCalc
-      if vlePCalc.Modified then
-        SetPCalcVar;
-      SavePCalcVar;
+      // Calc
+      SaveFile_Calc(EditorAutoSaveFileName_calc);
 
-      ini.WriteInteger('PCalc', 'VAR_Width', pnlPCalcVLE.Width);
-      ini.WriteInteger('PCalc', 'VAR_Width_0', vlePCalc.ColWidths[0]);
-      ini.WriteInteger('PCalc', 'FileHeight', pnlPCalcFile.Height);
-      ini.EraseSection('PCalcCmdHis');
-      for i := 1 to min(12, cbbPCalc.Items.Count) do
-      begin
-        ini.WriteString('PCalcCmdHis', IntToStr(i), cbbPCalc.Items[i - 1]);
-      end;
+      ini.EraseSection('HisFile_Calc');
+      ini.WriteInteger('HisFile_Calc', 'Count', pmHis_Calc.Items.Count);
+      for i := 0 to pmHis_Calc.Items.Count - 1 do
+        ini.WriteString('HisFile_Calc', IntToStr(i + 1), pmHis_Calc.Items[i].Caption);
 
-      ini.EraseSection('PCalcHisFile');
-      for i := 1 to min(8, pmPCalcHis.Items.Count) do
-      begin
-        ini.WriteString('PCalcHisFile', IntToStr(i), pmPCalcHis.Items[i - 1].Caption);
-      end;
+      ini.WriteString('calc', 'express', cbbCalc.Text);
+      ini.WriteInteger('calc', 'width', pnlCalc.Width);
+      ini.WriteInteger('calc', 'var', sgVar_Calc.Height);
+      ini.WriteInteger('calc', 'col0', sgVar_Calc.ColWidths[0]);
+      ini.WriteInteger('calc', 'col2', sgVar_Calc.ColWidths[2]);
+      ini.WriteString('calc', 'exphis', cbbCalc.Items.CommaText);
+
+      // Script
+      ini.WriteInteger('last', 'page_script', pcScript.ActivePageIndex);
 
       // pascal script
       ini.WriteInteger('PascalScript', 'Height', SynEditPascalScript.Height);
-      ini.EraseSection('PascalScriptHisFile');
-      for i := 1 to min(8, pmPCalcHis.Items.Count) do
-      begin
-        ini.WriteString('PascalScriptHisFile', IntToStr(i),
-          pmPascalScriptHis.Items[i - 1].Caption);
-      end;
+      SynEditPascalScript.Lines.SaveToFile(EditorAutoSaveFileName_PascalScript);
 
+      ini.EraseSection('HisFile_PascalScript');
+      ini.WriteInteger('HisFile_PascalScript', 'Count', pmHis_PascalScript.Items.Count);
+      for i := 0 to pmHis_PascalScript.Items.Count - 1 do
+        ini.WriteString('HisFile_PascalScript', IntToStr(i + 1),
+          pmHis_PascalScript.Items[i].Caption);
+
+      // micropython
+      ini.WriteInteger('micropython', 'Height', SynEditMPY.Height);
+      SynEditMPY.Lines.SaveToFile(EditorAutoSaveFileName_micropython);
+
+      ini.EraseSection('HisFile_micropython');
+      ini.WriteInteger('HisFile_micropython', 'Count', pmHis_PascalScript.Items.Count);
+      for i := 0 to pmHis_MPY.Items.Count - 1 do
+        ini.WriteString('HisFile_micropython', IntToStr(i + 1),
+          pmHis_MPY.Items[i].Caption);
+
+
+      // update ini
       ini.UpdateFile;
     end;
   finally
@@ -859,10 +922,48 @@ begin
     if biB <> nil then
       biB.Free;
 
-    if fl <> nil then
-      fl.Free;
-
     ini.Free;
+  end;
+end;
+
+procedure TFormMain.FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+begin
+  case Key of
+    VK_F9:
+    begin
+      if pcMain.ActivePage = tsScript then
+      begin
+        if pcScript.ActivePage = tsPascalScript then
+          btnRun_PascalScriptClick(Sender)
+        else if pcScript.ActivePage = tsMicropython then
+          btnRun_MPYClick(Sender);
+      end
+      else if pcMain.ActivePage = tsCalc then
+        btnRun_CalcClick(Sender);
+    end;
+    VK_S:
+    begin
+      if Shift = [ssCtrl] then
+      begin
+        if pcMain.ActivePage = tsScript then
+        begin
+          if pcScript.ActivePage = tsPascalScript then
+          begin
+            if btnSave_PascalScript.Enabled then
+              btnSave_PascalScriptClick(Sender);
+          end
+          else if pcScript.ActivePage = tsMicropython then
+          begin
+            if btnSave_MPY.Enabled then
+              btnSave_MPYClick(Sender);
+          end;
+        end
+        else if pcMain.ActivePage = tsCalc then
+        begin
+          btnSave_CalcClick(Sender);
+        end;
+      end;
+    end;
   end;
 end;
 
@@ -872,6 +973,17 @@ begin
   tmrAlpha.Enabled := True;
 end;
 
+procedure TFormMain.FormWindowStateChange(Sender: TObject);
+begin
+  if WindowState = wsMinimized then
+  begin
+    if TrayIcon.Visible and MinimizeToTray then
+      Hide;
+  end
+  else
+    winstat := WindowState;
+end;
+
 procedure TFormMain.imgLazClick(Sender: TObject);
 begin
   OpenURL('http://www.lazarus-ide.org/');
@@ -879,15 +991,8 @@ end;
 
 procedure TFormMain.lbVerClick(Sender: TObject);
 begin
-  pcAbout.ActivePageIndex := TLabel(Sender).Tag;
-end;
-
-procedure TFormMain.miPCalcHelpDemo1Click(Sender: TObject);
-begin
-  synPCalc.Text     := PCalc_Demos[TMenuItem(Sender).MenuIndex];
-  synPCalc.Modified := True;
-  btnPCalcSaveFile.Enabled := True;
-  btnPCalcSaveAsFile.Enabled := True;
+  Caption := IntToStr(TLabel(Sender).Tag);
+  pcAbout.PageIndex := TLabel(Sender).Tag;
 end;
 
 procedure TFormMain.miTrayExitClick(Sender: TObject);
@@ -934,22 +1039,23 @@ begin
   Clipboard.AsText := TMemo(Sender).Text;
 end;
 
-procedure TFormMain.mmoPCalcChange(Sender: TObject);
-var
-  i: integer;
+procedure TFormMain.Script_PascalCompile(Sender: TPSScript);
 begin
-  if mmoPCalc.Lines.Count > 10240 then
+  if Sender = Script_Pascal then
   begin
-    for i := 1 to 1024 do
-      mmoPCalc.Lines.Delete(0);
+    Sender.AddFunction(@PSprint, 'procedure print(v:array of Variant);');
+    Sender.AddFunction(@PSsprint, 'procedure sprint(sep:string; v:array of Variant);');
+    Sender.AddFunction(@PSwriteln, 'procedure Writeln(s: Variant);');
+    Sender.AddFunction(@PSwrite, 'procedure Write(s: Variant);');
+  end
+  else
+  begin
+    Sender.AddFunction(@PSprint_Calc, 'procedure print(v:array of Variant);');
+    Sender.AddFunction(@PSsprint_Calc,
+      'procedure sprint(sep:string; v:array of Variant);');
+    Sender.AddFunction(@PSwriteln_Calc, 'procedure Writeln(s: Variant);');
+    Sender.AddFunction(@PSwrite_Calc, 'procedure Write(s: Variant);');
   end;
-end;
-
-procedure TFormMain.PSScriptCompile(Sender: TPSScript);
-begin
-  Sender.AddFunction(@PSprint, 'procedure print(v:array of Variant);');
-  Sender.AddFunction(@PSwriteln, 'procedure Writeln(s: Variant);');
-  Sender.AddFunction(@PSwrite, 'procedure Write(s: Variant);');
   Sender.AddFunction(@PSreadln, 'function Readln(question: string): string;');
   Sender.AddFunction(@PSreadln, 'function Read(question: string): string;');
   Sender.AddFunction(@PSlog, 'function ln(x: extended): extended;');
@@ -1156,7 +1262,7 @@ begin
                   j := 3;
               end;
               s := Copy(s3, i + 1, j);
-              d := StrToBase(s, 8, False, MaxInt);
+              d := StrToBase(s, 8, False, system.MaxInt);
               if d > 255 then
               begin
                 beep;
@@ -1246,15 +1352,24 @@ begin
 
 end;
 
-procedure TFormMain.ApplicationPropertiesMinimize(Sender: TObject);
-begin
-  if TrayIcon.Visible and MinimizeToTray then
-    Hide;
-end;
-
 procedure TFormMain.btnBigIntAddClick(Sender: TObject);
 begin
   biCalc(Sender);
+end;
+
+procedure TFormMain.btnClear_CalcClick(Sender: TObject);
+begin
+  mmoOutCalc.Clear;
+end;
+
+procedure TFormMain.btnClear_MPYClick(Sender: TObject);
+begin
+  mmoOutMPY.Clear;
+end;
+
+procedure TFormMain.btnClear_PascalScriptClick(Sender: TObject);
+begin
+  mmoOutPascalScript.Clear;
 end;
 
 procedure TFormMain.btnConvertTimeNowClick(Sender: TObject);
@@ -1395,9 +1510,8 @@ begin
       begin
         s := '';
         for i := 1 to Length(ss) do
-          s     := s + Format('%.02X ', [Ord(ss[i])]);
+          s := s + Format('%.02X ', [Ord(ss[i])]);
         sgBytes.Cells[1, 11] := s;
-        Caption := ss + ' > ' + s;
       end;
     end;
     if sy <= 8 then
@@ -1444,7 +1558,7 @@ begin
       Exit;
   end;
 
-  dat := StrToBase(s, base, neg, MaxInt);
+  dat := StrToBase(s, base, neg, system.MaxInt);
 
   sgBase.Cells[1, 1] := BaseToStr(dat, 1, 2, neg, '0');
   sgBase.Cells[1, 2] := BaseToStr(dat, 1, 8, neg, '0');
@@ -1461,17 +1575,72 @@ begin
   sgBaseEditingDone(Sender);
 end;
 
-procedure TFormMain.SynEditPascalScriptChange(Sender: TObject);
+procedure TFormMain.sgVar_CalcEditingDone(Sender: TObject);
+var
+  i: integer;
+  s: string;
 begin
-  PascalScriptModified:=True;
-  btnPascalScriptSave.Enabled   := SynEditPascalScript.Modified;
-  btnPascalScriptSaveAs.Enabled := SynEditPascalScript.Modified;
+  i := 1;
+  while i < sgVar_Calc.RowCount do
+  begin
+    s := Trim(sgVar_Calc.Cells[0, i]);
+    if (s = '') then
+    begin
+      sgVar_Calc.DeleteRow(i);
+    end
+    else
+    begin
+      sgVar_Calc.Cells[0, i] := s;
+      sgVar_Calc.Cells[1, i] := Trim(sgVar_Calc.Cells[1, i]);
+      s := Trim(sgVar_Calc.Cells[2, i]);
+      if (s <> 'variant') and (s <> 'integer') and (s <> 'double') and
+        (s <> 'string') then
+        sgVar_Calc.Cells[2, i] := 'variant';
+      i := i + 1;
+    end;
+  end;
+
+  if sgVar_Calc.RowCount < 2 then
+    sgVar_Calc.RowCount := 2;
+
+  if sgVar_Calc.Cells[0, sgVar_Calc.RowCount - 1] <> '' then
+    sgVar_Calc.RowCount := sgVar_Calc.RowCount + 1;
+
 end;
 
-procedure TFormMain.synPCalcChange(Sender: TObject);
+procedure TFormMain.SynEditMPYChange(Sender: TObject);
 begin
-  btnPCalcSaveFile.Enabled   := synPCalc.Modified;
-  btnPCalcSaveAsFile.Enabled := synPCalc.Modified;
+  btnSave_MPY.Enabled := SynEditMPY.Modified;
+
+
+  btnSaveAs_MPY.Enabled := SynEditMPY.Modified;
+end;
+
+procedure TFormMain.SynEditMPYStatusChange(Sender: TObject; Changes: TSynStatusChanges);
+begin
+  btnCaret_MPY.Caption := IntToStr(SynEditMPY.CaretX) + ', ' +
+    IntToStr(SynEditMPY.CaretY);
+  if SynEditMPY.SelAvail then
+    btnCaret_MPY.Caption := btnCaret_MPY.Caption + ' Sel: ' +
+      IntToStr(Length(SynEditMPY.SelText));
+end;
+
+procedure TFormMain.SynEditPascalScriptChange(Sender: TObject);
+begin
+  Compiled_PascalScript := False;
+  btnSave_PascalScript.Enabled := SynEditPascalScript.Modified;
+  btnSaveAs_PascalScript.Enabled := SynEditPascalScript.Modified;
+end;
+
+procedure TFormMain.SynEditPascalScriptStatusChange(Sender: TObject;
+  Changes: TSynStatusChanges);
+begin
+  btnCaret_PascalScript.Caption :=
+    IntToStr(SynEditPascalScript.CaretX) + ', ' + IntToStr(SynEditPascalScript.CaretY);
+  if SynEditPascalScript.SelAvail then
+    btnCaret_PascalScript.Caption :=
+      btnCaret_PascalScript.Caption + ' Sel: ' +
+      IntToStr(Length(SynEditPascalScript.SelText));
 end;
 
 procedure TFormMain.tmrAlphaTimer(Sender: TObject);
@@ -1562,6 +1731,44 @@ begin
   setCrcMode(8, 7, $FF, 0, True, True);
 end;
 
+procedure TFormMain.btnNew_CalcClick(Sender: TObject);
+begin
+  sgVar_Calc.Clean;
+  sgVar_Calc.Modified := True;
+  sgVar_Calc.RowCount := 4;
+  sgVar_Calc.Rows[1].CommaText := 'x,12,variant';
+  sgVar_Calc.Rows[2].CommaText := 'y,5.6,variant';
+
+  SynEditFunc_Calc.Text     := NewFileTemplate_Calc;
+  SynEditFunc_Calc.Modified := True;
+  btnSave_Calc.Enabled      := False;
+  btnSaveAs_Calc.Enabled    := False;
+  dlgSave_Calc.FileName     := '';
+end;
+
+procedure TFormMain.btnNew_MPYClick(Sender: TObject);
+begin
+  if Sender <> nil then
+    SynEditMPY.Text     := NewFileTemplate_MPY;
+  SynEditMPY.Modified   := False;
+  btnSave_MPY.Enabled   := False;
+  btnSaveAs_MPY.Enabled := False;
+  tsMicropython.Caption := 'micropython';
+  dlgSave_Calc.FileName := '';
+end;
+
+procedure TFormMain.btnNew_PascalScriptClick(Sender: TObject);
+begin
+  if Sender <> nil then
+    SynEditPascalScript.Text := NewFileTemplate_PascalScript;
+  SynEditPascalScript.Modified := False;
+  btnSave_PascalScript.Enabled := False;
+  btnSaveAs_PascalScript.Enabled := False;
+  tsPascalScript.Caption := 'Pascal';
+  dlgSave_PascalScript.FileName := '';
+  Compiled_PascalScript  := False;
+end;
+
 procedure TFormMain.btnOpenGITEEClick(Sender: TObject);
 begin
   OpenURL(GITEE_URL);
@@ -1572,294 +1779,365 @@ begin
   OpenURL(GITHUB_URL);
 end;
 
-procedure TFormMain.btnPascalScriptClearClick(Sender: TObject);
+procedure TFormMain.btnOpen_CalcClick(Sender: TObject);
 begin
-  mmoPascalScript.Clear;
-end;
-
-
-procedure TFormMain.PascalScriptInit;
-begin
-
-end;
-
-procedure TFormMain.LoadPascalScriptFile(fname: string);
-begin
-  try
-    SynEditPascalScript.Lines.LoadFromFile(fname);
-    SynEditPascalScript.Modified    := False;
-    btnPascalScriptSaveAs.Enabled   := False;
-    btnPascalScriptSaveAs.Enabled   := False;
-    btnPascalScriptFileName.Caption := fname;
-    PascalScriptModified:=True;
-  except
-
-  end;
-end;
-
-procedure TFormMain.AddPascalScriptHisFile(fname: string);
-var
-  mi: TMenuItem;
-  i: integer;
-begin
-  i := pmPascalScriptHis.Items.IndexOfCaption(fname);
-  if i >= 0 then
+  if dlgOpen_Calc.Execute then
   begin
-    pmPascalScriptHis.Items[i].MenuIndex := 0;
-    Exit;
+    LoadFile_Calc(dlgOpen_Calc.FileName);
+    pmAddHis(pmHis_Calc, dlgOpen_Calc.FileName);
   end;
-
-  if pmPascalScriptHis.Items.Count > 8 then
-    pmPascalScriptHis.Items.Delete(7);
-
-  mi := TMenuItem.Create(pmPascalScriptHis);
-  mi.Caption := fname;
-  mi.OnClick := @miPascalScriptHisFileOnClick;
-  pmPascalScriptHis.Items.Insert(0, mi);
 end;
 
-procedure TFormMain.miPascalScriptHisFileOnClick(Sender: TObject);
+procedure TFormMain.btnOpen_MPYClick(Sender: TObject);
+begin
+  if dlgOpen_MPY.Execute then
+  begin
+    LoadFile_MPY(dlgOpen_MPY.FileName);
+    pmAddHis(pmHis_MPY, dlgOpen_MPY.FileName);
+  end;
+end;
+
+procedure TFormMain.btnOpen_PascalScriptClick(Sender: TObject);
+begin
+  if dlgOpen_PascalScript.Execute then
+  begin
+    LoadFile_PascalScript(dlgOpen_PascalScript.FileName);
+    pmAddHis(pmHis_PascalScript, dlgOpen_PascalScript.FileName);
+  end;
+end;
+
+procedure TFormMain.btnRun_CalcClick(Sender: TObject);
 var
-  n: integer;
   s: string;
+  res: boolean;
+  i, n: integer;
 begin
-  s := TMenuItem(Sender).Caption;
-  LoadPascalScriptFile(s);
-  n := pmPascalScriptHis.Items.IndexOfCaption(s);
-  pmPascalScriptHis.Items[n].MenuIndex := 0;
-end;
+  cbbCalc.Text := Trim(cbbCalc.Text);
 
-procedure TFormMain.btnPascalScriptNewClick(Sender: TObject);
-begin
-  SynEditPascalScript.Lines.Clear;
-  SynEditPascalScript.Lines.Append('program newfile;');
-  SynEditPascalScript.Lines.Append('var');
-  SynEditPascalScript.Lines.Append('  i: integer;');
-  SynEditPascalScript.Lines.Append('begin');
-  SynEditPascalScript.Lines.Append('  print([1, 1+2*3.4/5, ''Hello''])');
-  SynEditPascalScript.Lines.Append('end.');
-  SynEditPascalScript.Modified    := False;
-  dlgSavePascalScript.FileName    := '';
-  btnPascalScriptFileName.Caption := '';
-  btnPascalScriptSave.Enabled     := False;
-  btnPascalScriptSaveAs.Enabled   := False;
-  PascalScriptModified:=True;
-end;
-
-procedure TFormMain.btnPascalScriptOpenClick(Sender: TObject);
-begin
-  if dlgOpenPascalScript.Execute then
+  if cbbCalc.Text = ':list' then
   begin
-    LoadPascalScriptFile(dlgOpenPascalScript.FileName);
-    AddPascalScriptHisFile(dlgOpenPascalScript.FileName);
+    mmoOutAdd_Calc(Script_Calc.Script.Text);
+    Exit;
+  end
+  else if cbbCalc.Text = ':err' then
+  begin
+    if Script_Calc.CompilerMessageCount > 0 then
+      for i := 0 to Script_Calc.CompilerMessageCount - 1 do
+        mmoOutCalc.Lines.add(Script_Calc.CompilerErrorToStr(i))
+    else
+      mmoOutCalc.Lines.add('No error' + #13#10);
+    Exit;
+  end
+  else if cbbCalc.Text = '' then
+    Exit;
+
+  btnStop_Calc.Enabled := True;
+  btnRun_Calc.Enabled  := False;
+  try
+    try
+      if sgVar_Calc.Modified then
+      begin
+        Script_Calc_CodeMain := 'begin' + #13#10;
+        if sgVar_Calc.RowCount < 3 then
+          Script_Calc_CodeVar := ''
+        else
+        begin
+          Script_Calc_CodeVar := 'var' + #13#10;
+          for i := 1 to sgVar_Calc.RowCount - 2 do
+          begin
+            Script_Calc_CodeVar :=
+              Script_Calc_CodeVar + sgVar_Calc.Cells[0, i] + ':' +
+              sgVar_Calc.Cells[2, i] + ';' + #13#10;
+            if sgVar_Calc.Cells[1, i] <> '' then
+            begin
+              Script_Calc_CodeMain :=
+                Script_Calc_CodeMain + sgVar_Calc.Cells[0, i] + ':=' +
+                sgVar_Calc.Cells[1, i] + ';' + #13#10;
+            end;
+          end;
+          Script_Calc.Script.Text := Script_Calc_CodeVar + Script_Calc_CodeMain + 'end.';
+          res := Script_Calc.Compile;
+          if not res then
+          begin
+            mmoOutCalc.Lines.Add('Variables define error!');
+            mmoOutCalc.Lines.Add('');
+            Beep;
+            Exit;
+          end;
+        end;
+        sgVar_Calc.Modified := False;
+      end;
+
+      if SynEditFunc_Calc.Modified then
+      begin
+        Script_Calc_CodeFunc := #13#10 + SynEditFunc_Calc.Text + #13#10;
+        Script_Calc.Script.Text :=
+          Script_Calc_CodeVar + Script_Calc_CodeFunc + Script_Calc_CodeMain + 'end.';
+        res := Script_Calc.Compile;
+        if not res then
+        begin
+          mmoOutCalc.Lines.Add('Function define error!');
+          mmoOutCalc.Lines.Add('');
+          Beep;
+          Exit;
+        end;
+        SynEditFunc_Calc.Modified := False;
+      end;
+
+      // compile
+      Script_Calc.Script.Text :=
+        Script_Calc_CodeVar + Script_Calc_CodeFunc + Script_Calc_CodeMain +
+        #13#10 + 'sprint('' '',[' + cbbCalc.Text + ']);' + #13#10 + 'End.';
+
+      res := Script_Calc.Compile;
+      if not res then
+      begin
+        mmoOutCalc.Lines.Add('Express error!');
+        mmoOutCalc.Lines.Add('');
+        Beep;
+        Exit;
+      end;
+
+      Application.ProcessMessages;
+
+      // run
+      mmoOutCalc.Lines.Add('> ' + cbbCalc.Text);
+      mmoOutCalc.Lines.Add('= ');
+      res := Script_Calc.Execute;
+      if not res then
+        mmoOutCalc.Lines.add('Run-time error:' + Script_Calc.ExecErrorToString)
+      else
+      begin
+        //mmoOutCalc.Lines.Add('');
+
+        n := cbbCalc.Items.IndexOf(cbbCalc.Text);
+        if n = -1 then
+        begin
+          cbbCalc.Items.Insert(0, cbbCalc.Text);
+          if cbbCalc.Items.Count > 12 then
+            cbbCalc.Items.Delete(12);
+        end
+        else
+        begin
+          i := cbbCalc.SelStart;
+          cbbCalc.Items.Move(n, 0);
+          cbbCalc.Text     := cbbCalc.Items[0];
+          cbbCalc.SelStart := i;
+        end;
+      end;
+      mmoOutCalc.Lines.Add('');
+    except
+      on E: Exception do
+      begin
+        mmoOutCalc.Lines.add(E.Message);
+      end;
+    end;
+  finally
+    btnStop_Calc.Enabled := False;
+    btnRun_Calc.Enabled  := True;
   end;
 end;
 
-procedure TFormMain.btnPascalScriptRunClick(Sender: TObject);
+procedure TFormMain.btnRun_MPYClick(Sender: TObject);
+var
+  tmpfile: string;
+  s: string;
+  CharBuffer: array [0..511] of char;
+  ReadCount: integer;
+begin
+  btnStop_MPY.Enabled := True;
+  btnRun_MPY.Enabled  := False;
+  try
+    try
+      tmpfile := GetTempFileName + '.py';
+      SynEditMPY.Lines.SaveToFile(tmpfile);
+      ProcessMPY.Executable :=
+        ExtractFilePath(Application.ExeName) + 'micropython' + MICROPYTHON_BIN_NAME;
+      ProcessMPY.Parameters.Add(tmpfile);
+      ProcessMPY.Execute;
+
+      while ProcessMPY.Running or (ProcessMPY.Output.NumBytesAvailable > 0) or
+        (ProcessMPY.Stderr.NumBytesAvailable > 0) do
+      begin
+        while ProcessMPY.Output.NumBytesAvailable > 0 do
+        begin
+          ReadCount := Min(512, ProcessMPY.Output.NumBytesAvailable);
+          //Read up to buffer, not more
+          ProcessMPY.Output.Read(CharBuffer, ReadCount);
+          mmoOutAdd_MPY(Copy(CharBuffer, 0, ReadCount));
+          Application.ProcessMessages;
+        end;
+        // read stderr and write to our stderr
+        while ProcessMPY.Stderr.NumBytesAvailable > 0 do
+        begin
+          ReadCount := Min(512, ProcessMPY.Stderr.NumBytesAvailable);
+          //Read up to buffer, not more
+          ProcessMPY.Stderr.Read(CharBuffer, ReadCount);
+          mmoOutAdd_MPY(Copy(CharBuffer, 0, ReadCount));
+          Application.ProcessMessages;
+        end;
+      end;
+    except
+
+    end;
+  finally
+    btnStop_MPY.Enabled := False;
+    btnRun_MPY.Enabled  := True;
+  end;
+end;
+
+procedure TFormMain.mmoOutAdd(var mmo: TMemo; msg: string);
+var
+  i, n: integer;
+begin
+  // add msg to last line end
+  // process \n
+  // reduce flash on update
+  if msg = '' then
+    Exit;
+  mmoOut_Temp.Text := msg;
+  n := mmo.Lines.Count;
+  if n > 0 then
+    n := n - 1;
+
+  mmo.Lines[n] := mmo.Lines[n] + mmoOut_Temp.Lines[0];
+  for i := 1 to mmoOut_Temp.Lines.Count - 1 do
+    mmo.Lines.Append(mmoOut_Temp.Lines[i]);
+  if (msg[Length(msg)] = #10) then
+    mmo.Lines.Add('');
+  if mmo.Lines.Count > OUTPUT_MAX_LINES then
+  begin
+    for n := 1 to 256 do
+      mmo.Lines.Delete(0);
+  end;
+end;
+
+procedure TFormMain.btnRun_PascalScriptClick(Sender: TObject);
 var
   res: boolean;
   i: integer;
 begin
-  btnPascalScriptStop.Enabled := True;
-  btnPascalScriptRun.Enabled  := False;
+  btnStop_PascalScript.Enabled := True;
+  btnRun_PascalScript.Enabled  := False;
   try
     try
-      if PascalScriptModified then
+      if not Compiled_PascalScript then
       begin
-      // compile
-      PSScript.Script.Text := SynEditPascalScript.Text;
-      res := PSScript.Compile;
-      //for i := 0 to PSScript.CompilerMessageCount - 1 do
-      //  mmoPascalScript.Lines.add(PSScript.CompilerMessages[i].MessageToString);
+        // compile
+        Script_Pascal.Script.Text := SynEditPascalScript.Text;
+        Compiled_PascalScript     := Script_Pascal.Compile;
+        Application.ProcessMessages;
 
-      Application.ProcessMessages;
-
-      if not res then
-      begin
-        if PSScript.CompilerMessageCount > 0 then
-          for i := 0 to PSScript.CompilerMessageCount - 1 do
-            mmoPascalScript.Lines.add(PSScript.CompilerErrorToStr(i));
-      end
-      else
-      PascalScriptModified:=False;
+        if not Compiled_PascalScript then
+        begin
+          if Script_Pascal.CompilerMessageCount > 0 then
+            for i := 0 to Script_Pascal.CompilerMessageCount - 1 do
+              mmoOutPascalScript.Lines.add(Script_Pascal.CompilerErrorToStr(i));
+          Exit;
+        end;
       end;
 
       Application.ProcessMessages;
       // run
-      res := PSScript.Execute;
+      res := Script_Pascal.Execute;
       if not res then
-        mmoPascalScript.Lines.add('Run-time error:' + PSScript.ExecErrorToString);
+        mmoOutPascalScript.Lines.add('Run-time error:' +
+          Script_Pascal.ExecErrorToString);
 
     except
       on E: Exception do
       begin
-        mmoPascalScript.Lines.add(E.Message);
+        mmoOutPascalScript.Lines.add(E.Message);
       end;
     end;
   finally
-    btnPascalScriptStop.Enabled := False;
-    btnPascalScriptRun.Enabled  := True;
+    btnStop_PascalScript.Enabled := False;
+    btnRun_PascalScript.Enabled  := True;
   end;
 end;
 
-procedure TFormMain.btnPascalScriptSaveAsClick(Sender: TObject);
+procedure TFormMain.btnSaveAs_CalcClick(Sender: TObject);
 begin
-  if dlgSavePascalScript.Execute then
+  if dlgSave_Calc.Execute then
   begin
-    try
-      if ExtractFileExt(dlgSavePascalScript.FileName) = '' then
-        dlgSavePascalScript.FileName :=
-          ChangeFileExt(dlgSavePascalScript.FileName, dlgSavePascalScript.DefaultExt);
-      SynEditPascalScript.Lines.SaveToFile(dlgSavePascalScript.FileName);
-      SynEditPascalScript.Modified  := False;
-      btnPascalScriptSave.Enabled   := False;
-      btnPascalScriptSaveAs.Enabled := False;
-      AddPascalScriptHisFile(dlgSavePascalScript.FileName);
-    except
-
-    end;
+    SaveFile_Calc(dlgSave_Calc.FileName);
+    pmAddHis(pmHis_Calc, dlgSave_Calc.FileName);
   end;
 end;
 
-procedure TFormMain.btnPascalScriptSaveClick(Sender: TObject);
+procedure TFormMain.btnSaveAs_MPYClick(Sender: TObject);
 begin
-  if dlgSavePascalScript.FileName = '' then
+  if dlgSave_MPY.Execute then
   begin
-    if not dlgSavePascalScript.Execute then
+    SaveFile_MPY(dlgSave_MPY.FileName);
+    pmAddHis(pmHis_MPY, dlgSave_MPY.FileName);
+  end;
+end;
+
+procedure TFormMain.btnSaveAs_PascalScriptClick(Sender: TObject);
+begin
+  if dlgSave_PascalScript.Execute then
+  begin
+    SaveFile_PascalScript(dlgSave_PascalScript.FileName);
+    pmAddHis(pmHis_PascalScript, dlgSave_PascalScript.FileName);
+  end;
+end;
+
+procedure TFormMain.btnSave_CalcClick(Sender: TObject);
+begin
+  if dlgSave_Calc.FileName = '' then
+  begin
+    if not dlgSave_Calc.Execute then
       Exit;
-    if ExtractFileExt(dlgSavePascalScript.FileName) = '' then
-      dlgSavePascalScript.FileName :=
-        ChangeFileExt(dlgSavePascalScript.FileName, dlgSavePascalScript.DefaultExt);
-    AddPascalScriptHisFile(dlgSavePascalScript.FileName);
+    pmAddHis(pmHis_Calc, dlgSave_Calc.FileName);
   end;
-
-  try
-    SynEditPascalScript.Lines.SaveToFile(dlgSavePascalScript.FileName);
-    SynEditPascalScript.Modified  := False;
-    btnPascalScriptSave.Enabled   := False;
-    btnPascalScriptSaveAs.Enabled := False;
-  except
-
-  end;
+  SaveFile_Calc(dlgSave_Calc.FileName);
 end;
 
-procedure TFormMain.btnPascalScriptStopClick(Sender: TObject);
+procedure TFormMain.btnSave_MPYClick(Sender: TObject);
 begin
-  btnPascalScriptStop.Enabled := False;
-  btnPascalScriptRun.Enabled  := True;
-  PSScript.Stop;
-end;
-
-procedure TFormMain.btnPCalcClearOutputClick(Sender: TObject);
-begin
-  mmoPCalc.Lines.Clear;
-end;
-
-procedure TFormMain.btnPCalcDemo1Click(Sender: TObject);
-begin
-  synPCalc.Text     := PCalc_Demos[TToolButton(Sender).Tag];
-  synPCalc.Modified := True;
-  btnPCalcSaveFile.Enabled := True;
-  btnPCalcSaveAsFile.Enabled := True;
-end;
-
-procedure TFormMain.btnPCalcHelpClick(Sender: TObject);
-begin
-  FormPCalcHelp.Show;
-end;
-
-procedure TFormMain.btnPCalcNewFileClick(Sender: TObject);
-begin
-  synPCalc.Lines.Clear;
-  dlgSavePCalc.FileName := '';
-  synPCalc.Modified     := False;
-  btnPCalcSaveFile.Enabled := False;
-  btnPCalcSaveAsFile.Enabled := False;
-  btnPCalcFile.Caption  := '';
-end;
-
-procedure TFormMain.btnPCalcOpenFileClick(Sender: TObject);
-begin
-  if dlgOpenPCalc.Execute then
+  if dlgSave_MPY.FileName = '' then
   begin
-    LoadPCalcFile(dlgOpenPCalc.FileName);
-    AddPCalcHisFile(dlgOpenPCalc.FileName);
-  end;
-end;
-
-procedure TFormMain.btnPCalcRunClick(Sender: TObject);
-begin
-  if vlePCalc.Modified then
-  begin
-    vlePCalc.Modified := False;
-    SetPCalcVar;
-  end;
-
-  fl.Step := True;
-  btnPCalcRun.Enabled := False;
-  btnPCalcStop.Enabled := True;
-  Application.ProcessMessages;
-  try
-    fl.ComputeStr(synPCalc.Text, PCalcVarNum, @PCalcVars, @PCalcVals);
-  except
-    on E: Exception do
-    begin
-      Application.MessageBox(PChar(E.Message), PChar('Error'), MB_ICONSTOP);
-      ActiveControl     := synPCalc;
-      synPCalc.SelStart := fl.ErrStrPos;
-    end;
-  end;
-  btnPCalcRun.Enabled  := True;
-  btnPCalcStop.Enabled := False;
-end;
-
-procedure TFormMain.btnPCalcSaveAsFileClick(Sender: TObject);
-begin
-  if dlgSavePCalc.Execute then
-  begin
-    try
-      if ExtractFileExt(dlgSavePCalc.FileName) = '' then
-        dlgSavePCalc.FileName :=
-          ChangeFileExt(dlgSavePCalc.FileName, dlgSavePCalc.DefaultExt);
-      synPCalc.Lines.SaveToFile(dlgSavePCalc.FileName);
-      synPCalc.Modified := False;
-      btnPCalcSaveFile.Enabled := False;
-      btnPCalcSaveAsFile.Enabled := False;
-      AddPCalcHisFile(dlgSavePCalc.FileName);
-    except
-
-    end;
-  end;
-end;
-
-procedure TFormMain.btnPCalcSaveFileClick(Sender: TObject);
-begin
-  if dlgSavePCalc.FileName = '' then
-  begin
-    if not dlgSavePCalc.Execute then
+    if not dlgSave_MPY.Execute then
       Exit;
-    if ExtractFileExt(dlgSavePCalc.FileName) = '' then
-      dlgSavePCalc.FileName :=
-        ChangeFileExt(dlgSavePCalc.FileName, dlgSavePCalc.DefaultExt);
-    AddPCalcHisFile(dlgSavePCalc.FileName);
+    pmAddHis(pmHis_MPY, dlgSave_MPY.FileName);
   end;
-
-  try
-    synPCalc.Lines.SaveToFile(dlgSavePCalc.FileName);
-    synPCalc.Modified := False;
-    btnPCalcSaveFile.Enabled := False;
-    btnPCalcSaveAsFile.Enabled := False;
-  except
-
-  end;
-
+  SaveFile_MPY(dlgSave_MPY.FileName);
 end;
 
-procedure TFormMain.btnPCalcStopClick(Sender: TObject);
+procedure TFormMain.btnSave_PascalScriptClick(Sender: TObject);
 begin
-  fl.Stop := True;
-  btnPCalcRun.Enabled := True;
-  btnPCalcStop.Enabled := False;
+  if dlgSave_PascalScript.FileName = '' then
+  begin
+    if not dlgSave_PascalScript.Execute then
+      Exit;
+    pmAddHis(pmHis_PascalScript, dlgSave_PascalScript.FileName);
+  end;
+  SaveFile_PascalScript(dlgSave_PascalScript.FileName);
+end;
+
+procedure TFormMain.btnStop_CalcClick(Sender: TObject);
+begin
+  btnStop_Calc.Enabled := False;
+  btnRun_Calc.Enabled  := True;
+  Script_Calc.Stop;
+end;
+
+procedure TFormMain.btnStop_MPYClick(Sender: TObject);
+begin
+  btnStop_MPY.Enabled := False;
+  btnRun_MPY.Enabled  := True;
+  if ProcessMPY.Running then
+  begin
+    ProcessMPY.Terminate(0);
+  end;
+end;
+
+procedure TFormMain.btnStop_PascalScriptClick(Sender: TObject);
+begin
+  btnStop_PascalScript.Enabled := False;
+  btnRun_PascalScript.Enabled  := True;
+  Script_Pascal.Stop;
 end;
 
 procedure TFormMain.btnShowOptionClick(Sender: TObject);
@@ -1875,7 +2153,6 @@ begin
     ini.WriteBool('Option', 'MinimizeToTray', MinimizeToTray);
     ini.WriteBool('Option', 'CloseToTray', CloseToTray);
 
-    FormOption.cgOptFunctionItemClick(nil, 0);
     if FormOption.dlgFont.Tag = 2 then
     begin
       Font := FormOption.Font;
@@ -1884,61 +2161,21 @@ begin
   end;
 end;
 
-procedure TFormMain.cbbPCalcDblClick(Sender: TObject);
-const
-  cbbPCalcHis_MAX = 12;
-var
-  s, r: string;
-  n: integer;
-begin
-  if vlePCalc.Modified then
-  begin
-    vlePCalc.Modified := False;
-    SetPCalcVar;
-  end;
-
-  try
-    s := Trim(cbbPCalc.Text);
-    r := fl.ComputeStr(s, PCalcVarNum, @PCalcVars, @PCalcVals);
-    if (r <> '') then
-    begin
-      mmoPCalc.Lines.Append('> ' + cbbPCalc.Text);
-      mmoPCalc.Lines.Append('= ' + r);
-      mmoPCalc.Lines.Append('');
-
-      // input history
-      n := cbbPCalc.Items.IndexOf(s);
-      if n = -1 then
-      begin
-        cbbPCalc.Items.Add(s);
-        if cbbPCalc.Items.Count > cbbPCalcHis_MAX then
-          cbbPCalc.Items.Delete(0);
-      end
-      else
-      begin
-        cbbPCalc.Items.Move(n, cbbPCalc.Items.Count - 1);
-      end;
-    end;
-  except
-
-  end;
-end;
-
-procedure TFormMain.cbbPCalcKeyPress(Sender: TObject; var Key: char);
+procedure TFormMain.cbbCalcKeyPress(Sender: TObject; var Key: char);
 begin
   if Key = #13 then
   begin
     Key := #0;
-    cbbPCalcDblClick(Sender);
+    btnRun_CalcClick(Sender);
   end;
 end;
 
-procedure TFormMain.cbbPCalcMouseDown(Sender: TObject; Button: TMouseButton;
+procedure TFormMain.cbbCalcMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
 begin
   if (Shift = [ssShift, ssLeft]) then
   begin
-    cbbPCalc.Items.Clear;
+    cbbCalc.Items.Clear;
     beep;
   end;
 end;
@@ -2035,7 +2272,7 @@ begin
     tmrLogo.Interval := Random(15) * 10 + 50;
   end;
 
-  if (pcMain.ActivePage = tsAbout) and visible then
+  if (pcMain.ActivePage = tsAbout) and Visible then
   begin
     // option animation
     tmrLogo.Tag := (tmrLogo.Tag + btnShowOption.Tag) mod ilOption.Count;
@@ -2058,105 +2295,12 @@ end;
 procedure TFormMain.TrayIconClick(Sender: TObject);
 begin
   // resotre main form
-  if FormMain.WindowState = wsMinimized then
-    FormMain.WindowState := wsNormal;
+  if WindowState = wsMinimized then
+    WindowState := winstat;
   Show;
+  Application.BringToFront;
 end;
 
-procedure TFormMain.LoadPCalcVar;
-var
-  i, num: integer;
-begin
-  num := ini.ReadInteger('PCalcVar', 'Num', 0);
-  for i := 1 to num do
-  begin
-    vlePCalc.Cells[0, i] := ini.ReadString('PCalcVar', 'var' + IntToStr(i), '');
-    vlePCalc.Cells[1, i] := ini.ReadString('PCalcVar', 'val' + IntToStr(i), '');
-  end;
-end;
-
-procedure TFormMain.SavePCalcVar;
-var
-  i: integer;
-begin
-  ini.EraseSection('PCalcVar');
-  ini.WriteInteger('PCalcVar', 'Num', PCalcVarNum);
-  for i := 1 to PCalcVarNum do
-  begin
-    ini.WriteString('PCalcVar', 'var' + IntToStr(i), PCalcVars[i - 1]);
-    ini.WriteString('PCalcVar', 'val' + IntToStr(i), PCalcVals[i - 1].str);
-  end;
-end;
-
-procedure TFormMain.SetPCalcVar;
-var
-  i, num: integer;
-begin
-  num := 0;
-  for i := 1 to vlePCalc.RowCount - 1 do
-  begin
-    if (Trim(vlePCalc.Cells[0, i]) <> '') and (Trim(vlePCalc.Cells[1, i]) <> '') then
-    begin
-      PCalcVars[num] := Trim(vlePCalc.Cells[0, i]);
-      setS(PCalcVals[num], Trim(vlePCalc.Cells[1, i]));
-      num := num + 1;
-    end;
-  end;
-  PCalcVarNum := num;
-  lbPCalcVarCount.Caption := 'Var: ' + IntToStr(num) + '/' +
-    IntToStr(vlePCalc.RowCount - 1);
-  vlePCalc.Clean([gzNormal]);
-  for i := 0 to num - 1 do
-  begin
-    vlePCalc.Cells[0, i + 1] := PCalcVars[i];
-    vlePCalc.Cells[1, i + 1] := PCalcVals[i].str;
-  end;
-end;
-
-procedure TFormMain.AddPCalcHisFile(fname: string);
-var
-  mi: TMenuItem;
-  i: integer;
-begin
-  i := pmPCalcHis.Items.IndexOfCaption(fname);
-  if i >= 0 then
-  begin
-    pmPCalcHis.Items[i].MenuIndex := 0;
-    Exit;
-  end;
-
-  if pmPCalcHis.Items.Count > 8 then
-    pmPCalcHis.Items.Delete(7);
-
-  mi := TMenuItem.Create(pmPCalcHis);
-  mi.Caption := fname;
-  mi.OnClick := @miPCalcHisFileOnClick;
-  pmPCalcHis.Items.Insert(0, mi);
-end;
-
-procedure TFormMain.LoadPCalcFile(fname: string);
-begin
-  try
-    synPCalc.Lines.LoadFromFile(fname);
-    synPCalc.Modified    := False;
-    btnPCalcSaveFile.Enabled := False;
-    btnPCalcSaveAsFile.Enabled := False;
-    btnPCalcFile.Caption := fname;
-  except
-
-  end;
-end;
-
-procedure TFormMain.miPCalcHisFileOnClick(Sender: TObject);
-var
-  n: integer;
-  s: string;
-begin
-  s := TMenuItem(Sender).Caption;
-  LoadPCalcFile(s);
-  n := pmPCalcHis.Items.IndexOfCaption(s);
-  pmPCalcHis.Items[n].MenuIndex := 0;
-end;
 
 function TFormMain.getCrcBit: integer;
 begin
@@ -2713,6 +2857,199 @@ begin
       SecondOf(d), DayOfTheWeek(d) - 1, DayOfTheYear(d), 0]);
   except
   end;
+end;
+
+procedure TFormMain.updateTabVisible;
+begin
+  tsCRC.TabVisible      := ini.ReadBool('Option', 'CRC_Enabled', True);
+  tsDigit.TabVisible    := ini.ReadBool('Option', 'Dital_Enabled', True);
+  tsBytes.TabVisible    := ini.ReadBool('Option', 'Bytes_Enabled', True);
+  tsBase.TabVisible     := ini.ReadBool('Option', 'Base_Enabled', True);
+  tsBigFloat.TabVisible := ini.ReadBool('Option', 'BigFloat_Enabled', True);
+  tsBigInt.TabVisible   := ini.ReadBool('Option', 'BigInt_Enabled', True);
+  tsBuffer.TabVisible   := ini.ReadBool('Option', 'Buffer_Enabled', True);
+  tsConvert.TabVisible  := ini.ReadBool('Option', 'Convert_Enabled', True);
+  tsConvertTime.TabVisible := ini.ReadBool('Option', 'Time_Enabled', True);
+  tsCalc.TabVisible     := ini.ReadBool('Option', 'Calc_Enabled', True);
+  tsScript.TabVisible   := ini.ReadBool('Option', 'Script_Enabled', True);
+  tsPascalScript.TabVisible := ini.ReadBool('Option', 'Pascal_Enabled', True);
+  tsMicropython.TabVisible := ini.ReadBool('Option', 'micropython_Enabled', True);
+end;
+
+function TFormMain.shortFileName(FileName: string): string;
+begin
+  Result := ExtractFileName(FileName);
+  if Length(Result) > 16 then
+    Result := copy(Result, 1, 13) + '...';
+end;
+
+procedure TFormMain.mmoOutAdd_PascalScript(msg: string);
+begin
+  mmoOutAdd(mmoOutPascalScript, msg);
+end;
+
+procedure TFormMain.mmoOutAdd_MPY(msg: string);
+begin
+  mmoOutAdd(mmoOutMPY, msg);
+end;
+
+procedure TFormMain.mmoOutAdd_Calc(msg: string);
+begin
+  mmoOutAdd(mmoOutCalc, msg);
+end;
+
+procedure TFormMain.pmAddHis(var pm: TPopupMenu; FileName: string);
+var
+  mi: TMenuItem;
+begin
+  if FileName <> '' then
+  begin
+    mi := pm.Items.Find(FileName);
+    // Add new history file
+    if mi = nil then
+    begin
+      // max 8 history files
+      if pm.Items.Count > 8 then
+        pm.Items.Delete(7);
+
+      mi := TMenuItem.Create(pm);
+      mi.Caption := FileName;
+      if pm = pmHis_PascalScript then
+      begin
+        mi.OnClick := @pmHisClick_PascalScript;
+      end
+      else if pm = pmHis_MPY then
+      begin
+        mi.OnClick := @pmHisClick_MPY;
+      end
+      else if pm = pmHis_Calc then
+      begin
+        mi.OnClick := @pmHisClick_Calc;
+      end;
+
+      mi.GroupIndex := 1;
+      mi.RadioItem  := True;
+      mi.AutoCheck  := True;
+
+      pm.Items.Insert(0, mi);
+      if lbName.Tag > 0 then
+        pm.Items[0].Checked := True;
+    end
+    else
+    begin
+      // move filename to first
+      if mi.MenuIndex = 0 then
+        Exit;
+      pm.Items.Remove(mi);
+      pmAddHis(pm, FileName);
+    end;
+  end;
+end;
+
+procedure TFormMain.pmHisClick_PascalScript(Sender: TObject);
+begin
+  // load history file
+  LoadFile_PascalScript(TMenuItem(Sender).Caption);
+  // move to first
+  pmAddHis(pmHis_PascalScript, TMenuItem(Sender).Caption);
+end;
+
+procedure TFormMain.pmHisClick_MPY(Sender: TObject);
+begin
+  // load history file
+  LoadFile_MPY(TMenuItem(Sender).Caption);
+  // move to first
+  pmAddHis(pmHis_MPY, TMenuItem(Sender).Caption);
+end;
+
+procedure TFormMain.pmHisClick_Calc(Sender: TObject);
+begin
+  // load history file
+  LoadFile_Calc(TMenuItem(Sender).Caption);
+  // move to first
+  pmAddHis(pmHis_Calc, TMenuItem(Sender).Caption);
+end;
+
+procedure TFormMain.LoadFile_PascalScript(FileName: string);
+begin
+  btnNew_PascalScriptClick(nil);
+  SynEditPascalScript.Lines.LoadFromFile(FileName);
+  dlgSave_PascalScript.FileName := FileName;
+  SynEditPascalScript.Hint := FileName;
+  tsPascalScript.Caption := 'Pascal - ' + shortFileName(FileName);
+end;
+
+procedure TFormMain.SaveFile_PascalScript(FileName: string);
+begin
+  try
+    SynEditPascalScript.Lines.SaveToFile(FileName);
+    SynEditPascalScript.Modified := False;
+    btnSave_PascalScript.Enabled := False;
+    btnSaveAs_PascalScript.Enabled := False;
+    tsPascalScript.Caption := 'Pascal - ' + shortFileName(FileName);
+  except
+
+  end;
+end;
+
+procedure TFormMain.LoadFile_MPY(FileName: string);
+begin
+  btnNew_MPYClick(nil);
+  SynEditMPY.Lines.LoadFromFile(FileName);
+  dlgSave_MPY.FileName := FileName;
+  SynEditMPY.Hint      := FileName;
+  tsMicropython.Caption := 'micropython - ' + shortFileName(FileName);
+end;
+
+procedure TFormMain.SaveFile_MPY(FileName: string);
+begin
+  try
+    SynEditMPY.Lines.SaveToFile(FileName);
+    SynEditMPY.Modified   := False;
+    btnSave_MPY.Enabled   := False;
+    btnSaveAs_MPY.Enabled := False;
+    tsMicropython.Caption := 'micropython - ' + shortFileName(FileName);
+  except
+
+  end;
+end;
+
+procedure TFormMain.LoadFile_Calc(FileName: string);
+var
+  i, n: integer;
+  s: string;
+begin
+  mmoOut_Temp.Lines.LoadFromFile(FileName);
+  s := mmoOut_Temp.Lines[0];
+  if not TryStrToInt(s, n) then
+    Exit;
+
+  sgVar_Calc.Clean;
+  sgVar_Calc.RowCount := n;
+  for i := 1 to n - 1 do
+  begin
+    mmoOut_Temp.Lines.Delete(0);
+    sgVar_Calc.Rows[i].CommaText := mmoOut_Temp.Lines[0];
+  end;
+  mmoOut_Temp.Lines.Delete(0);
+
+  dlgSave_Calc.FileName := FileName;
+  SynEditFunc_Calc.Text := mmoOut_Temp.Text;
+  SynEditFunc_Calc.Hint := FileName;
+  sgVar_Calc.Hint := FileName;
+end;
+
+procedure TFormMain.SaveFile_Calc(FileName: string);
+var
+  i: integer;
+begin
+  mmoOut_Temp.Text := SynEditFunc_Calc.Text;
+  mmoOut_Temp.Lines.Insert(0, IntToStr(sgVar_Calc.RowCount));
+  for i := 1 to sgVar_Calc.RowCount - 1 do
+    mmoOut_Temp.Lines.Insert(i, sgVar_Calc.Rows[i].CommaText);
+  mmoOut_Temp.Lines.SaveToFile(FileName);
+  SynEditFunc_Calc.Hint := FileName;
+  sgVar_Calc.Hint := FileName;
 end;
 
 end.
