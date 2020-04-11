@@ -1489,7 +1489,7 @@ begin
       Exit;
   end;
 
-  dat := StrToBase(s, base, neg, system.MaxInt);
+  dat := StrToBase(s, base, neg, system.maxLongint);
 
   sgBase.Cells[1, 1] := BaseToStr(dat, 1, 2, neg, '0');
   sgBase.Cells[1, 2] := BaseToStr(dat, 1, 8, neg, '0');
