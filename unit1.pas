@@ -19,7 +19,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '0.9';
+  VERSION = '1.0.0';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -148,7 +148,7 @@ type
     mmoBigIntC: TMemo;
     mmoCRC: TMemo;
     mmoBigFloatC: TMemo;
-    PageControl1: TPageControl;
+    pcConstant: TPageControl;
     pcAbout: TPageControl;
     pnlBigFloatA: TPanel;
     pnlBigIntB: TPanel;
@@ -186,6 +186,7 @@ type
     Script_Calc: TPSScript;
     sgBytes: TStringGrid;
     sgBase: TStringGrid;
+    sgConstantPhysics: TStringGrid;
     sgVar_Calc: TStringGrid;
     btnShowOption: TSpeedButton;
     btnConvertTimeNow: TSpeedButton;
@@ -211,7 +212,6 @@ type
     SynEditMPY: TSynEdit;
     SynPasSyn: TSynPasSyn;
     SynPythonSyn: TSynPythonSyn;
-    TabSheet1: TTabSheet;
     btnCaret_PascalScript: TToolButton;
     ToolBar10: TToolBar;
     ToolButton23: TToolButton;
@@ -315,8 +315,7 @@ type
     tsCRC: TTabSheet;
     tsConstant: TTabSheet;
     tsConstantMath: TTabSheet;
-    tsContantPhysics: TTabSheet;
-    tsConstantChemistry: TTabSheet;
+    tsConstantPhysics: TTabSheet;
     tmrAlpha: TTimer;
     ToolBar1: TToolBar;
     ToolBar2: TToolBar;
@@ -472,6 +471,7 @@ type
     procedure updateTime(d: TDateTime);
 
     procedure updateTabVisible;
+    procedure updateTSPC(ts: TTabSheet; pc: TPageControl);
   end;
 
 
@@ -658,13 +658,10 @@ begin
 
   lbVer.Caption := 'ver ' + VERSION;
 
-  tsConstant.TabVisible := False;
-
   DateTimefmt.ShortDateFormat := 'yyyy-mm-dd';
   DateTimefmt.DateSeparator   := '-';
   DateTimefmt.TimeSeparator   := ':';
   DateTimefmt.LongTimeFormat  := 'hh:nn:ss';
-
 
   // test inifile writeable
   try
@@ -699,9 +696,6 @@ begin
     TrayIcon.Visible := ini.ReadBool('Option', 'TrayIcon', True);
     MinimizeToTray   := ini.ReadBool('Option', 'MinimizeToTray', True);
     CloseToTray      := ini.ReadBool('Option', 'CloseToTray', True);
-
-    // visible
-    updateTabVisible;
 
     // Digit
     rbBigBytes.Checked      := ini.ReadBool('Digit', 'BigBytes', True);
@@ -752,7 +746,7 @@ begin
     btnConvertTimeNowClick(nil);
 
     // Script
-    tsScript.TabVisible := tsPascalScript.TabVisible;
+    pcScript.PageIndex := ini.ReadInteger('last', 'page_script', 0);
 
     // pascal script
     SynEditPascalScript.Height := ini.ReadInteger('PascalScript', 'Height', 300);
@@ -781,10 +775,17 @@ begin
     for i := 1 to ini.ReadInteger('HisFile_micropython', 'Count', 0) do
       pmAddHis(pmHis_MPY, ini.ReadString('HisFile_micropython', IntToStr(i), ''));
 
+
+    // Constant
+    pcConstant.PageIndex := ini.ReadInteger('last', 'page_constant', 0);
+
+
   except
 
   end;
 
+  // visible
+  updateTabVisible;
 
   try
     bfA := TBigFloat.Create;
@@ -882,9 +883,12 @@ begin
         ini.WriteString('HisFile_micropython', IntToStr(i + 1),
           pmHis_MPY.Items[i].Caption);
 
+      // COnstant
+      ini.WriteInteger('last', 'page_constant', pcConstant.ActivePageIndex);
 
       // update ini
       ini.UpdateFile;
+
     end;
   finally
     if bfA <> nil then
@@ -2792,18 +2796,50 @@ end;
 
 procedure TFormMain.updateTabVisible;
 begin
-  tsCRC.TabVisible      := ini.ReadBool('Option', 'CRC_Enabled', True);
-  tsDigit.TabVisible    := ini.ReadBool('Option', 'Dital_Enabled', True);
-  tsBytes.TabVisible    := ini.ReadBool('Option', 'Bytes_Enabled', True);
+  tsCRC.TabVisible := ini.ReadBool('Option', 'CRC_Enabled', True);
+
   tsBase.TabVisible     := ini.ReadBool('Option', 'Base_Enabled', True);
   tsBigFloat.TabVisible := ini.ReadBool('Option', 'BigFloat_Enabled', True);
   tsBigInt.TabVisible   := ini.ReadBool('Option', 'BigInt_Enabled', True);
-  tsConvert.TabVisible  := ini.ReadBool('Option', 'Convert_Enabled', True);
+  tsBytes.TabVisible    := ini.ReadBool('Option', 'Bytes_Enabled', True);
+  tsDigit.TabVisible    := ini.ReadBool('Option', 'Dital_Enabled', True);
+  updateTSPC(tsDigit,pcDigit);
+
   tsConvertTime.TabVisible := ini.ReadBool('Option', 'Time_Enabled', True);
-  tsCalc.TabVisible     := ini.ReadBool('Option', 'Calc_Enabled', True);
-  tsScript.TabVisible   := ini.ReadBool('Option', 'Script_Enabled', True);
+  tsConvert.TabVisible     := ini.ReadBool('Option', 'Convert_Enabled', True);
+  updateTSPC(tsConvert,pcConvert);
+
+  tsCalc.TabVisible := ini.ReadBool('Option', 'Calc_Enabled', True);
+
   tsPascalScript.TabVisible := ini.ReadBool('Option', 'Pascal_Enabled', True);
   tsMicropython.TabVisible := ini.ReadBool('Option', 'micropython_Enabled', True);
+  tsScript.TabVisible := ini.ReadBool('Option', 'Script_Enabled', True);
+  updateTSPC(tsScript,pcScript);
+
+  tsConstantMath.TabVisible := ini.ReadBool('Option', 'ConstantMath_Enabled', True);
+  tsConstantPhysics.TabVisible :=
+    ini.ReadBool('Option', 'ConstantPhysics_Enabled', True);
+  tsConstant.TabVisible := ini.ReadBool('Option', 'Constant_Enabled', True);
+  updateTSPC(tsConstant,pcConstant);
+end;
+
+procedure TFormMain.updateTSPC(ts:TTabSheet;pc: TPageControl);
+var
+  i,n,p:integer;
+begin
+  n:=0;
+  for i:=0 to pc.PageCount-1 do
+  begin
+    if pc.Pages[i].TabVisible then
+    begin
+      n:=n+1;
+      p:=i;
+    end;
+  end;
+  if n>0 then
+    if pc.ActivePageIndex=-1 then
+      pc.ActivePageIndex:=p;
+  ts.TabVisible:=n>0;
 end;
 
 function TFormMain.shortFileName(FileName: string): string;

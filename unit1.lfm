@@ -447,10 +447,10 @@ object FormMain: TFormMain
     Height = 520
     Top = 0
     Width = 697
-    ActivePage = tsConvert
+    ActivePage = tsAbout
     Align = alClient
     MultiLine = True
-    TabIndex = 2
+    TabIndex = 6
     TabOrder = 0
     Options = [nboMultiLine]
     object tsCRC: TTabSheet
@@ -882,9 +882,9 @@ object FormMain: TFormMain
         Height = 490
         Top = 0
         Width = 689
-        ActivePage = tsBytes
+        ActivePage = tsBigFloat
         Align = alClient
-        TabIndex = 0
+        TabIndex = 2
         TabOrder = 0
         object tsBytes: TTabSheet
           Caption = 'Bytes'
@@ -1018,12 +1018,12 @@ object FormMain: TFormMain
         object tsBase: TTabSheet
           Caption = 'Base'
           ClientHeight = 460
-          ClientWidth = 624
+          ClientWidth = 681
           object sgBase: TStringGrid
             Left = 0
             Height = 435
             Top = 25
-            Width = 624
+            Width = 681
             Align = alClient
             AutoFillColumns = True
             ColCount = 2
@@ -1041,7 +1041,7 @@ object FormMain: TFormMain
             OnEditingDone = sgBaseEditingDone
             ColWidths = (
               99
-              504
+              578
             )
             Cells = (
               6
@@ -1069,7 +1069,7 @@ object FormMain: TFormMain
             Left = 0
             Height = 25
             Top = 0
-            Width = 624
+            Width = 681
             AutoSize = True
             Caption = 'ToolBar6'
             EdgeBorders = []
@@ -1098,22 +1098,22 @@ object FormMain: TFormMain
         object tsBigFloat: TTabSheet
           Caption = 'BigFloat'
           ClientHeight = 460
-          ClientWidth = 624
+          ClientWidth = 681
           object pnlBigFloatA: TPanel
             Left = 0
             Height = 120
             Top = 0
-            Width = 624
+            Width = 681
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 120
-            ClientWidth = 624
+            ClientWidth = 681
             TabOrder = 0
             object mmoBigFloatA: TMemo
               Left = 32
               Height = 120
               Top = 0
-              Width = 592
+              Width = 649
               Align = alClient
               Lines.Strings = (
                 ''
@@ -1137,7 +1137,7 @@ object FormMain: TFormMain
             Left = 0
             Height = 5
             Top = 120
-            Width = 624
+            Width = 681
             Align = alTop
             AutoSnap = False
             ResizeAnchor = akTop
@@ -1147,17 +1147,17 @@ object FormMain: TFormMain
             Left = 0
             Height = 120
             Top = 125
-            Width = 624
+            Width = 681
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 120
-            ClientWidth = 624
+            ClientWidth = 681
             TabOrder = 2
             object mmoBigFloatB: TMemo
               Left = 32
               Height = 120
               Top = 0
-              Width = 592
+              Width = 649
               Align = alClient
               Lines.Strings = (
                 ''
@@ -1181,7 +1181,7 @@ object FormMain: TFormMain
             Left = 0
             Height = 5
             Top = 245
-            Width = 624
+            Width = 681
             Align = alTop
             AutoSnap = False
             ResizeAnchor = akTop
@@ -1191,18 +1191,18 @@ object FormMain: TFormMain
             Left = 0
             Height = 210
             Top = 250
-            Width = 624
+            Width = 681
             Align = alClient
             BevelOuter = bvNone
             ClientHeight = 210
-            ClientWidth = 624
+            ClientWidth = 681
             Constraints.MinHeight = 120
             TabOrder = 4
             object tbBigFloat: TToolBar
               Left = 0
               Height = 25
               Top = 0
-              Width = 624
+              Width = 681
               AutoSize = True
               EdgeBorders = []
               Images = ilDigit
@@ -1345,7 +1345,7 @@ object FormMain: TFormMain
               end
               object ToolButton26: TToolButton
                 Left = 537
-                Height = 8
+                Height = 22
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1369,7 +1369,7 @@ object FormMain: TFormMain
               Left = 32
               Height = 185
               Top = 25
-              Width = 592
+              Width = 649
               Align = alClient
               OnMouseUp = mmoBigFloatCMouseUp
               ReadOnly = True
@@ -3899,6 +3899,461 @@ object FormMain: TFormMain
         end
       end
     end
+    object tsConstant: TTabSheet
+      Caption = 'constant'
+      ClientHeight = 490
+      ClientWidth = 689
+      ImageIndex = 10
+      object pcConstant: TPageControl
+        Left = 0
+        Height = 490
+        Top = 0
+        Width = 689
+        ActivePage = tsConstantPhysics
+        Align = alClient
+        TabIndex = 1
+        TabOrder = 0
+        object tsConstantMath: TTabSheet
+          Caption = 'Math'
+          ClientHeight = 460
+          ClientWidth = 681
+          object sgConstantMath: TStringGrid
+            Left = 0
+            Height = 460
+            Top = 0
+            Width = 681
+            Align = alClient
+            AlternateColor = 16316664
+            AutoEdit = False
+            AutoFillColumns = True
+            ColCount = 3
+            ColumnClickSorts = True
+            Columns = <            
+              item
+                Alignment = taCenter
+                MaxSize = 80
+                SizePriority = 0
+                Title.Alignment = taCenter
+                Title.Caption = 'Name'
+                Width = 80
+              end            
+              item
+                MaxSize = 180
+                SizePriority = 0
+                Title.Caption = 'Value'
+                Width = 180
+              end            
+              item
+                Title.Caption = 'Description'
+                Width = 400
+              end>
+            DefaultColWidth = 64
+            FixedCols = 0
+            RowCount = 50
+            TabOrder = 0
+            TitleFont.CharSet = ANSI_CHARSET
+            TitleFont.Color = clBlack
+            TitleFont.Height = -14
+            TitleFont.Name = 'Courier New'
+            TitleFont.Pitch = fpFixed
+            TitleFont.Quality = fqDraft
+            OnClick = sgConstantMathClick
+            ColWidths = (
+              80
+              180
+              400
+            )
+            Cells = (
+              34
+              0
+              1
+              'π'
+              0
+              2
+              'e'
+              0
+              3
+              '√2'
+              0
+              4
+              'γ'
+              0
+              5
+              'φ'
+              0
+              6
+              'β'
+              0
+              7
+              'δ'
+              0
+              8
+              'α'
+              0
+              9
+              'C2'
+              0
+              10
+              'M1'
+              0
+              11
+              'B2'
+              0
+              12
+              'B4'
+              1
+              1
+              '3.1415926536'
+              1
+              2
+              '2.7182818284'
+              1
+              3
+              '1.4142135624'
+              1
+              4
+              '0.5772156649'
+              1
+              5
+              '0.6180339887'
+              1
+              6
+              '0.70258'
+              1
+              7
+              '4.6692016091'
+              1
+              8
+              '2.5029078751'
+              1
+              9
+              '0.6601618158'
+              1
+              10
+              '0.2614972128'
+              1
+              11
+              '1.9021605823'
+              1
+              12
+              '0.8705883800'
+              2
+              1
+              'ratio of the circumference of a circle to its diameter             '
+              2
+              4
+              'Euler constant'
+              2
+              5
+              'Golden ratio'
+              2
+              6
+              'Embree-Trefethen'
+              2
+              7
+              'First fegenbaum constant'
+              2
+              8
+              'Second fergenbaum constant'
+              2
+              9
+              'Twin prime constant'
+              2
+              10
+              'Meissel Mertens constant'#10#10
+              2
+              11
+              'Brownian constant of twin prime number'
+              2
+              12
+              'Prime Quadruplet'
+            )
+          end
+        end
+        object tsConstantPhysics: TTabSheet
+          Caption = 'Physics'
+          ClientHeight = 460
+          ClientWidth = 681
+          object sgConstantPhysics: TStringGrid
+            Left = 0
+            Height = 460
+            Top = 0
+            Width = 681
+            Align = alClient
+            AlternateColor = 16316664
+            AutoEdit = False
+            AutoFillColumns = True
+            ColCount = 4
+            ColumnClickSorts = True
+            Columns = <            
+              item
+                Alignment = taCenter
+                MaxSize = 80
+                SizePriority = 0
+                Title.Alignment = taCenter
+                Title.Caption = 'Name'
+                Width = 58
+              end            
+              item
+                MaxSize = 180
+                SizePriority = 0
+                Title.Caption = 'Value'
+                Width = 169
+              end            
+              item
+                Alignment = taCenter
+                SizePriority = 0
+                Title.Alignment = taCenter
+                Title.Caption = 'unit'
+                Width = 85
+              end            
+              item
+                Title.Caption = 'Description'
+                Width = 348
+              end>
+            DefaultColWidth = 64
+            FixedCols = 0
+            RowCount = 50
+            TabOrder = 0
+            TitleFont.CharSet = ANSI_CHARSET
+            TitleFont.Color = clBlack
+            TitleFont.Height = -14
+            TitleFont.Name = 'Courier New'
+            TitleFont.Pitch = fpFixed
+            TitleFont.Quality = fqDraft
+            OnClick = sgConstantMathClick
+            ColWidths = (
+              58
+              169
+              85
+              348
+            )
+            Cells = (
+              73
+              0
+              1
+              'c'
+              0
+              2
+              'G'
+              0
+              3
+              'NA'
+              0
+              4
+              'R'
+              0
+              5
+              'k'
+              0
+              6
+              'Vm'
+              0
+              7
+              'e'
+              0
+              8
+              'mu'
+              0
+              9
+              'me'
+              0
+              10
+              'e/me'
+              0
+              11
+              'mp'
+              0
+              12
+              'mn'
+              0
+              13
+              'F'
+              0
+              14
+              'ε0'
+              0
+              15
+              'μ0'
+              0
+              16
+              'μe'
+              0
+              17
+              'μp'
+              0
+              18
+              'α0'
+              0
+              19
+              'μB'
+              0
+              20
+              'μN'
+              0
+              21
+              'h'
+              0
+              22
+              'α'
+              0
+              23
+              'R∞'
+              0
+              24
+              'λc'
+              0
+              25
+              'mp/me'
+              1
+              1
+              '299792458'
+              1
+              2
+              '6.67428E-11'
+              1
+              3
+              '6.02214179E23'
+              1
+              4
+              '8.314472'
+              1
+              5
+              '1.3806504E-23'
+              1
+              6
+              '22.413996E3'
+              1
+              7
+              '1.602176487E-19'
+              1
+              8
+              '1.660538782E-27'
+              1
+              9
+              '9.10938215E-31'
+              1
+              10
+              '－1.758820150E11'
+              1
+              11
+              '1.672621637E-27'
+              1
+              12
+              '1.674927211E-27'
+              1
+              13
+              '9.64853399E4'
+              1
+              14
+              '8.854187817E-12'
+              1
+              15
+              '1.2566370614E-6'
+              1
+              16
+              '-9.28476377E-24'
+              1
+              17
+              '1.410606662E-26'
+              1
+              18
+              '5.2917720859E-11'
+              1
+              19
+              '9.27400915E-24'
+              1
+              20
+              '5.05078324E-27'
+              1
+              21
+              '6.62606896E-34'
+              1
+              22
+              '7.2973525376E-3'
+              1
+              23
+              '1.0973731568527E7'
+              1
+              24
+              '2.4263102175E-12'
+              1
+              25
+              '1836.15267247'
+              2
+              1
+              'm/s'
+              2
+              2
+              'm3/(Kg·s2)'
+              2
+              4
+              'J/(mol·K)'
+              2
+              5
+              'J/K'
+              2
+              6
+              'm3/mol'
+              2
+              7
+              'C'
+              2
+              8
+              'Kg'
+              2
+              9
+              'Kg'
+              2
+              10
+              'C/Kg'
+              2
+              11
+              'Kg'
+              2
+              12
+              'Kg'
+              2
+              13
+              'C/mol'
+              2
+              14
+              'F/m'
+              2
+              15
+              'H/m'
+              2
+              16
+              'J/T'
+              2
+              17
+              'J/T'
+              2
+              18
+              'm'
+              2
+              19
+              'J/T'
+              2
+              20
+              'J/T'
+              2
+              21
+              'J·s'
+              2
+              23
+              '1/m'
+              2
+              24
+              'm'
+              3
+              2
+              'Newtonian constant of gravitation'
+            )
+          end
+        end
+      end
+    end
     object tsAbout: TTabSheet
       Caption = 'About'
       ClientHeight = 490
@@ -4305,11 +4760,10 @@ object FormMain: TFormMain
           object btnOpenGITHUB1: TSpeedButton
             Left = 264
             Height = 28
-            Hint = 'visit project in github'
+            Hint = 'Help'
             Top = 16
             Width = 28
             AutoSize = True
-            Caption = 'github'
             Flat = True
             Images = ilAB
             ImageIndex = 2
@@ -4318,7 +4772,7 @@ object FormMain: TFormMain
           object btnExit: TSpeedButton
             Left = 264
             Height = 28
-            Hint = 'visit project in github'
+            Hint = 'Exit'
             Top = 48
             Width = 28
             AutoSize = True
@@ -4361,6 +4815,11 @@ object FormMain: TFormMain
                 Align = alClient
                 HideSelection = False
                 Lines.Strings = (
+                  '2020.4 v1.0'
+                  '    + add Constant Table'
+                  '    * meger Buffer convert to Digit'
+                  '    - bugs'
+                  ''
                   '2020.4 v0.9'
                   '    * use PascalScript as Programmable Calculator interpreter'
                   '    - remove ArtFormula'
@@ -4397,7 +4856,7 @@ object FormMain: TFormMain
                   '    + include CRC, base convert, digit bytes'
                 )
                 ReadOnly = True
-                Rtf = '{\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Courier New;}}'#13#10'{\colortbl ;\red0\green0\blue0;\red0\green0\blue255;}'#13#10'{\*\generator Riched20 10.0.17763}\viewkind4\uc1 '#13#10'\pard\cf1\b\f0\fs22\lang2052 2020.4 v0.9\par'#13#10'\b0     * use PascalScript as Programmable Calculator interpreter\par'#13#10'    \lang1033 -\lang2052  remove ArtFormula\par'#13#10'\b\par'#13#10'2020.4 v0.8\b0\par'#13#10'    + \cf2 micropython\cf1\par'#13#10'    * rewrite file open/save/history function\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.3  v0.7\b0\par'#13#10'    + \cf2 Pascal Script\cf1\par'#13#10'    * Adjust interface\par'#13#10'    * Optimize\par'#13#10'    - Fix bug\par'#13#10'\par'#13#10'\b 2020.3  v0.6\b0\par'#13#10'    + Time convert\par'#13#10'    + Programmable Calculator file history\par'#13#10'    + Hex <-> string\par'#13#10'\par'#13#10'\b 2020.3  v0.5\b0\par'#13#10'    + Programmable Calculator.\par'#13#10'    + Tray Icon\par'#13#10'    * more Option\par'#13#10'\par'#13#10'\b 2020.3  v0.4\b0\par'#13#10'    + add add Buffer convert.\par'#13#10'    + Option Dialog\par'#13#10'\par'#13#10'\b 2020.3  v0.3\b0\par'#13#10'    + add Big Int and Big float.\par'#13#10'\par'#13#10'\b 2020.3  v0.2, first version.\b0\par'#13#10'    \lang1033 +\lang2052  include CRC, base convert, digit bytes\par'#13#10'\par'#13#10'}'#13#10#0
+                Rtf = '{\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Courier New;}}'#13#10'{\colortbl ;\red0\green0\blue0;\red255\green0\blue0;\red0\green0\blue255;\red128\green0\blue255;}'#13#10'{\*\generator Riched20 10.0.17763}\viewkind4\uc1 '#13#10'\pard\cf1\b\f0\fs22\lang2052 2020.4 v1.0\par'#13#10'\b0     + add \b Constant Table\b0\par'#13#10'    * meger Buffer convert to Digit\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.4 v0.9\par'#13#10'\b0     * use PascalScript as Programmable Calculator interpreter\par'#13#10'    \lang1033 -\lang2052  remove \cf2 ArtFormula\cf1\par'#13#10'\b\par'#13#10'2020.4 v0.8\b0\par'#13#10'    + \cf3\b micropython\cf1\b0\par'#13#10'    * rewrite file open/save/history function\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.3  v0.7\b0\par'#13#10'    + \cf4\b Pascal Script\cf1\b0\par'#13#10'    * Adjust interface\par'#13#10'    * Optimize\par'#13#10'    - Fix bug\par'#13#10'\par'#13#10'\b 2020.3  v0.6\b0\par'#13#10'    + Time convert\par'#13#10'    + Programmable Calculator file history\par'#13#10'    + Hex <-> string\par'#13#10'\par'#13#10'\b 2020.3  v0.5\b0\par'#13#10'    + Programmable Calculator.\par'#13#10'    + Tray Icon\par'#13#10'    * more Option\par'#13#10'\par'#13#10'\b 2020.3  v0.4\b0\par'#13#10'    + add add Buffer convert.\par'#13#10'    + Option Dialog\par'#13#10'\par'#13#10'\b 2020.3  v0.3\b0\par'#13#10'    + add Big Int and Big float.\par'#13#10'\par'#13#10'\b 2020.3  v0.2, first version.\b0\par'#13#10'    \lang1033 +\lang2052  include CRC, base convert, digit bytes\par'#13#10'\par'#13#10'}'#13#10#0
                 ScrollBars = ssAutoVertical
                 TabOrder = 0
                 ZoomFactor = 1
@@ -4405,17 +4864,19 @@ object FormMain: TFormMain
             end
             object tsReadme: TTabSheet
               Caption = 'Readme'
-              ClientHeight = 340
+              ClientHeight = 348
               ClientWidth = 489
               object rmoAboutReadme: TRichMemo
                 Left = 0
-                Height = 340
+                Height = 348
                 Top = 0
                 Width = 489
                 Align = alClient
                 HideSelection = False
                 Lines.Strings = (
-                  'Some third party components and functions used by CalcToolbox:'
+                  'Calc Toolbox is a small cross-platform calculation software for engineer calculation.'
+                  ''
+                  'Calc Toolbox is develop wwith Lazarus, and use some third party components and functions:'
                   ''
                   'CRC algorithm from'
                   'https://www.iteye.com/blog/kiolp-2262455'
@@ -4426,14 +4887,17 @@ object FormMain: TFormMain
                   'Big Float function from'
                   'http://www.delphiforfun.org.ws034.alentus.com/Programs/Library/bigfloat.htm'
                   ''
-                  'PascalScript (Integrate with Lazarus)'
+                  'PascalScript (Integrate with Lazarus IDE)'
                   'https://wiki.lazarus.freepascal.org/index.php/Pascal_Script'
+                  ''
+                  'SynEdit (Integrate with Lazarus IDE)'
+                  'https://wiki.freepascal.org/SynEdit'
                   ''
                   'RichMemo'
                   'https://wiki.freepascal.org/RichMemo'
                 )
                 ReadOnly = True
-                Rtf = '{\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Courier New;}}'#13#10'{\colortbl ;\red0\green0\blue0;\red0\green0\blue255;}'#13#10'{\*\generator Riched20 10.0.17763}\viewkind4\uc1 '#13#10'\pard\cf1\f0\fs22\lang2052 Some third party components and functions used by CalcToolbox:\par'#13#10'\par'#13#10'\b CRC algorithm\b0  from\par'#13#10'\cf2\ul\i https://www.iteye.com/blog/kiolp-2262455\cf1\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 Base convert\b0\fs22  function from\par'#13#10'\cf2\ul\i https://blog.csdn.net/tianqin20140902/article/details/44151717\cf1\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 Big Float\b0\fs22  function from\par'#13#10'\cf2\ul\i http://www.delphiforfun.org.ws034.alentus.com/Programs/Library/bigfloat.htm\cf1\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 PascalScript\b0\fs22  \lang1033 (\lang2052 Integrate with Lazarus\lang1033 )\lang2052\par'#13#10'\cf2\ul\i https://wiki.lazarus.freepascal.org/index.php/Pascal_Script\cf1\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24\lang1033 RichMemo\b0\fs22\par'#13#10'\cf2\ul\i https://wiki.freepascal.org/RichMemo\cf1\ulnone\i0\par'#13#10'\lang2052\par'#13#10'}'#13#10#0
+                Rtf = '{\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Courier New;}}'#13#10'{\colortbl ;\red128\green0\blue255;\red0\green0\blue0;\red128\green128\blue0;\red0\green0\blue255;}'#13#10'{\*\generator Riched20 10.0.17763}\viewkind4\uc1 '#13#10'\pard\cf1\b\f0\fs28\lang2052 Calc Toolbox\cf2\b0\fs22  is a small \cf3 cross-platform\cf2  calculation software for engineer calculation.\par'#13#10'\par'#13#10'Calc Toolbox is develop wwith Lazarus, and use \lang1033 s\lang2052 ome third party components and functions:\par'#13#10'\par'#13#10'\b CRC algorithm\b0  from\par'#13#10'\cf4\ul\i https://www.iteye.com/blog/kiolp-2262455\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 Base convert\b0\fs22  function from\par'#13#10'\cf4\ul\i https://blog.csdn.net/tianqin20140902/article/details/44151717\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 Big Float\b0\fs22  function from\par'#13#10'\cf4\ul\i http://www.delphiforfun.org.ws034.alentus.com/Programs/Library/bigfloat.htm\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 PascalScript\b0\fs22  \lang1033 (\lang2052 Integrate with Lazarus IDE\lang1033 )\lang2052\par'#13#10'\cf4\ul\i https://wiki.lazarus.freepascal.org/index.php/Pascal_Script\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 SynEdit \b0\fs22\lang1033 (\lang2052 Integrate with Lazarus IDE\lang1033 )\lang2052\par'#13#10'\cf4\ul\i https://wiki.freepascal.org/SynEdit\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24\lang1033 RichMemo\b0\fs22\par'#13#10'\cf4\ul\i https://wiki.freepascal.org/RichMemo\cf2\ulnone\i0\par'#13#10'\lang2052\par'#13#10'}'#13#10#0
                 ScrollBars = ssAutoVertical
                 TabOrder = 0
                 ZoomFactor = 1
@@ -8931,113 +9395,9 @@ object FormMain: TFormMain
         end
       end
     end
-    object tsConstant: TTabSheet
-      Caption = 'constant'
-      ClientHeight = 490
-      ClientWidth = 689
-      ImageIndex = 10
-      object PageControl1: TPageControl
-        Left = 0
-        Height = 490
-        Top = 0
-        Width = 689
-        ActivePage = TabSheet1
-        Align = alClient
-        TabIndex = 3
-        TabOrder = 0
-        object tsConstantMath: TTabSheet
-          Caption = 'Math'
-          ClientHeight = 460
-          ClientWidth = 624
-          object sgConstantMath: TStringGrid
-            Left = 0
-            Height = 460
-            Top = 0
-            Width = 624
-            Align = alClient
-            AlternateColor = 16316664
-            AutoEdit = False
-            AutoFillColumns = True
-            ColCount = 3
-            ColumnClickSorts = True
-            Columns = <            
-              item
-                Alignment = taCenter
-                MaxSize = 80
-                SizePriority = 0
-                Title.Alignment = taCenter
-                Title.Caption = 'Name'
-                Width = 80
-              end            
-              item
-                MaxSize = 180
-                SizePriority = 0
-                Title.Caption = 'Value'
-                Width = 180
-              end            
-              item
-                Title.Caption = 'Description'
-                Width = 343
-              end>
-            DefaultColWidth = 64
-            FixedCols = 0
-            RowCount = 50
-            TabOrder = 0
-            TitleFont.CharSet = ANSI_CHARSET
-            TitleFont.Color = clBlack
-            TitleFont.Height = -14
-            TitleFont.Name = 'Courier New'
-            TitleFont.Pitch = fpFixed
-            TitleFont.Quality = fqDraft
-            OnClick = sgConstantMathClick
-            ColWidths = (
-              80
-              180
-              343
-            )
-            Cells = (
-              8
-              0
-              1
-              'pi'
-              0
-              2
-              'e'
-              0
-              3
-              'γ'
-              0
-              4
-              'φ'
-              0
-              5
-              'β'
-              1
-              1
-              '3.14159265'
-              1
-              2
-              '2.71828183'
-              2
-              1
-              'ratio of the circumference of a circle to its diameter             '
-            )
-          end
-        end
-        object tsContantPhysics: TTabSheet
-          Caption = 'Physics'
-        end
-        object tsConstantChemistry: TTabSheet
-          Caption = 'Chemistry'
-        end
-        object TabSheet1: TTabSheet
-          Caption = 'Electromagnetics'
-        end
-      end
-    end
   end
   object mmoOut_Temp: TMemo
-    Left = 232
+    Left = 224
     Height = 24
     Top = 240
     Width = 24
