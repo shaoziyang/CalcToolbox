@@ -27,5 +27,8 @@ const
     );
 
   NewFileTemplate_Lua: string = (
-  'print("Hello word.")' + #13#10#13#10
+  'print("Hello word.")' + #13#10#13#10 +
+  'for i = 1, 5 do' + #13#10 +
+  '    print(i)' + #13#10 +
+  'end'  
     );
