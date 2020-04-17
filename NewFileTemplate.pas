@@ -25,3 +25,7 @@ const
   '  result := x * x + 1;' + #13#10 +
   'end;' + #13#10#13#10
     );
+
+  NewFileTemplate_Lua: string = (
+  'print("Hello word.")' + #13#10#13#10
+    );

@@ -1,7 +1,7 @@
 object FormMain: TFormMain
-  Left = 318
+  Left = 319
   Height = 520
-  Top = 112
+  Top = 135
   Width = 697
   AlphaBlend = True
   AlphaBlendValue = 0
@@ -447,10 +447,10 @@ object FormMain: TFormMain
     Height = 520
     Top = 0
     Width = 697
-    ActivePage = tsAbout
+    ActivePage = tsScript
     Align = alClient
     MultiLine = True
-    TabIndex = 6
+    TabIndex = 4
     TabOrder = 0
     Options = [nboMultiLine]
     object tsCRC: TTabSheet
@@ -470,7 +470,7 @@ object FormMain: TFormMain
         Transparent = True
         object ToolButton1: TToolButton
           Left = 185
-          Height = 22
+          Height = 8
           Top = 0
           AutoSize = True
           Caption = ' '
@@ -506,7 +506,7 @@ object FormMain: TFormMain
         end
         object ToolButton4: TToolButton
           Left = 353
-          Height = 22
+          Height = 8
           Top = 0
           Caption = ' '
           Style = tbsSeparator
@@ -534,7 +534,7 @@ object FormMain: TFormMain
         end
         object ToolButton21: TToolButton
           Left = 505
-          Height = 22
+          Height = 8
           Top = 0
           Caption = 'ToolButton21'
           Style = tbsSeparator
@@ -782,49 +782,49 @@ object FormMain: TFormMain
         end
         object ToolButton9: TToolButton
           Left = 519
-          Height = 22
+          Height = 5
           Top = 2
           Caption = 'ToolButton9'
           Style = tbsDivider
         end
         object ToolButton8: TToolButton
           Left = 187
-          Height = 22
+          Height = 5
           Top = 24
           Caption = 'ToolButton8'
           Style = tbsDivider
         end
         object ToolButton10: TToolButton
           Left = 580
-          Height = 22
+          Height = 5
           Top = 46
           Caption = 'ToolButton10'
           Style = tbsDivider
         end
         object ToolButton11: TToolButton
           Left = 352
-          Height = 22
+          Height = 5
           Top = 46
           Caption = 'ToolButton11'
           Style = tbsDivider
         end
         object ToolButton12: TToolButton
           Left = 487
-          Height = 22
+          Height = 5
           Top = 46
           Caption = 'ToolButton12'
           Style = tbsDivider
         end
         object ToolButton15: TToolButton
           Left = 602
-          Height = 22
+          Height = 5
           Top = 24
           Caption = 'ToolButton15'
           Style = tbsDivider
         end
         object ToolButton16: TToolButton
           Left = 107
-          Height = 22
+          Height = 5
           Top = 46
           Caption = 'ToolButton16'
           Style = tbsDivider
@@ -969,7 +969,7 @@ object FormMain: TFormMain
             OnEditingDone = sgBytesEditingDone
             ColWidths = (
               159
-              518
+              501
             )
             Cells = (
               13
@@ -1041,7 +1041,7 @@ object FormMain: TFormMain
             OnEditingDone = sgBaseEditingDone
             ColWidths = (
               99
-              578
+              561
             )
             Cells = (
               6
@@ -1272,7 +1272,7 @@ object FormMain: TFormMain
               end
               object btnBigFloatReciprocal: TToolButton
                 Tag = 106
-                Left = 307
+                Left = 330
                 Hint = 'Reciprocal'
                 Top = 0
                 ImageIndex = 5
@@ -1280,7 +1280,7 @@ object FormMain: TFormMain
               end
               object btnBigFloatPI: TToolButton
                 Tag = 201
-                Left = 422
+                Left = 445
                 Hint = 'constant pi'
                 Top = 0
                 ImageIndex = 10
@@ -1288,7 +1288,7 @@ object FormMain: TFormMain
               end
               object btnBigFloatPower: TToolButton
                 Tag = 107
-                Left = 330
+                Left = 353
                 Hint = 'pow'
                 Top = 0
                 ImageIndex = 6
@@ -1296,7 +1296,7 @@ object FormMain: TFormMain
               end
               object btnBigFloatLog: TToolButton
                 Tag = 109
-                Left = 376
+                Left = 399
                 Hint = 'log'
                 Top = 0
                 ImageIndex = 8
@@ -1304,7 +1304,7 @@ object FormMain: TFormMain
               end
               object btnBigFloatLn: TToolButton
                 Tag = 110
-                Left = 399
+                Left = 422
                 Hint = 'log10'
                 Top = 0
                 ImageIndex = 9
@@ -1312,7 +1312,7 @@ object FormMain: TFormMain
               end
               object btnBigFloatExp: TToolButton
                 Tag = 108
-                Left = 353
+                Left = 376
                 Hint = 'exp'
                 Top = 0
                 ImageIndex = 7
@@ -1320,7 +1320,7 @@ object FormMain: TFormMain
               end
               object btnBigFloatLog2: TToolButton
                 Tag = 203
-                Left = 468
+                Left = 491
                 Hint = 'constant log(2)'
                 Top = 0
                 ImageIndex = 12
@@ -1328,31 +1328,38 @@ object FormMain: TFormMain
               end
               object btnBigFloatE: TToolButton
                 Tag = 202
-                Left = 445
+                Left = 468
                 Hint = 'constant e'
                 Top = 0
                 ImageIndex = 11
                 OnClick = btnBigFloatAddClick
               end
               object ToolButton19: TToolButton
-                Left = 491
+                Left = 514
                 Top = 0
                 Enabled = False
               end
               object btnBigFloatElapsed: TToolButton
-                Left = 514
+                Left = 537
                 Top = 0
               end
               object ToolButton26: TToolButton
-                Left = 537
-                Height = 22
+                Left = 560
+                Height = 8
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
               end
               object btnBigFloatHint: TToolButton
-                Left = 545
+                Left = 568
                 Top = 0
+              end
+              object btnBigFloatNRoot: TToolButton
+                Tag = 111
+                Left = 307
+                Top = 0
+                ImageIndex = 20
+                OnClick = btnBigFloatAddClick
               end
             end
             object StaticText4: TStaticText
@@ -1588,7 +1595,7 @@ object FormMain: TFormMain
               end
               object ToolButton25: TToolButton
                 Left = 350
-                Height = 22
+                Height = 8
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1599,7 +1606,7 @@ object FormMain: TFormMain
               end
               object ToolButton24: TToolButton
                 Left = 381
-                Height = 22
+                Height = 8
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1619,7 +1626,7 @@ object FormMain: TFormMain
               end
               object ToolButton27: TToolButton
                 Left = 412
-                Height = 22
+                Height = 8
                 Top = 0
                 Caption = 'ToolButton27'
                 Style = tbsSeparator
@@ -1949,51 +1956,6 @@ object FormMain: TFormMain
         Width = 5
         ResizeStyle = rsLine
       end
-      object Panel3: TPanel
-        Left = 305
-        Height = 490
-        Top = 0
-        Width = 384
-        Align = alClient
-        BevelOuter = bvNone
-        ClientHeight = 490
-        ClientWidth = 384
-        TabOrder = 1
-        object mmoOutCalc: TMemo
-          Left = 0
-          Height = 460
-          Top = 0
-          Width = 384
-          Align = alClient
-          ReadOnly = True
-          ScrollBars = ssAutoVertical
-          TabOrder = 0
-        end
-        object cbbCalc: TComboBox
-          Left = 0
-          Height = 25
-          Top = 465
-          Width = 384
-          Align = alBottom
-          AutoSelect = False
-          DropDownCount = 12
-          ItemHeight = 17
-          OnDblClick = btnRun_CalcClick
-          OnKeyPress = cbbCalcKeyPress
-          OnMouseDown = cbbCalcMouseDown
-          TabOrder = 1
-        end
-        object Shape2: TShape
-          Left = 0
-          Height = 5
-          Top = 460
-          Width = 384
-          Align = alBottom
-          Brush.Style = bsClear
-          Enabled = False
-          Pen.Style = psClear
-        end
-      end
       object pnlCalc: TPanel
         Left = 0
         Height = 490
@@ -2003,7 +1965,7 @@ object FormMain: TFormMain
         BevelOuter = bvNone
         ClientHeight = 490
         ClientWidth = 300
-        TabOrder = 2
+        TabOrder = 1
         object ToolBar10: TToolBar
           Left = 0
           Height = 22
@@ -2035,6 +1997,7 @@ object FormMain: TFormMain
             Top = 0
             ImageIndex = 15
             OnClick = btnSave_CalcClick
+            Visible = False
           end
           object btnSaveAs_Calc: TToolButton
             Left = 105
@@ -2042,28 +2005,15 @@ object FormMain: TFormMain
             ImageIndex = 29
             OnClick = btnSaveAs_CalcClick
           end
-          object btnRun_Calc: TToolButton
-            Left = 136
-            Top = 0
-            ImageIndex = 11
-            OnClick = btnRun_CalcClick
-          end
           object ToolButton36: TToolButton
             Left = 128
-            Height = 22
+            Height = 8
             Top = 0
             Caption = 'ToolButton34'
             Style = tbsSeparator
           end
-          object btnStop_Calc: TToolButton
-            Left = 159
-            Top = 0
-            Enabled = False
-            ImageIndex = 16
-            OnClick = btnStop_CalcClick
-          end
           object btnHelp_Calc: TToolButton
-            Left = 190
+            Left = 136
             Top = 0
             DropdownMenu = pmHelp_PascalScript
             ImageIndex = 28
@@ -2076,18 +2026,11 @@ object FormMain: TFormMain
             ImageIndex = 30
             OnClick = btnClear_CalcClick
           end
-          object ToolButton23: TToolButton
-            Left = 182
-            Height = 22
-            Top = 0
-            Caption = 'ToolButton17'
-            Style = tbsSeparator
-          end
         end
         inline SynEditFunc_Calc: TSynEdit
           Left = 0
-          Height = 338
-          Top = 152
+          Height = 321
+          Top = 169
           Width = 300
           Align = alClient
           Font.Height = -13
@@ -2604,7 +2547,7 @@ object FormMain: TFormMain
               MinSize = 0
               MaxSize = 100
               Title.Caption = 'Value'
-              Width = 116
+              Width = 99
             end          
             item
               ButtonStyle = cbsPickList
@@ -2617,7 +2560,7 @@ object FormMain: TFormMain
                 'string'
               )
               SizePriority = 0
-              Title.Caption = 'style'
+              Title.Caption = 'Type'
               Width = 116
             end>
           DefaultColWidth = 64
@@ -2635,7 +2578,7 @@ object FormMain: TFormMain
           OnEditingDone = sgVar_CalcEditingDone
           ColWidths = (
             64
-            116
+            99
             116
           )
         end
@@ -2648,6 +2591,116 @@ object FormMain: TFormMain
           Align = alTop
           ResizeAnchor = akTop
         end
+        object Label1: TLabel
+          Left = 0
+          Height = 17
+          Top = 152
+          Width = 300
+          Align = alTop
+          Caption = 'Pascal Functions'
+          ParentColor = False
+        end
+      end
+      object pcCalcMode: TPageControl
+        Left = 305
+        Height = 490
+        Top = 0
+        Width = 384
+        ActivePage = TabSheet2
+        Align = alClient
+        TabIndex = 1
+        TabOrder = 2
+        OnChange = pcCalcModeChange
+        object TabSheet1: TTabSheet
+          Caption = 'Command'
+          ClientHeight = 460
+          ClientWidth = 376
+          object Shape2: TShape
+            Left = 0
+            Height = 5
+            Top = 430
+            Width = 376
+            Align = alBottom
+            Brush.Style = bsClear
+            Enabled = False
+            Pen.Style = psClear
+          end
+          object cbbCalc: TComboBox
+            Left = 0
+            Height = 25
+            Top = 435
+            Width = 376
+            Align = alBottom
+            AutoSelect = False
+            DropDownCount = 12
+            ItemHeight = 17
+            OnDblClick = cbbCalcDblClick
+            OnKeyPress = cbbCalcKeyPress
+            OnMouseDown = cbbCalcMouseDown
+            TabOrder = 0
+          end
+          object mmoOutCalc: TMemo
+            Left = 0
+            Height = 430
+            Top = 0
+            Width = 376
+            Align = alClient
+            ReadOnly = True
+            ScrollBars = ssAutoVertical
+            TabOrder = 1
+          end
+        end
+        object TabSheet2: TTabSheet
+          Caption = 'Table'
+          ClientHeight = 460
+          ClientWidth = 376
+          object sgExpr_Calc: TStringGrid
+            Left = 0
+            Height = 460
+            Top = 0
+            Width = 376
+            Align = alClient
+            AlternateColor = 16775673
+            AutoFillColumns = True
+            ColCount = 3
+            ColumnClickSorts = True
+            Columns = <            
+              item
+                MaxSize = 80
+                SizePriority = 0
+                Tag = 1
+                Title.Caption = 'Expression'
+                Width = 167
+              end            
+              item
+                ButtonStyle = cbsNone
+                MaxSize = 180
+                SizePriority = 0
+                Title.Caption = 'Result'
+                Width = 150
+              end>
+            DefaultColWidth = 64
+            DoubleBuffered = True
+            ExtendedSelect = False
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goAlwaysShowEditor, goSmoothScroll, goFixedRowNumbering, goSelectionActive]
+            ParentDoubleBuffered = False
+            RowCount = 2
+            TabOrder = 0
+            TitleFont.CharSet = ANSI_CHARSET
+            TitleFont.Color = clBlack
+            TitleFont.Height = -14
+            TitleFont.Name = 'Courier New'
+            TitleFont.Pitch = fpFixed
+            TitleFont.Quality = fqDraft
+            OnEditingDone = sgExpr_CalcEditingDone
+            OnKeyPress = sgExpr_CalcKeyPress
+            ColWidths = (
+              38
+              167
+              150
+            )
+          end
+        end
       end
     end
     object tsScript: TTabSheet
@@ -2659,10 +2712,10 @@ object FormMain: TFormMain
         Height = 490
         Top = 0
         Width = 689
-        ActivePage = tsMicropython
+        ActivePage = tsLua
         Align = alClient
         Images = ilMain
-        TabIndex = 1
+        TabIndex = 2
         TabOrder = 0
         object tsPascalScript: TTabSheet
           Caption = 'Pascal'
@@ -3897,6 +3950,620 @@ object FormMain: TFormMain
             TabOrder = 3
           end
         end
+        object tsLua: TTabSheet
+          Caption = 'Lua'
+          ClientHeight = 460
+          ClientWidth = 681
+          ImageIndex = 40
+          object ToolBar11: TToolBar
+            Left = 0
+            Height = 22
+            Top = 0
+            Width = 681
+            AutoSize = True
+            Caption = 'ToolBar11'
+            EdgeBorders = []
+            Images = ilMain
+            ShowCaptions = True
+            TabOrder = 0
+            Transparent = True
+            object btnNew_Lua: TToolButton
+              Left = 24
+              Top = 0
+              ImageIndex = 13
+              OnClick = btnNew_LuaClick
+            end
+            object btnOpen_Lua: TToolButton
+              Left = 47
+              Top = 0
+              DropdownMenu = pmHis_Lua
+              ImageIndex = 14
+              OnClick = btnOpen_LuaClick
+              Style = tbsDropDown
+            end
+            object btnSave_Lua: TToolButton
+              Left = 82
+              Top = 0
+              Enabled = False
+              ImageIndex = 15
+              OnClick = btnSave_LuaClick
+            end
+            object btnSaveAs_Lua: TToolButton
+              Left = 105
+              Top = 0
+              Enabled = False
+              ImageIndex = 29
+              OnClick = btnSaveAs_LuaClick
+            end
+            object btnRun_Lua: TToolButton
+              Left = 136
+              Top = 0
+              ImageIndex = 11
+              OnClick = btnRun_LuaClick
+            end
+            object ToolButton37: TToolButton
+              Left = 128
+              Height = 22
+              Top = 0
+              Caption = 'ToolButton34'
+              Style = tbsSeparator
+            end
+            object btnStop_Lua: TToolButton
+              Left = 159
+              Top = 0
+              Enabled = False
+              ImageIndex = 16
+              OnClick = btnStop_LuaClick
+            end
+            object btnHelp_Lua: TToolButton
+              Left = 190
+              Top = 0
+              DropdownMenu = pmHelp_PascalScript
+              ImageIndex = 28
+              Style = tbsDropDown
+              Visible = False
+            end
+            object btnClear_Lua: TToolButton
+              Left = 1
+              Top = 0
+              ImageIndex = 30
+              OnClick = btnClear_LuaClick
+            end
+            object ToolButton29: TToolButton
+              Left = 182
+              Height = 22
+              Top = 0
+              Caption = 'ToolButton17'
+              Style = tbsSeparator
+            end
+            object btnCaret_Lua: TToolButton
+              Left = 225
+              Top = 0
+              Caption = '1,1'
+            end
+          end
+          inline SynEditLua: TSynEdit
+            Left = 0
+            Height = 300
+            Top = 22
+            Width = 681
+            Align = alTop
+            Font.Height = -13
+            Font.Name = 'Courier New'
+            Font.Pitch = fpFixed
+            Font.Quality = fqNonAntialiased
+            ParentColor = False
+            ParentFont = False
+            TabOrder = 1
+            Gutter.Width = 57
+            Gutter.MouseActions = <>
+            RightGutter.Width = 0
+            RightGutter.MouseActions = <>
+            Keystrokes = <            
+              item
+                Command = ecUp
+                ShortCut = 38
+              end            
+              item
+                Command = ecSelUp
+                ShortCut = 8230
+              end            
+              item
+                Command = ecScrollUp
+                ShortCut = 16422
+              end            
+              item
+                Command = ecDown
+                ShortCut = 40
+              end            
+              item
+                Command = ecSelDown
+                ShortCut = 8232
+              end            
+              item
+                Command = ecScrollDown
+                ShortCut = 16424
+              end            
+              item
+                Command = ecLeft
+                ShortCut = 37
+              end            
+              item
+                Command = ecSelLeft
+                ShortCut = 8229
+              end            
+              item
+                Command = ecWordLeft
+                ShortCut = 16421
+              end            
+              item
+                Command = ecSelWordLeft
+                ShortCut = 24613
+              end            
+              item
+                Command = ecRight
+                ShortCut = 39
+              end            
+              item
+                Command = ecSelRight
+                ShortCut = 8231
+              end            
+              item
+                Command = ecWordRight
+                ShortCut = 16423
+              end            
+              item
+                Command = ecSelWordRight
+                ShortCut = 24615
+              end            
+              item
+                Command = ecPageDown
+                ShortCut = 34
+              end            
+              item
+                Command = ecSelPageDown
+                ShortCut = 8226
+              end            
+              item
+                Command = ecPageBottom
+                ShortCut = 16418
+              end            
+              item
+                Command = ecSelPageBottom
+                ShortCut = 24610
+              end            
+              item
+                Command = ecPageUp
+                ShortCut = 33
+              end            
+              item
+                Command = ecSelPageUp
+                ShortCut = 8225
+              end            
+              item
+                Command = ecPageTop
+                ShortCut = 16417
+              end            
+              item
+                Command = ecSelPageTop
+                ShortCut = 24609
+              end            
+              item
+                Command = ecLineStart
+                ShortCut = 36
+              end            
+              item
+                Command = ecSelLineStart
+                ShortCut = 8228
+              end            
+              item
+                Command = ecEditorTop
+                ShortCut = 16420
+              end            
+              item
+                Command = ecSelEditorTop
+                ShortCut = 24612
+              end            
+              item
+                Command = ecLineEnd
+                ShortCut = 35
+              end            
+              item
+                Command = ecSelLineEnd
+                ShortCut = 8227
+              end            
+              item
+                Command = ecEditorBottom
+                ShortCut = 16419
+              end            
+              item
+                Command = ecSelEditorBottom
+                ShortCut = 24611
+              end            
+              item
+                Command = ecToggleMode
+                ShortCut = 45
+              end            
+              item
+                Command = ecCopy
+                ShortCut = 16429
+              end            
+              item
+                Command = ecPaste
+                ShortCut = 8237
+              end            
+              item
+                Command = ecDeleteChar
+                ShortCut = 46
+              end            
+              item
+                Command = ecCut
+                ShortCut = 8238
+              end            
+              item
+                Command = ecDeleteLastChar
+                ShortCut = 8
+              end            
+              item
+                Command = ecDeleteLastChar
+                ShortCut = 8200
+              end            
+              item
+                Command = ecDeleteLastWord
+                ShortCut = 16392
+              end            
+              item
+                Command = ecUndo
+                ShortCut = 32776
+              end            
+              item
+                Command = ecRedo
+                ShortCut = 40968
+              end            
+              item
+                Command = ecLineBreak
+                ShortCut = 13
+              end            
+              item
+                Command = ecSelectAll
+                ShortCut = 16449
+              end            
+              item
+                Command = ecCopy
+                ShortCut = 16451
+              end            
+              item
+                Command = ecBlockIndent
+                ShortCut = 24649
+              end            
+              item
+                Command = ecLineBreak
+                ShortCut = 16461
+              end            
+              item
+                Command = ecInsertLine
+                ShortCut = 16462
+              end            
+              item
+                Command = ecDeleteWord
+                ShortCut = 16468
+              end            
+              item
+                Command = ecBlockUnindent
+                ShortCut = 24661
+              end            
+              item
+                Command = ecPaste
+                ShortCut = 16470
+              end            
+              item
+                Command = ecCut
+                ShortCut = 16472
+              end            
+              item
+                Command = ecDeleteLine
+                ShortCut = 16473
+              end            
+              item
+                Command = ecDeleteEOL
+                ShortCut = 24665
+              end            
+              item
+                Command = ecUndo
+                ShortCut = 16474
+              end            
+              item
+                Command = ecRedo
+                ShortCut = 24666
+              end            
+              item
+                Command = ecGotoMarker0
+                ShortCut = 16432
+              end            
+              item
+                Command = ecGotoMarker1
+                ShortCut = 16433
+              end            
+              item
+                Command = ecGotoMarker2
+                ShortCut = 16434
+              end            
+              item
+                Command = ecGotoMarker3
+                ShortCut = 16435
+              end            
+              item
+                Command = ecGotoMarker4
+                ShortCut = 16436
+              end            
+              item
+                Command = ecGotoMarker5
+                ShortCut = 16437
+              end            
+              item
+                Command = ecGotoMarker6
+                ShortCut = 16438
+              end            
+              item
+                Command = ecGotoMarker7
+                ShortCut = 16439
+              end            
+              item
+                Command = ecGotoMarker8
+                ShortCut = 16440
+              end            
+              item
+                Command = ecGotoMarker9
+                ShortCut = 16441
+              end            
+              item
+                Command = ecSetMarker0
+                ShortCut = 24624
+              end            
+              item
+                Command = ecSetMarker1
+                ShortCut = 24625
+              end            
+              item
+                Command = ecSetMarker2
+                ShortCut = 24626
+              end            
+              item
+                Command = ecSetMarker3
+                ShortCut = 24627
+              end            
+              item
+                Command = ecSetMarker4
+                ShortCut = 24628
+              end            
+              item
+                Command = ecSetMarker5
+                ShortCut = 24629
+              end            
+              item
+                Command = ecSetMarker6
+                ShortCut = 24630
+              end            
+              item
+                Command = ecSetMarker7
+                ShortCut = 24631
+              end            
+              item
+                Command = ecSetMarker8
+                ShortCut = 24632
+              end            
+              item
+                Command = ecSetMarker9
+                ShortCut = 24633
+              end            
+              item
+                Command = EcFoldLevel1
+                ShortCut = 41009
+              end            
+              item
+                Command = EcFoldLevel2
+                ShortCut = 41010
+              end            
+              item
+                Command = EcFoldLevel3
+                ShortCut = 41011
+              end            
+              item
+                Command = EcFoldLevel4
+                ShortCut = 41012
+              end            
+              item
+                Command = EcFoldLevel5
+                ShortCut = 41013
+              end            
+              item
+                Command = EcFoldLevel6
+                ShortCut = 41014
+              end            
+              item
+                Command = EcFoldLevel7
+                ShortCut = 41015
+              end            
+              item
+                Command = EcFoldLevel8
+                ShortCut = 41016
+              end            
+              item
+                Command = EcFoldLevel9
+                ShortCut = 41017
+              end            
+              item
+                Command = EcFoldLevel0
+                ShortCut = 41008
+              end            
+              item
+                Command = EcFoldCurrent
+                ShortCut = 41005
+              end            
+              item
+                Command = EcUnFoldCurrent
+                ShortCut = 41003
+              end            
+              item
+                Command = EcToggleMarkupWord
+                ShortCut = 32845
+              end            
+              item
+                Command = ecNormalSelect
+                ShortCut = 24654
+              end            
+              item
+                Command = ecColumnSelect
+                ShortCut = 24643
+              end            
+              item
+                Command = ecLineSelect
+                ShortCut = 24652
+              end            
+              item
+                Command = ecTab
+                ShortCut = 9
+              end            
+              item
+                Command = ecShiftTab
+                ShortCut = 8201
+              end            
+              item
+                Command = ecMatchBracket
+                ShortCut = 24642
+              end            
+              item
+                Command = ecColSelUp
+                ShortCut = 40998
+              end            
+              item
+                Command = ecColSelDown
+                ShortCut = 41000
+              end            
+              item
+                Command = ecColSelLeft
+                ShortCut = 40997
+              end            
+              item
+                Command = ecColSelRight
+                ShortCut = 40999
+              end            
+              item
+                Command = ecColSelPageDown
+                ShortCut = 40994
+              end            
+              item
+                Command = ecColSelPageBottom
+                ShortCut = 57378
+              end            
+              item
+                Command = ecColSelPageUp
+                ShortCut = 40993
+              end            
+              item
+                Command = ecColSelPageTop
+                ShortCut = 57377
+              end            
+              item
+                Command = ecColSelLineStart
+                ShortCut = 40996
+              end            
+              item
+                Command = ecColSelLineEnd
+                ShortCut = 40995
+              end            
+              item
+                Command = ecColSelEditorTop
+                ShortCut = 57380
+              end            
+              item
+                Command = ecColSelEditorBottom
+                ShortCut = 57379
+              end>
+            MouseActions = <>
+            MouseTextActions = <>
+            MouseSelActions = <>
+            Lines.Strings = (
+              ''
+            )
+            VisibleSpecialChars = [vscSpace, vscTabAtLast]
+            SelectedColor.BackPriority = 50
+            SelectedColor.ForePriority = 50
+            SelectedColor.FramePriority = 50
+            SelectedColor.BoldPriority = 50
+            SelectedColor.ItalicPriority = 50
+            SelectedColor.UnderlinePriority = 50
+            SelectedColor.StrikeOutPriority = 50
+            BracketHighlightStyle = sbhsBoth
+            BracketMatchColor.Background = clNone
+            BracketMatchColor.Foreground = clNone
+            BracketMatchColor.Style = [fsBold]
+            FoldedCodeColor.Background = clNone
+            FoldedCodeColor.Foreground = clGray
+            FoldedCodeColor.FrameColor = clGray
+            MouseLinkColor.Background = clNone
+            MouseLinkColor.Foreground = clBlue
+            LineHighlightColor.Background = clNone
+            LineHighlightColor.Foreground = clNone
+            OnChange = SynEditLuaChange
+            OnStatusChange = SynEditLuaStatusChange
+            inline SynLeftGutterPartList1: TSynGutterPartList
+              object SynGutterMarks1: TSynGutterMarks
+                Width = 24
+                MouseActions = <>
+              end
+              object SynGutterLineNumber1: TSynGutterLineNumber
+                Width = 17
+                MouseActions = <>
+                MarkupInfo.Background = clBtnFace
+                MarkupInfo.Foreground = clNone
+                DigitCount = 2
+                ShowOnlyLineNumbersMultiplesOf = 1
+                ZeroStart = False
+                LeadingZeros = False
+              end
+              object SynGutterChanges1: TSynGutterChanges
+                Width = 4
+                MouseActions = <>
+                ModifiedColor = 59900
+                SavedColor = clGreen
+              end
+              object SynGutterSeparator1: TSynGutterSeparator
+                Width = 2
+                MouseActions = <>
+                MarkupInfo.Background = clWhite
+                MarkupInfo.Foreground = clGray
+              end
+              object SynGutterCodeFolding1: TSynGutterCodeFolding
+                MouseActions = <>
+                MarkupInfo.Background = clNone
+                MarkupInfo.Foreground = clGray
+                MouseActionsExpanded = <>
+                MouseActionsCollapsed = <>
+              end
+            end
+          end
+          object Splitter13: TSplitter
+            Cursor = crVSplit
+            Left = 0
+            Height = 5
+            Top = 322
+            Width = 681
+            Align = alTop
+            ResizeAnchor = akTop
+            ResizeStyle = rsLine
+          end
+          object mmoOutLua: TMemo
+            Left = 0
+            Height = 133
+            Top = 327
+            Width = 681
+            Align = alClient
+            ReadOnly = True
+            ScrollBars = ssAutoVertical
+            TabOrder = 3
+          end
+        end
       end
     end
     object tsConstant: TTabSheet
@@ -3909,9 +4576,9 @@ object FormMain: TFormMain
         Height = 490
         Top = 0
         Width = 689
-        ActivePage = tsConstantPhysics
+        ActivePage = tsConstantMath
         Align = alClient
-        TabIndex = 1
+        TabIndex = 0
         TabOrder = 0
         object tsConstantMath: TTabSheet
           Caption = 'Math'
@@ -4799,9 +5466,9 @@ object FormMain: TFormMain
             Height = 378
             Top = 16
             Width = 497
-            ActivePage = tsChangeLog
+            ActivePage = tsLicense
             Align = alClient
-            TabIndex = 0
+            TabIndex = 2
             TabOrder = 0
             object tsChangeLog: TTabSheet
               Caption = 'Change Log'
@@ -4815,6 +5482,10 @@ object FormMain: TFormMain
                 Align = alClient
                 HideSelection = False
                 Lines.Strings = (
+                  '2020.4 v1.1.0'
+                  '    + add Calc Mode: Command/Table'
+                  '    + Lua interpreter'
+                  ''
                   '2020.4 v1.0'
                   '    + add Constant Table'
                   '    * meger Buffer convert to Digit'
@@ -4856,7 +5527,7 @@ object FormMain: TFormMain
                   '    + include CRC, base convert, digit bytes'
                 )
                 ReadOnly = True
-                Rtf = '{\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Courier New;}}'#13#10'{\colortbl ;\red0\green0\blue0;\red255\green0\blue0;\red0\green0\blue255;\red128\green0\blue255;}'#13#10'{\*\generator Riched20 10.0.17763}\viewkind4\uc1 '#13#10'\pard\cf1\b\f0\fs22\lang2052 2020.4 v1.0\par'#13#10'\b0     + add \b Constant Table\b0\par'#13#10'    * meger Buffer convert to Digit\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.4 v0.9\par'#13#10'\b0     * use PascalScript as Programmable Calculator interpreter\par'#13#10'    \lang1033 -\lang2052  remove \cf2 ArtFormula\cf1\par'#13#10'\b\par'#13#10'2020.4 v0.8\b0\par'#13#10'    + \cf3\b micropython\cf1\b0\par'#13#10'    * rewrite file open/save/history function\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.3  v0.7\b0\par'#13#10'    + \cf4\b Pascal Script\cf1\b0\par'#13#10'    * Adjust interface\par'#13#10'    * Optimize\par'#13#10'    - Fix bug\par'#13#10'\par'#13#10'\b 2020.3  v0.6\b0\par'#13#10'    + Time convert\par'#13#10'    + Programmable Calculator file history\par'#13#10'    + Hex <-> string\par'#13#10'\par'#13#10'\b 2020.3  v0.5\b0\par'#13#10'    + Programmable Calculator.\par'#13#10'    + Tray Icon\par'#13#10'    * more Option\par'#13#10'\par'#13#10'\b 2020.3  v0.4\b0\par'#13#10'    + add add Buffer convert.\par'#13#10'    + Option Dialog\par'#13#10'\par'#13#10'\b 2020.3  v0.3\b0\par'#13#10'    + add Big Int and Big float.\par'#13#10'\par'#13#10'\b 2020.3  v0.2, first version.\b0\par'#13#10'    \lang1033 +\lang2052  include CRC, base convert, digit bytes\par'#13#10'\par'#13#10'}'#13#10#0
+                Rtf = '{\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Courier New;}}'#13#10'{\colortbl ;\red0\green0\blue0;\red0\green0\blue160;\red255\green0\blue0;\red0\green0\blue255;\red128\green0\blue255;}'#13#10'{\*\generator Riched20 10.0.17763}\viewkind4\uc1 '#13#10'\pard\cf1\b\f0\fs22\lang2052 2020.4 v1.1.0\par'#13#10'\b0     + add Calc Mode: Command/Table\par'#13#10'    + \cf2\b Lua\cf1\b0  interpreter\par'#13#10'\par'#13#10'\b 2020.4 v1.0\par'#13#10'\b0     + add \b Constant Table\b0\par'#13#10'    * meger Buffer convert to Digit\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.4 v0.9\par'#13#10'\b0     * use PascalScript as Programmable Calculator interpreter\par'#13#10'    \lang1033 -\lang2052  remove \cf3 ArtFormula\cf1\par'#13#10'\b\par'#13#10'2020.4 v0.8\b0\par'#13#10'    + \cf4\b micropython\cf1\b0\par'#13#10'    * rewrite file open/save/history function\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.3  v0.7\b0\par'#13#10'    + \cf5\b Pascal Script\cf1\b0\par'#13#10'    * Adjust interface\par'#13#10'    * Optimize\par'#13#10'    - Fix bug\par'#13#10'\par'#13#10'\b 2020.3  v0.6\b0\par'#13#10'    + Time convert\par'#13#10'    + Programmable Calculator file history\par'#13#10'    + Hex <-> string\par'#13#10'\par'#13#10'\b 2020.3  v0.5\b0\par'#13#10'    + Programmable Calculator.\par'#13#10'    + Tray Icon\par'#13#10'    * more Option\par'#13#10'\par'#13#10'\b 2020.3  v0.4\b0\par'#13#10'    + add add Buffer convert.\par'#13#10'    + Option Dialog\par'#13#10'\par'#13#10'\b 2020.3  v0.3\b0\par'#13#10'    + add Big Int and Big float.\par'#13#10'\par'#13#10'\b 2020.3  v0.2, first version.\b0\par'#13#10'    \lang1033 +\lang2052  include CRC, base convert, digit bytes\par'#13#10'\par'#13#10'}'#13#10#0
                 ScrollBars = ssAutoVertical
                 TabOrder = 0
                 ZoomFactor = 1
@@ -4876,7 +5547,7 @@ object FormMain: TFormMain
                 Lines.Strings = (
                   'Calc Toolbox is a small cross-platform calculation software for engineer calculation.'
                   ''
-                  'Calc Toolbox is develop wwith Lazarus, and use some third party components and functions:'
+                  'Calc Toolbox is develop with Lazarus (Oopen source, Delphi compatible cross-platform RAD software), and use some third party components and functions:'
                   ''
                   'CRC algorithm from'
                   'https://www.iteye.com/blog/kiolp-2262455'
@@ -4897,10 +5568,37 @@ object FormMain: TFormMain
                   'https://wiki.freepascal.org/RichMemo'
                 )
                 ReadOnly = True
-                Rtf = '{\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Courier New;}}'#13#10'{\colortbl ;\red128\green0\blue255;\red0\green0\blue0;\red128\green128\blue0;\red0\green0\blue255;}'#13#10'{\*\generator Riched20 10.0.17763}\viewkind4\uc1 '#13#10'\pard\cf1\b\f0\fs28\lang2052 Calc Toolbox\cf2\b0\fs22  is a small \cf3 cross-platform\cf2  calculation software for engineer calculation.\par'#13#10'\par'#13#10'Calc Toolbox is develop wwith Lazarus, and use \lang1033 s\lang2052 ome third party components and functions:\par'#13#10'\par'#13#10'\b CRC algorithm\b0  from\par'#13#10'\cf4\ul\i https://www.iteye.com/blog/kiolp-2262455\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 Base convert\b0\fs22  function from\par'#13#10'\cf4\ul\i https://blog.csdn.net/tianqin20140902/article/details/44151717\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 Big Float\b0\fs22  function from\par'#13#10'\cf4\ul\i http://www.delphiforfun.org.ws034.alentus.com/Programs/Library/bigfloat.htm\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 PascalScript\b0\fs22  \lang1033 (\lang2052 Integrate with Lazarus IDE\lang1033 )\lang2052\par'#13#10'\cf4\ul\i https://wiki.lazarus.freepascal.org/index.php/Pascal_Script\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 SynEdit \b0\fs22\lang1033 (\lang2052 Integrate with Lazarus IDE\lang1033 )\lang2052\par'#13#10'\cf4\ul\i https://wiki.freepascal.org/SynEdit\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24\lang1033 RichMemo\b0\fs22\par'#13#10'\cf4\ul\i https://wiki.freepascal.org/RichMemo\cf2\ulnone\i0\par'#13#10'\lang2052\par'#13#10'}'#13#10#0
+                Rtf = '{\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Courier New;}}'#13#10'{\colortbl ;\red128\green0\blue255;\red0\green0\blue0;\red128\green128\blue0;\red0\green0\blue255;}'#13#10'{\*\generator Riched20 10.0.17763}\viewkind4\uc1 '#13#10'\pard\cf1\b\f0\fs28\lang2052 Calc Toolbox\cf2\b0\fs22  is a small \cf3 cross-platform\cf2  calculation software for engineer calculation.\par'#13#10'\par'#13#10'Calc Toolbox is develop with Lazarus (Oopen source, Delphi compatible cross-platform RAD software), and use \lang1033 s\lang2052 ome third party components and functions:\par'#13#10'\par'#13#10'\b CRC algorithm\b0  from\par'#13#10'\cf4\ul\i https://www.iteye.com/blog/kiolp-2262455\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 Base convert\b0\fs22  function from\par'#13#10'\cf4\ul\i https://blog.csdn.net/tianqin20140902/article/details/44151717\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 Big Float\b0\fs22  function from\par'#13#10'\cf4\ul\i http://www.delphiforfun.org.ws034.alentus.com/Programs/Library/bigfloat.htm\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 PascalScript\b0\fs22  \lang1033 (\lang2052 Integrate with Lazarus IDE\lang1033 )\lang2052\par'#13#10'\cf4\ul\i https://wiki.lazarus.freepascal.org/index.php/Pascal_Script\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24 SynEdit \b0\fs22\lang1033 (\lang2052 Integrate with Lazarus IDE\lang1033 )\lang2052\par'#13#10'\cf4\ul\i https://wiki.freepascal.org/SynEdit\cf2\ulnone\i0\par'#13#10'\par'#13#10'\b\fs24\lang1033 RichMemo\b0\fs22\par'#13#10'\cf4\ul\i https://wiki.freepascal.org/RichMemo\cf2\ulnone\i0\par'#13#10'\lang2052\par'#13#10'}'#13#10#0
                 ScrollBars = ssAutoVertical
                 TabOrder = 0
                 ZoomFactor = 1
+              end
+            end
+            object tsLicense: TTabSheet
+              Caption = 'License'
+              ClientHeight = 348
+              ClientWidth = 489
+              object Memo1: TMemo
+                Left = 0
+                Height = 348
+                Top = 0
+                Width = 489
+                Align = alClient
+                BorderStyle = bsNone
+                Lines.Strings = (
+                  'MIT License'
+                  ''
+                  'Copyright (c) 2018 shaoziyang'
+                  ''
+                  'Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:'
+                  ''
+                  'The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.'
+                  ''
+                  'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.'
+                )
+                ReadOnly = True
+                ScrollBars = ssAutoBoth
+                TabOrder = 0
               end
             end
           end
@@ -9397,7 +10095,7 @@ object FormMain: TFormMain
     end
   end
   object mmoOut_Temp: TMemo
-    Left = 224
+    Left = 216
     Height = 24
     Top = 240
     Width = 24
@@ -9412,7 +10110,7 @@ object FormMain: TFormMain
     left = 16
     top = 288
     Bitmap = {
-      4C69280000001000000010000000D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
+      4C69290000001000000010000000D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
@@ -10692,21 +11390,53 @@ object FormMain: TFormMain
       5DFFCDCDCDFFCACACAFFCACACAFFCACACAFFCACACAFFCDCDCDFF5D5D5DFFC0C0
       C0FFE5E5E5FFA1A1A1FF000000FF000000FF000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
-      00FF000000FF000000FF000000FF
+      00FF000000FF000000FF000000FF0000000000000000B4B3B349AAA8A879A9A9
+      A959ABAAAA71B0B4B457B3B4B479B8B7B789CCCBCBA6000000009C3535108D1F
+      1FAA830C0CDC912828990000000000000000AAAAAA74B3AFAF6CB7C4C43AC3CE
+      CE05CAD4D400B3959511C9B9B90AF9FFFF00363D3D398127273B860E0E7F7E02
+      02FF7D0000FD7D0101FF810D0D53B1B6B681ADAFAF41B4BABA009D4C4C2C8E23
+      239A871414DC810606EB830808E78C2121C5651D1D6A880B0B018613137A7D00
+      00FF7C0000F87E0202FF941D1D55B1A0A066985C5C008C1C1C7C810909F97D01
+      01FF7D0101FF7E0101FF7C0000FF790000FF8E1818FF851919CD993B3B3D8D22
+      22B1841010F6973131A15916160A964F4F0090272778810606FF7D0000FB7F03
+      03FA800303FC7D0202FD800F0FFCD2A9A9FBFAF7F7F9CFA3A3FF8C1F1FD89833
+      331EC9B2B220C0C2C2298983830086000029810606F67E0000FB7F0202FB7F03
+      03FE810505FE750000FEAE6161FEFFFFFFFEFAF8F8FEFFFFFFF7B06666FF7903
+      03A238000000C2DBDB2ACFE2E2108917178C7E0101FF7A0000F97E0000FE7F02
+      02FE810606FE760000FFA95858FFFFFFFFFEFFFFFFFEFFFFFFFDAE6161FB7800
+      00F4932A2A2479353515B4A2A21D820A0AC97D0303FE912828FB800808FF7E00
+      00FD7E0000FF7E0101FE7B0101FEC38989FEE3C9C9FEC18989FF7F0606FA7F04
+      04FF9022225A5F000000AB9D9D2B810707DE7E0B0BFFC59090FC841919FE7B00
+      00FE840D0DFE800606FF820B0BFF7A0000FF922A2AFD8B1D1DFE7B0000FA7F02
+      02FE840D0D6E4A010100ABA0A02C820909D87D0A0AFEC18989FC871B1BFF7502
+      02FDB67272FF903535FFA95B5BFFA75656FFAF6666FDC89494FF9D4343FA7800
+      00FF8B1C1C6638000000ADA0A02C860C0CAB7E0B0BFDC18989FA7F0C0CFE6C00
+      00FEBC7C7CFE882C2CFFAA5E5EFFAD6262FEA14E4EFEC08888FEA54E4EFB7800
+      00FD9B26263A3E000009AFA4A4298C2222547D0909FFC89696F8B47171FE9E4A
+      4AFEB67070FEB88787FEC18B8BFEBF7F7FFEBB8888FEC28D8DFAAF6262FF7B01
+      01D15F11110A222D2D21000000002B0F0F018A1A1ABC8B1B1BFF993636F9952C
+      2CFC841010FE9F4242FE8E2020FE810707FD9B3B3BFB952F2FFB8F2525FF8C1E
+      1E5177232303EDDDDD2F0000000000000000770A0A167F0404C8790000FF7900
+      00FF7C0000FA780000FA7B0000FA7D0000FB760000FF790000FF8B212173A15B
+      5B00D0E3E32700000000000000000000000000000000AA91910E8B1F1F8E800D
+      0DE5810909FF810404FF810505FF830E0EFF891818C89716164EA1666600AA91
+      9125000000000000000000000000000000000000000000000000FFFFFF00AC6F
+      6F1C952F2F4C8D20206B8F22226198262635D3C5C501A34C4C00000000000000
+      0000000000000000000000000000
     }
   end
   object tmrAlpha: TTimer
     Enabled = False
     Interval = 10
     OnTimer = tmrAlphaTimer
-    left = 184
+    left = 176
     top = 240
   end
   object ilDigit: TImageList
-    left = 104
+    left = 96
     top = 288
     Bitmap = {
-      4C69140000001000000010000000000000000000000000000000000000000000
+      4C69150000001000000010000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000008000FF008000FF008000FF008000FF00000000000000000000
@@ -11346,19 +12076,51 @@ object FormMain: TFormMain
       F4FFBABABAFFCFCFCFFFF3F3F3FFC2C2C2FFC7C7C7FFF9F9F9FFE2E2E2FFC5C5
       C55BEBEBEB00E8E8E800BBBBBB00FFFFFF009696960043434300AAAAAA00C5C5
       C5125E5E5E5B4A4A4A9CC6C6C6BC7E7E7EBC4141419CC2C2C25B737373123E3E
-      3E0086868600A2A2A20037373700
+      3E0086868600A2A2A2003737370092252500FFFFFF00FFFFFF00922525009225
+      2500FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00922525009225250092252500FFFFFF00922525009225
+      2500FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF009225250092252500800000FF800000FF800000FF8000
+      00FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF009225250092252500FFFFFF00800000FFFFFFFF00FFFF
+      FF00800000FFFFFFFF00FFFFFF00FFFFFF00FF0000FFFF0000FFFF0000FFFF00
+      00FFFF0000FFFFFFFF009225250092252500FFFFFF00800000FF800000FF8000
+      00FFFFFFFF00FFFFFF00FFFFFF00FF0000FFFF7171FFFFAAAAFFFFAAAAFFFFAA
+      AAFFFFAAAAFFFFFFFF009225250092252500FFFFFF00800000FFFFFFFF00FFFF
+      FF00800000FFFFFFFF00FFFFFF00FF0000FFFFAAAAFFFFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF009225250092252500FFFFFF00800000FFFFFFFF00FFFF
+      FF00800000FFFFFFFF00FF0000FFFFAAAAFFFFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF009225250092252500800000FF800000FF800000FF8000
+      00FFFFFFFF00FFFFFF00FF0000FFFFAAAAFFFFFFFF00FFFFFF00FFFFFF000080
+      00FF008000FFFFFFFF00FFFFFF0092252500FFFFFF00FFFFFF00922525009225
+      2500FFFFFF00FF0000FFFFAAAAFFFFFFFF00FFFFFF00FFFFFF00008000FF0080
+      00FF008000FF008000FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FF0000FFFFAAAAFFFFFFFF00FFFFFF00008000FF008000FFFFFF
+      FF00FFFFFF00008000FF008000FFFFFFFF00FFFFFF00FF0000FFFFFFFF00FFFF
+      FF00FF0000FFFFAAAAFFFFFFFF00FFFFFF00FFFFFF00008000FF008000FFFFFF
+      FF00FFFFFF00008000FF008000FFFFFFFF00FFFFFF00FFAAAAFFFF0000FFFFFF
+      FF00FF0000FFFFAAAAFFFFFFFF00FFFFFF00FFFFFF00008000FF008000FFFFFF
+      FF00FFFFFF00008000FF008000FFFFFFFF00FFFFFF00FFFFFF00FFAAAAFFFF00
+      00FFFFAAAAFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00008000FF008000FF0080
+      00FF008000FF008000FF008000FFFFFFFF00FFFFFF00FFFFFF00FFAAAAFFFF00
+      00FFFFAAAAFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00008000FF008000FFFFFF
+      FF00FFFFFF00008000FF008000FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00008000FF008000FFFFFF
+      FF00FFFFFF00008000FF008000FFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00008000FF008000FFFFFF
+      FF00FFFFFF00008000FF008000FF
     }
   end
   object tmrLogo: TTimer
     Interval = 100
     OnTimer = tmrLogoTimer
-    left = 144
+    left = 136
     top = 240
   end
   object ilOption: TImageList
     Height = 48
     Width = 48
-    left = 61
+    left = 56
     top = 288
     Bitmap = {
       4C69180000003000000030000000000000000000000000000000000000000000
@@ -18280,7 +19042,7 @@ object FormMain: TFormMain
     Enabled = False
     CompilerMode = pcmDelphi
     NestedComments = False
-    left = 224
+    left = 216
     top = 336
   end
   object TrayIcon: TTrayIcon
@@ -18424,12 +19186,12 @@ object FormMain: TFormMain
     }
     Visible = True
     OnClick = TrayIconClick
-    left = 61
+    left = 56
     top = 240
   end
   object ilTray: TImageList
     Tag = -36
-    left = 144
+    left = 136
     top = 288
     Bitmap = {
       4C69020000001000000010000000000000000000000000000000000000000000
@@ -18500,12 +19262,13 @@ object FormMain: TFormMain
     }
   end
   object ApplicationProperties: TApplicationProperties
+    OnException = ApplicationPropertiesException
     left = 16
     top = 240
   end
   object pmTray: TPopupMenu
     Images = ilMain
-    left = 104
+    left = 96
     top = 240
     object pmTrayShow: TMenuItem
       Caption = 'Show'
@@ -18528,7 +19291,7 @@ object FormMain: TFormMain
   object ilAB: TImageList
     Height = 24
     Width = 24
-    left = 184
+    left = 176
     top = 288
     Bitmap = {
       4C69050000001800000018000000000000000000000100000000000000000000
@@ -18903,26 +19666,26 @@ object FormMain: TFormMain
     top = 336
   end
   object pmHis_PascalScript: TPopupMenu
-    left = 144
+    left = 136
     top = 336
   end
   object dlgOpen_PascalScript: TOpenDialog
     Title = 'Open existing pascal file'
     DefaultExt = '.pas'
     Filter = 'Pascal File|*.pas;*.pp'
-    left = 61
+    left = 56
     top = 336
   end
   object dlgSave_PascalScript: TSaveDialog
     Title = 'Save pascal file as'
     DefaultExt = '.pas'
     Filter = 'Pascal File|*.pas;*.pp'
-    left = 104
+    left = 96
     top = 336
   end
   object pmHelp_PascalScript: TPopupMenu
     Images = ilMain
-    left = 184
+    left = 176
     top = 336
     object miPascalScriptHelpDemo1: TMenuItem
       Caption = 'miPascalScriptHelpDemo1'
@@ -18948,8 +19711,8 @@ object FormMain: TFormMain
   object SynPythonSyn: TSynPythonSyn
     DefaultFilter = 'Python Files (*.py)|*.py'
     Enabled = False
-    left = 224
-    top = 392
+    left = 216
+    top = 384
   end
   object ProcessMPY: TProcess
     Active = False
@@ -18965,27 +19728,27 @@ object FormMain: TFormMain
     WindowWidth = 0
     FillAttribute = 0
     left = 16
-    top = 392
+    top = 384
   end
   object dlgOpen_MPY: TOpenDialog
     DefaultExt = '.py'
     Filter = 'python files|*.py'
-    left = 61
-    top = 392
+    left = 56
+    top = 384
   end
   object dlgSave_MPY: TSaveDialog
     DefaultExt = '.py'
     Filter = 'python files|*.py'
-    left = 104
-    top = 392
+    left = 96
+    top = 384
   end
   object pmHis_MPY: TPopupMenu
-    left = 144
-    top = 392
+    left = 136
+    top = 384
   end
   object pmHelp_MPY: TPopupMenu
-    left = 184
-    top = 392
+    left = 176
+    top = 384
   end
   object Script_Calc: TPSScript
     CompilerOptions = []
@@ -18999,23 +19762,23 @@ object FormMain: TFormMain
     Title = 'Open existing pascal file'
     DefaultExt = '.calc'
     Filter = 'Calculate script|*.calc'
-    left = 61
+    left = 56
     top = 192
   end
   object dlgSave_Calc: TSaveDialog
     Title = 'Save pascal file as'
     DefaultExt = '.calc'
     Filter = 'Calculate script|*.calc'
-    left = 104
+    left = 96
     top = 192
   end
   object pmHis_Calc: TPopupMenu
-    left = 144
+    left = 136
     top = 192
   end
   object pmHelp_Calc: TPopupMenu
     Images = ilMain
-    left = 184
+    left = 176
     top = 192
     object miPascalScriptHelpDemo6: TMenuItem
       Caption = 'miPascalScriptHelpDemo1'
@@ -19037,5 +19800,41 @@ object FormMain: TFormMain
       Caption = 'miPascalScriptHelpDemo5'
       ImageIndex = 23
     end
+  end
+  object ProcessLua: TProcess
+    Active = False
+    Options = [poUsePipes, poNoConsole]
+    Priority = ppNormal
+    StartupOptions = []
+    ShowWindow = swoNone
+    WindowColumns = 0
+    WindowHeight = 0
+    WindowLeft = 0
+    WindowRows = 0
+    WindowTop = 0
+    WindowWidth = 0
+    FillAttribute = 0
+    left = 16
+    top = 432
+  end
+  object dlgOpen_Lua: TOpenDialog
+    DefaultExt = '.lua'
+    Filter = 'Lua files|*.lua'
+    left = 56
+    top = 432
+  end
+  object dlgSave_Lua: TSaveDialog
+    DefaultExt = '.lua'
+    Filter = 'Lua files|*.lua'
+    left = 96
+    top = 432
+  end
+  object pmHis_Lua: TPopupMenu
+    left = 136
+    top = 432
+  end
+  object pmHelp_Lua: TPopupMenu
+    left = 176
+    top = 432
   end
 end
