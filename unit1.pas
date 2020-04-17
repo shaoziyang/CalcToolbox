@@ -13,8 +13,8 @@ uses
   UBigFloatV3,
   //UBigIntsForFloatV4,
   UBigIntsV5,
-  SynEdit, SynHighlighterPas,   SynHighlighterPython,
-  SynEditTypes,  SynHighlighterLua, SynEditHighlighter,
+  SynEdit, SynHighlighterPas, SynHighlighterPython,
+  SynEditTypes, SynHighlighterLua, SynEditHighlighter,
   RichMemo;
 
 const
@@ -24,11 +24,11 @@ const
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
-  MICROPYTHON_BIN_NAME = '\micropython.exe';
+  MICROPYTHON_BIN_NAME = 'bin\micropython\windows\micropython.exe';
   LUA_BIN_NAME = 'bin\lua\windows\lua.exe';
 {$else}
 {$ifdef Linux}
-  MICROPYTHON_BIN_NAME = '/micropython';
+  MICROPYTHON_BIN_NAME = 'bin/micropython/linux/micropython';
   LUA_BIN_NAME = 'bin/lua/linux/lua';
 {$endif}
 {$endif}
@@ -438,8 +438,7 @@ type
     procedure sgExpr_CalcKeyPress(Sender: TObject; var Key: char);
     procedure sgVar_CalcEditingDone(Sender: TObject);
     procedure SynEditLuaChange(Sender: TObject);
-    procedure SynEditLuaStatusChange(Sender: TObject; Changes: TSynStatusChanges
-      );
+    procedure SynEditLuaStatusChange(Sender: TObject; Changes: TSynStatusChanges);
     procedure SynEditMPYChange(Sender: TObject);
     procedure SynEditMPYStatusChange(Sender: TObject; Changes: TSynStatusChanges);
     procedure SynEditPascalScriptChange(Sender: TObject);
@@ -1017,8 +1016,8 @@ begin
         else if pcScript.ActivePage = tsMicropython then
           btnRun_MPYClick(Sender)
         else if pcScript.ActivePage = tsLua then
-          btnRun_LuaClick(Sender)
-      end
+          btnRun_LuaClick(Sender);
+      end;
     end;
     VK_S:
     begin
@@ -1292,8 +1291,7 @@ begin
   bfCalc(Sender);
 end;
 
-procedure TFormMain.ApplicationPropertiesException(Sender: TObject; E: Exception
-  );
+procedure TFormMain.ApplicationPropertiesException(Sender: TObject; E: Exception);
 begin
   Exit;
 end;
@@ -1723,14 +1721,13 @@ end;
 
 procedure TFormMain.SynEditLuaChange(Sender: TObject);
 begin
-  btnSave_Lua.Enabled := SynEditLua.Modified;
+  btnSave_Lua.Enabled   := SynEditLua.Modified;
   btnSaveAs_Lua.Enabled := SynEditLua.Modified;
 end;
 
-procedure TFormMain.SynEditLuaStatusChange(Sender: TObject;
-  Changes: TSynStatusChanges);
+procedure TFormMain.SynEditLuaStatusChange(Sender: TObject; Changes: TSynStatusChanges);
 begin
-    btnCaret_Lua.Caption := IntToStr(SynEditLua.CaretX) + ', ' +
+  btnCaret_Lua.Caption := IntToStr(SynEditLua.CaretX) + ', ' +
     IntToStr(SynEditLua.CaretY);
   if SynEditLua.SelAvail then
     btnCaret_Lua.Caption := btnCaret_Lua.Caption + ' Sel: ' +
@@ -1739,7 +1736,7 @@ end;
 
 procedure TFormMain.SynEditMPYChange(Sender: TObject);
 begin
-  btnSave_MPY.Enabled := SynEditMPY.Modified;
+  btnSave_MPY.Enabled   := SynEditMPY.Modified;
   btnSaveAs_MPY.Enabled := SynEditMPY.Modified;
 end;
 
@@ -1869,20 +1866,20 @@ begin
   SynEditFunc_Calc.Text     := NewFileTemplate_Calc;
   SynEditFunc_Calc.Modified := True;
 
-  dlgSave_Calc.FileName     := '';
-  pmHis_Calc.Items[0].Checked:=False;
+  dlgSave_Calc.FileName := '';
+  pmHis_Calc.Items[0].Checked := False;
 end;
 
 procedure TFormMain.btnNew_LuaClick(Sender: TObject);
 begin
   if Sender <> nil then
-    SynEditLua.Text     := NewFileTemplate_Lua;
-  SynEditLua.Modified   := False;
-  btnSave_Lua.Enabled   := False;
+    SynEditLua.Text := NewFileTemplate_Lua;
+  SynEditLua.Modified := False;
+  btnSave_Lua.Enabled := False;
   btnSaveAs_Lua.Enabled := False;
   tsLua.Caption := 'Lua';
-  dlgSave_Lua.FileName  := '';
-  pmHis_Lua.Items[0].Checked:=False;
+  dlgSave_Lua.FileName := '';
+  pmHis_Lua.Items[0].Checked := False;
 end;
 
 procedure TFormMain.btnNew_MPYClick(Sender: TObject);
@@ -1894,7 +1891,7 @@ begin
   btnSaveAs_MPY.Enabled := False;
   tsMicropython.Caption := 'micropython';
   dlgSave_MPY.FileName  := '';
-  pmHis_MPY.Items[0].Checked:=False;
+  pmHis_MPY.Items[0].Checked := False;
 end;
 
 procedure TFormMain.btnNew_PascalScriptClick(Sender: TObject);
@@ -1907,7 +1904,7 @@ begin
   tsPascalScript.Caption := 'Pascal';
   dlgSave_PascalScript.FileName := '';
   Compiled_PascalScript  := False;
-  pmHis_PascalScript.Items[0].Checked:=False;
+  pmHis_PascalScript.Items[0].Checked := False;
 end;
 
 procedure TFormMain.btnOpenGITEEClick(Sender: TObject);
@@ -1931,7 +1928,7 @@ end;
 
 procedure TFormMain.btnOpen_LuaClick(Sender: TObject);
 begin
-    if dlgOpen_Lua.Execute then
+  if dlgOpen_Lua.Execute then
   begin
     LoadFile_Lua(dlgOpen_Lua.FileName);
     pmAddHis(pmHis_Lua, dlgOpen_Lua.FileName);
@@ -1970,7 +1967,7 @@ begin
       tmpfile := GetTempFileName + '.lua';
       SynEditLua.Lines.SaveToFile(tmpfile);
       ProcessLua.Executable :=
-        ExtractFilePath(Application.ExeName) +  LUA_BIN_NAME;
+        ExtractFilePath(Application.ExeName) + LUA_BIN_NAME;
       ProcessLua.Parameters.Add(tmpfile);
 
       if FileExists(ProcessLua.Executable) then
@@ -1979,7 +1976,8 @@ begin
       end
       else
       begin
-        mmoOutAdd_Lua(#13#10+'Lua interpreter not found. Please check the settings in the options.'+#13#10);
+        mmoOutAdd_Lua(#13#10 +
+          'Lua interpreter not found. Please check the settings in the options.' + #13#10);
       end;
 
       while ProcessLua.Running or (ProcessLua.Output.NumBytesAvailable > 0) or
@@ -2026,7 +2024,7 @@ begin
       tmpfile := GetTempFileName + '.py';
       SynEditMPY.Lines.SaveToFile(tmpfile);
       ProcessMPY.Executable :=
-        ExtractFilePath(Application.ExeName) + 'micropython' + MICROPYTHON_BIN_NAME;
+        ExtractFilePath(Application.ExeName) + MICROPYTHON_BIN_NAME;
       ProcessMPY.Parameters.Add(tmpfile);
 
       if FileExists(ProcessMPY.Executable) then
@@ -2035,7 +2033,8 @@ begin
       end
       else
       begin
-        mmoOutAdd_MPY(#13#10+'micropython interpreter not found. Please check the settings in the options.'+#13#10);
+        mmoOutAdd_MPY(#13#10 +
+          'micropython interpreter not found. Please check the settings in the options.' + #13#10);
       end;
 
       ProcessMPY.Execute;
@@ -2189,7 +2188,7 @@ end;
 
 procedure TFormMain.btnSave_LuaClick(Sender: TObject);
 begin
-   if dlgSave_Lua.FileName = '' then
+  if dlgSave_Lua.FileName = '' then
   begin
     if not dlgSave_Lua.Execute then
       Exit;
@@ -2222,7 +2221,7 @@ end;
 
 procedure TFormMain.btnStop_LuaClick(Sender: TObject);
 begin
-    btnStop_Lua.Enabled := False;
+  btnStop_Lua.Enabled := False;
   btnRun_Lua.Enabled  := True;
   if ProcessLua.Running then
   begin
@@ -3155,7 +3154,7 @@ begin
 
   tsPascalScript.TabVisible := ini.ReadBool('Option', 'Pascal_Enabled', True);
   tsMicropython.TabVisible := ini.ReadBool('Option', 'micropython_Enabled', True);
-  tsLua.TabVisible:=ini.ReadBool('Option', 'Lua_Enabled', True);
+  tsLua.TabVisible    := ini.ReadBool('Option', 'Lua_Enabled', True);
   tsScript.TabVisible := ini.ReadBool('Option', 'Script_Enabled', True);
   updateTSPC(tsScript, pcScript);
 
@@ -3345,7 +3344,7 @@ begin
   btnNew_LuaClick(nil);
   SynEditLua.Lines.LoadFromFile(FileName);
   dlgSave_Lua.FileName := FileName;
-  SynEditLua.Hint      := FileName;
+  SynEditLua.Hint := FileName;
   tsLua.Caption := 'Lua - ' + shortFileName(FileName);
 end;
 
@@ -3353,8 +3352,9 @@ procedure TFormMain.SaveFile_Lua(FileName: string);
 begin
   try
     SynEditLua.Lines.SaveToFile(FileName);
-    SynEditLua.Modified   := False;
-    btnSave_Lua.Enabled   := False;
+    SynEditLua.Modified := False;
+    btnSave_Lua.Enabled := False;
+
     btnSaveAs_Lua.Enabled := False;
     tsLua.Caption := 'Lua - ' + shortFileName(FileName);
   except
