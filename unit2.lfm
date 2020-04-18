@@ -443,6 +443,7 @@ object FormOption: TFormOption
         Kind = bkOK
         ModalResult = 1
         Images = FormMain.ilMain
+        ImageIndex = 41
         OnClick = btnOptionOKClick
         TabOrder = 1
       end
@@ -530,9 +531,9 @@ object FormOption: TFormOption
         TabOrder = 1
       end
       object ComboBox1: TComboBox
-        Left = 16
+        Left = 320
         Height = 25
-        Top = 240
+        Top = 56
         Width = 249
         ItemHeight = 17
         Style = csDropDownList
@@ -540,9 +541,9 @@ object FormOption: TFormOption
         Visible = False
       end
       object Label3: TLabel
-        Left = 16
+        Left = 320
         Height = 17
-        Top = 208
+        Top = 24
         Width = 57
         Caption = 'Language'
         ParentColor = False
@@ -578,6 +579,14 @@ object FormOption: TFormOption
         Checked = True
         State = cbChecked
         TabOrder = 5
+      end
+      object chkErrlog_En: TCheckBox
+        Left = 16
+        Height = 21
+        Top = 200
+        Width = 75
+        Caption = 'Error log'
+        TabOrder = 6
       end
     end
     object TabSheet1: TTabSheet
