@@ -20,7 +20,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '1.2.0';
+  VERSION = '1.2.1';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -544,6 +544,9 @@ type
 
     external_c_bin_name: string;
 
+    errlog_en: boolean;
+    errlogfile: string;
+    procedure errlog(msg: string);
   public
     MinimizeToTray, CloseToTray: boolean;
     function BufferToStr(buf: TByteArray; N: integer): string;
@@ -765,6 +768,7 @@ begin
 
   path := ExtractFilePath(Application.ExeName);
   ini  := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
+  errlogfile := ChangeFileExt(Application.ExeName, '.err');
 
   lbVer.Caption := 'ver ' + VERSION;
 
@@ -805,7 +809,8 @@ begin
     begin
       lbFont.Font.Style := [fsBold];
     end;
-    Font := lbFont.Font;
+    Font      := lbFont.Font;
+    errlog_en := ini.ReadBool('option', 'errlog', False);
 
     TrayIcon.Visible := ini.ReadBool('Option', 'TrayIcon', True);
     MinimizeToTray   := ini.ReadBool('Option', 'MinimizeToTray', True);
@@ -1124,7 +1129,6 @@ procedure TFormMain.FormShow(Sender: TObject);
 begin
   tmrAlpha.Tag     := 1;
   tmrAlpha.Enabled := True;
-  pcCalcModeChange(Sender);
 end;
 
 procedure TFormMain.FormWindowStateChange(Sender: TObject);
@@ -1368,7 +1372,7 @@ end;
 
 procedure TFormMain.ApplicationPropertiesException(Sender: TObject; E: Exception);
 begin
-  Exit;
+  errlog(E.Message);
 end;
 
 procedure TFormMain.btnBigIntAddClick(Sender: TObject);
@@ -1952,16 +1956,15 @@ end;
 procedure TFormMain.btnNew_CalcClick(Sender: TObject);
 begin
   sgVar_Calc.Clean;
-  sgVar_Calc.Modified := True;
-  sgVar_Calc.RowCount := 4;
+  sgVar_Calc.Modified   := True;
+  sgVar_Calc.RowCount   := 4;
   sgVar_Calc.Rows[1].CommaText := 'x,12,variant';
   sgVar_Calc.Rows[2].CommaText := 'y,5.6,variant';
-
-  SynEditFunc_Calc.Text     := NewFileTemplate_Calc;
+  SynEditFunc_Calc.Text := NewFileTemplate_Calc;
   SynEditFunc_Calc.Modified := True;
-
   dlgSave_Calc.FileName := '';
-  pmHis_Calc.Items[0].Checked := False;
+  if pmHis_Calc.Items.Count > 0 then
+    pmHis_Calc.Items[0].Checked := False;
 end;
 
 procedure TFormMain.btnNew_CClick(Sender: TObject);
@@ -1973,7 +1976,8 @@ begin
   btnSaveAs_C.Enabled := False;
   tsC.Caption := 'C';
   dlgSave_C.FileName := '';
-  pmHis_C.Items[0].Checked := False;
+  if pmHis_C.Items.Count > 0 then
+    pmHis_C.Items[0].Checked := False;
 end;
 
 procedure TFormMain.btnNew_LuaClick(Sender: TObject);
@@ -1985,7 +1989,8 @@ begin
   btnSaveAs_Lua.Enabled := False;
   tsLua.Caption := 'Lua';
   dlgSave_Lua.FileName := '';
-  pmHis_Lua.Items[0].Checked := False;
+  if pmHis_Lua.Items.Count > 0 then
+    pmHis_Lua.Items[0].Checked := False;
 end;
 
 procedure TFormMain.btnNew_MPYClick(Sender: TObject);
@@ -1997,7 +2002,8 @@ begin
   btnSaveAs_MPY.Enabled := False;
   tsMicropython.Caption := 'micropython';
   dlgSave_MPY.FileName  := '';
-  pmHis_MPY.Items[0].Checked := False;
+  if pmHis_MPY.Items.Count > 0 then
+    pmHis_MPY.Items[0].Checked := False;
 end;
 
 procedure TFormMain.btnNew_PascalScriptClick(Sender: TObject);
@@ -2010,7 +2016,8 @@ begin
   tsPascalScript.Caption := 'Pascal';
   dlgSave_PascalScript.FileName := '';
   Compiled_PascalScript  := False;
-  pmHis_PascalScript.Items[0].Checked := False;
+  if pmHis_PascalScript.Items.Count > 0 then
+    pmHis_PascalScript.Items[0].Checked := False;
 end;
 
 procedure TFormMain.btnOpenGITEEClick(Sender: TObject);
@@ -2473,12 +2480,14 @@ begin
   begin
 
     TrayIcon.Visible := FormOption.chkShowTray.Checked;
-    MinimizeToTray   := FormOption.chkMinimizeToTray.Checked;
-    CloseToTray      := FormOption.chkCloseToTray.Checked;
+    MinimizeToTray := FormOption.chkMinimizeToTray.Checked;
+    CloseToTray := FormOption.chkCloseToTray.Checked;
+    errlog_en := FormOption.chkErrlog_En.Checked;
 
     ini.WriteBool('Option', 'TrayIcon', TrayIcon.Visible);
     ini.WriteBool('Option', 'MinimizeToTray', MinimizeToTray);
     ini.WriteBool('Option', 'CloseToTray', CloseToTray);
+    ini.WriteBool('Option', 'errlog', errlog_en);
 
     if FormOption.dlgFont.Tag = 2 then
     begin
@@ -3674,6 +3683,22 @@ begin
   mmoOut_Temp.Lines.SaveToFile(FileName);
   SynEditFunc_Calc.Hint := FileName;
   sgVar_Calc.Hint := FileName;
+end;
+
+procedure TFormMain.errlog(msg: string);
+var
+  f: Textfile;
+begin
+  if not errlog_en then
+    Exit;
+
+  AssignFile(f, errlogfile);
+  if FileExists(errlogfile) then
+    Append(f)
+  else
+    Rewrite(f);
+  writeln(f, DateTimeToSTr(now), ' ', msg);
+  CloseFile(f);
 end;
 
 end.
