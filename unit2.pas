@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, Buttons,
-  LCLType, ComCtrls, StdCtrls, EditBtn;
+  LCLType, LCLIntf, ComCtrls, StdCtrls, EditBtn;
 
 type
 
@@ -34,8 +34,12 @@ type
     Image1: TImage;
     ilCheckBox: TImageList;
     Label3: TLabel;
-    Label4: TLabel;
+    lbMPYWebSite: TLabel;
+    lbTinyCWeb: TLabel;
     lbOptFont: TStaticText;
+    lbLuaWebSite: TLabel;
+    lbTinyCWebSite1: TLabel;
+    lbTinyCWebSite2: TLabel;
     PageControl1: TPageControl;
     Panel1: TPanel;
     Panel2: TPanel;
@@ -47,6 +51,10 @@ type
     procedure btnOptionSelectFontClick(Sender: TObject);
     procedure chkShowTrayChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure lbLuaWebSiteClick(Sender: TObject);
+    procedure lbMPYWebSiteClick(Sender: TObject);
+    procedure lbTinyCWebSite1Click(Sender: TObject);
+    procedure lbTinyCWebSite2Click(Sender: TObject);
     procedure tvFunctionsClick(Sender: TObject);
     procedure tvFunctionsKeyDown(Sender: TObject; var Key: word;
       Shift: TShiftState);
@@ -156,6 +164,26 @@ begin
   edtExternal_lua_bin.Text    := FormMain.external_lua_bin_name;
   edtExternal_c_bin.Text      := FormMain.external_c_bin_name;
 
+end;
+
+procedure TFormOption.lbLuaWebSiteClick(Sender: TObject);
+begin
+  OpenURL('https://www.lua.org');
+end;
+
+procedure TFormOption.lbMPYWebSiteClick(Sender: TObject);
+begin
+  OpenURL('https://github.com/micropython/micropython');
+end;
+
+procedure TFormOption.lbTinyCWebSite1Click(Sender: TObject);
+begin
+  OpenURL('https://bellard.org/tcc/');
+end;
+
+procedure TFormOption.lbTinyCWebSite2Click(Sender: TObject);
+begin
+  OpenURL('https://github.com/TinyCC/tinycc');
 end;
 
 procedure TFormOption.tvFunctionsClick(Sender: TObject);
