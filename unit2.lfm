@@ -1,13 +1,13 @@
 object FormOption: TFormOption
-  Left = 287
-  Height = 377
-  Top = 495
-  Width = 523
+  Left = 313
+  Height = 430
+  Top = 436
+  Width = 600
   AlphaBlendValue = 200
   BorderStyle = bsDialog
   Caption = 'Option'
-  ClientHeight = 377
-  ClientWidth = 523
+  ClientHeight = 430
+  ClientWidth = 600
   Icon.Data = {
     BE2500000000010001003030000001002000A825000016000000280000003000
     0000600000000100200000000000002400006400000064000000000000000000
@@ -320,36 +320,13 @@ object FormOption: TFormOption
   object Panel1: TPanel
     Left = 0
     Height = 48
-    Top = 329
-    Width = 523
+    Top = 382
+    Width = 600
     Align = alBottom
     BevelOuter = bvNone
     ClientHeight = 48
-    ClientWidth = 523
+    ClientWidth = 600
     TabOrder = 0
-    object btnOptionCancel: TBitBtn
-      Left = 312
-      Height = 30
-      Top = 8
-      Width = 75
-      Cancel = True
-      DefaultCaption = True
-      Kind = bkCancel
-      ModalResult = 2
-      TabOrder = 0
-    end
-    object btnOptionOK: TBitBtn
-      Left = 424
-      Height = 30
-      Top = 8
-      Width = 75
-      Default = True
-      DefaultCaption = True
-      Kind = bkOK
-      ModalResult = 1
-      OnClick = btnOptionOKClick
-      TabOrder = 1
-    end
     object Image1: TImage
       Left = 6
       Height = 36
@@ -435,20 +412,55 @@ object FormOption: TFormOption
       Stretch = True
       Transparent = True
     end
+    object Panel2: TPanel
+      Left = 344
+      Height = 48
+      Top = 0
+      Width = 256
+      Align = alRight
+      BevelOuter = bvNone
+      ClientHeight = 48
+      ClientWidth = 256
+      TabOrder = 0
+      object btnOptionCancel: TBitBtn
+        Left = 24
+        Height = 30
+        Top = 8
+        Width = 75
+        Cancel = True
+        DefaultCaption = True
+        Kind = bkCancel
+        ModalResult = 2
+        TabOrder = 0
+      end
+      object btnOptionOK: TBitBtn
+        Left = 145
+        Height = 30
+        Top = 8
+        Width = 75
+        Default = True
+        DefaultCaption = True
+        Kind = bkOK
+        ModalResult = 1
+        Images = FormMain.ilMain
+        OnClick = btnOptionOKClick
+        TabOrder = 1
+      end
+    end
   end
   object PageControl1: TPageControl
     Left = 0
-    Height = 329
+    Height = 382
     Top = 0
-    Width = 523
-    ActivePage = TabSheet1
+    Width = 600
+    ActivePage = tsOptionGeneral
     Align = alClient
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 1
     object tsOptionGeneral: TTabSheet
       Caption = 'General'
-      ClientHeight = 299
-      ClientWidth = 515
+      ClientHeight = 352
+      ClientWidth = 592
       object lbOptFont: TStaticText
         Left = 16
         Height = 40
@@ -570,27 +582,29 @@ object FormOption: TFormOption
     end
     object TabSheet1: TTabSheet
       Caption = 'Functions'
-      ClientHeight = 299
-      ClientWidth = 515
+      ClientHeight = 352
+      ClientWidth = 592
       object tvFunctions: TTreeView
         Left = 0
-        Height = 299
+        Height = 352
         Top = 0
-        Width = 515
+        Width = 592
         Align = alClient
+        AutoExpand = True
         BackgroundColor = clNone
         BorderStyle = bsNone
         Color = clNone
         HotTrack = True
         Images = FormMain.ilMain
         ReadOnly = True
+        RowSelect = True
         ScrollBars = ssAutoVertical
         SeparatorColor = clSilver
         StateImages = ilCheckBox
         TabOrder = 0
         OnClick = tvFunctionsClick
         OnKeyDown = tvFunctionsKeyDown
-        Options = [tvoAutoItemHeight, tvoHideSelection, tvoHotTrack, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+        Options = [tvoAutoExpand, tvoAutoItemHeight, tvoHideSelection, tvoHotTrack, tvoKeepCollapsedNodes, tvoReadOnly, tvoRowSelect, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoNoDoubleClickExpand, tvoThemedDraw]
         Items.Data = {
           F9FFFFFF020006000000FFFFFFFFFFFFFFFF00000000FFFFFFFF000000000000
           00000003000000435243FFFFFFFFFFFFFFFF00000000FFFFFFFF040000000000
@@ -602,14 +616,115 @@ object FormOption: TFormOption
           FFFFFFFFFFFFFFFFFF01000000000000000107000000436F6E76657274FFFFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFF0000000000000000000400000054696D65FFFF
           FFFFFFFFFFFFFFFFFFFFFFFFFFFF0000000000000000000400000043616C63FF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0200000000000000010600000053637269
+          FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0400000000000000010600000053637269
           7074240000002400000001000000FFFFFFFF0000000000000000000600000050
           617363616C270000002700000000000000FFFFFFFF0000000000000000000B00
-          00006D6963726F707974686F6EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF020000
-          00000000000108000000436F6E7374616E74FFFFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFF000000000000000000040000004D617468FFFFFFFFFFFFFFFFFFFFFFFFFF
-          FFFFFF0000000000000000000700000050687973696373
+          00006D6963726F707974686F6E280000002800000001000000FFFFFFFF000000
+          000000000000030000004C7561230000002300000000000000FFFFFFFF000000
+          0000000000000100000043FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0200000000
+          0000000108000000436F6E7374616E74FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          000000000000000000040000004D617468FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+          FF0000000000000000000700000050687973696373
         }
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'Script'
+      ClientHeight = 352
+      ClientWidth = 592
+      object Bevel4: TBevel
+        Left = 21
+        Height = 29
+        Top = 112
+        Width = 9
+        Shape = bsLeftLine
+      end
+      object Bevel1: TBevel
+        Left = 21
+        Height = 29
+        Top = 32
+        Width = 9
+        Shape = bsLeftLine
+      end
+      object chkUse_external_micropython: TCheckBox
+        Left = 16
+        Height = 21
+        Top = 16
+        Width = 235
+        Caption = 'use external micropython interpreter'
+        TabOrder = 0
+      end
+      object edtExternal_micropython_bin: TFileNameEdit
+        Left = 32
+        Height = 25
+        Top = 48
+        Width = 528
+        FilterIndex = 0
+        HideDirectories = False
+        ButtonWidth = 23
+        NumGlyphs = 1
+        Images = FormMain.ilMain
+        ImageIndex = 39
+        MaxLength = 0
+        TabOrder = 1
+      end
+      object chkUse_external_lua: TCheckBox
+        Left = 16
+        Height = 21
+        Top = 96
+        Width = 182
+        Caption = 'use external Lua interpreter'
+        TabOrder = 2
+      end
+      object edtExternal_lua_bin: TFileNameEdit
+        Left = 32
+        Height = 25
+        Top = 128
+        Width = 528
+        FilterIndex = 0
+        HideDirectories = False
+        ButtonWidth = 23
+        NumGlyphs = 1
+        Images = FormMain.ilMain
+        ImageIndex = 40
+        MaxLength = 0
+        TabOrder = 3
+      end
+      object Label4: TLabel
+        Left = 32
+        Height = 17
+        Top = 176
+        Width = 101
+        Caption = 'Tiny C interpreter'
+        ParentColor = False
+      end
+      object edtExternal_c_bin: TFileNameEdit
+        Left = 32
+        Height = 25
+        Top = 208
+        Width = 528
+        FilterIndex = 0
+        HideDirectories = False
+        ButtonWidth = 23
+        NumGlyphs = 1
+        Images = FormMain.ilMain
+        ImageIndex = 35
+        MaxLength = 0
+        TabOrder = 4
+      end
+      object Bevel2: TBevel
+        Left = 21
+        Height = 13
+        Top = 48
+        Width = 16
+        Shape = bsBottomLine
+      end
+      object Bevel3: TBevel
+        Left = 21
+        Height = 13
+        Top = 128
+        Width = 16
+        Shape = bsBottomLine
       end
     end
   end

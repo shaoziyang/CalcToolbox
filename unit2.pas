@@ -6,28 +6,40 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, Buttons,
-  LCLType, ComCtrls, StdCtrls;
+  LCLType, ComCtrls, StdCtrls, EditBtn;
 
 type
 
   { TFormOption }
 
   TFormOption = class(TForm)
+    Bevel1: TBevel;
+    Bevel2: TBevel;
+    Bevel3: TBevel;
+    Bevel4: TBevel;
     btnOptionCancel: TBitBtn;
     btnOptionOK: TBitBtn;
     btnOptionSelectFont: TBitBtn;
+    chkUse_external_micropython: TCheckBox;
+    chkUse_external_lua: TCheckBox;
     chkShowTray: TCheckBox;
     chkMinimizeToTray: TCheckBox;
     chkCloseToTray: TCheckBox;
     ComboBox1: TComboBox;
     dlgFont: TFontDialog;
+    edtExternal_micropython_bin: TFileNameEdit;
+    edtExternal_lua_bin: TFileNameEdit;
+    edtExternal_c_bin: TFileNameEdit;
     Image1: TImage;
     ilCheckBox: TImageList;
     Label3: TLabel;
+    Label4: TLabel;
     lbOptFont: TStaticText;
     PageControl1: TPageControl;
     Panel1: TPanel;
+    Panel2: TPanel;
     TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
     tvFunctions: TTreeView;
     tsOptionGeneral: TTabSheet;
     procedure btnOptionOKClick(Sender: TObject);
@@ -84,11 +96,14 @@ begin
   ini.WriteBool('Option', 'Script_Enabled', tvFunctions.Items[9].StateIndex=1);
   ini.WriteBool('Option', 'Pascal_Enabled', tvFunctions.Items[10].StateIndex=1);
   ini.WriteBool('Option', 'micropython_Enabled', tvFunctions.Items[11].StateIndex=1);
-  ini.WriteBool('Option', 'Constant_Enabled', tvFunctions.Items[12].StateIndex=1);
-  ini.WriteBool('Option', 'ConstantMath_Enabled', tvFunctions.Items[13].StateIndex=1);
-  ini.WriteBool('Option', 'ConstantPhysics_Enabled', tvFunctions.Items[14].StateIndex=1);
+  ini.WriteBool('Option', 'Lua_Enabled', tvFunctions.Items[12].StateIndex=1);
+  ini.WriteBool('Option', 'C_Enabled', tvFunctions.Items[13].StateIndex=1);
+  ini.WriteBool('Option', 'Constant_Enabled', tvFunctions.Items[14].StateIndex=1);
+  ini.WriteBool('Option', 'ConstantMath_Enabled', tvFunctions.Items[15].StateIndex=1);
+  ini.WriteBool('Option', 'ConstantPhysics_Enabled', tvFunctions.Items[16].StateIndex=1);
 
   FormMain.updateTabVisible;
+
 end;
 
 procedure TFormOption.chkShowTrayChange(Sender: TObject);
@@ -124,9 +139,18 @@ begin
   tvSetCheck(tvFunctions.Items[9], ini.ReadBool('Option', 'Script_Enabled', True));
   tvSetCheck(tvFunctions.Items[10], ini.ReadBool('Option', 'Pascal_Enabled', True));
   tvSetCheck(tvFunctions.Items[11], ini.ReadBool('Option', 'micropython_Enabled', True));
-  tvSetCheck(tvFunctions.Items[12], ini.ReadBool('Option', 'Constant_Enabled', True));
-  tvSetCheck(tvFunctions.Items[13], ini.ReadBool('Option', 'ConstantMath_Enabled', True));
-  tvSetCheck(tvFunctions.Items[14], ini.ReadBool('Option', 'ConstantPhysics_Enabled', True));
+  tvSetCheck(tvFunctions.Items[12], ini.ReadBool('Option', 'Lua_Enabled', True));
+  tvSetCheck(tvFunctions.Items[13], ini.ReadBool('Option', 'C_Enabled', True));
+  tvSetCheck(tvFunctions.Items[14], ini.ReadBool('Option', 'Constant_Enabled', True));
+  tvSetCheck(tvFunctions.Items[15], ini.ReadBool('Option', 'ConstantMath_Enabled', True));
+  tvSetCheck(tvFunctions.Items[16], ini.ReadBool('Option', 'ConstantPhysics_Enabled', True));
+
+  chkUse_external_micropython.Checked:=FormMain.use_external_micropython;
+  edtExternal_micropython_bin.Text:=FormMain.external_micropython_bin_name;
+  chkUse_external_lua.Checked:=FormMain.use_external_lua;
+  edtExternal_lua_bin.Text:=FormMain.external_lua_bin_name;
+  edtExternal_c_bin.Text:=FormMain.external_c_bin_name;
+
 end;
 
 procedure TFormOption.tvFunctionsClick(Sender: TObject);
