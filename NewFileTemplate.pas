@@ -27,8 +27,17 @@ const
     );
 
   NewFileTemplate_Lua: string = (
-  'print("Hello word.")' + #13#10#13#10 +
+  'print("Hello world.")' + #13#10#13#10 +
   'for i = 1, 5 do' + #13#10 +
   '    print(i)' + #13#10 +
   'end'  
+    );
+
+  NewFileTemplate_C: string = (
+  '#include <stdio.h>' + #13#10#13#10 +
+  'int main(){' + #13#10 +
+  '    printf("\n\nHello world.\n");' + #13#10#13#10 +
+  '    for(int i = 1; i < 10; i++)' + #13#10 +
+  '        printf("%d, ", i);' + #13#10 +
+  '}'
     );
