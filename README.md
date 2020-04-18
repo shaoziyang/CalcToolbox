@@ -26,8 +26,13 @@ Linux screenshot
 - Multiple types of numbers to byte buffer conversion
 - Big Float calculation
 - Big Integer calculation
+- Convertor
 - Programmable calculator
-- Pascal Script
+- Multiple interpreters   
+  - Pascal Script
+  - micropython (windows/linux)
+  - Lua
+  - Tiny C
 - Constants display
 - more
 
@@ -42,28 +47,27 @@ Linux screenshot
 - Big Float and Big Integer (DFFLib) from  
   http://www.delphiforfun.org.ws034.alentus.com/Programs/Library/bigfloat.htm
 
+- PascalScript (Integrate with Lazarus IDE)  
+  https://wiki.lazarus.freepascal.org/index.php/Pascal_Script
+
+- SynEdit (Integrate with Lazarus IDE)  
+  https://wiki.freepascal.org/SynEdit
+
+- RichMemo  
+  https://wiki.freepascal.org/RichMemo
+
 
 ## Build
 
-### windows
-
 - Install Lazarus 2.0+ and FPC 3.0.4+
+- Install RichMemo package
 - Run Lazarus IDE, then open project **CalcToolBox.lpr**
 - Build the project.
 
-### Linux
-
-- Install Lazarus 2.0+ and FPC 3.0.4+
-- Run Lazarus IDE, then open project **CalcToolBox.lpr**
-- open **project option** fro **project** menu
-- Select **Linux** under *Target OS* in **Config and Target** option
-- Select **LCLWidgetType** in **Additions and Overrides**
-- Build
-
 ### Reduce file size
 
-Default build file size is very large, to reduce file size, please open project option dialog.
-- in **Debugging** tab, remove
+Default build binary file size is very large (> 30M), to reduce file size, please open project option dialog.
+- in **Debugging** tab, remove option
   - **Generate info for the debugger**
   - **Display line numbers in run-time error backtraces**
 - in Compilation and Linking, select
@@ -75,3 +79,53 @@ Then rebuild.
 
 
 ![](powered_by.png)
+
+
+## More screenshot
+
+- CRC
+
+![](screenshot-crc.png)
+
+- Base convert
+
+![](screenshot-base.png)
+
+- Big Float calculate
+
+![](screenshot-bigfloat.png)
+
+- Big Int calculate
+
+![](screenshot-bigint.png)
+
+- Big Int calculate
+
+![](screenshot-bigint.png)
+
+- Programmable calculator
+
+![](screenshot-calc.png)
+
+- Pascal interpreter
+
+![](screenshot-pascal.png)
+
+- micropython interpreter
+
+![](screenshot-micropython.png)
+
+- Lua interpreter
+
+![](screenshot-lua.png)
+
+- TinyC interpreter
+
+![](screenshot-c.png)
+
+- Options
+
+![](screenshot-option.png)
+
+
+
