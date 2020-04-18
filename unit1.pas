@@ -14,13 +14,13 @@ uses
   //UBigIntsForFloatV4,
   UBigIntsV5,
   SynEdit, SynHighlighterPas, SynHighlighterPython,
-  SynEditTypes, SynHighlighterLua, SynEditHighlighter,
+  SynEditTypes, SynHighlighterLua, SynEditHighlighter, SynHighlighterCpp,
   RichMemo;
 
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '1.1.0';
+  VERSION = '1.2.0';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -56,12 +56,16 @@ type
     btnBigIntSqrt: TToolButton;
     btnBigIntSub: TToolButton;
     btnCaret_Lua: TToolButton;
+    btnCaret_C: TToolButton;
     btnClear_Calc: TToolButton;
     btnClear_Lua: TToolButton;
+    btnClear_C: TToolButton;
     btnHelp_Calc: TToolButton;
     btnHelp_Lua: TToolButton;
+    btnHelp_C: TToolButton;
     btnNew_Calc: TToolButton;
     btnNew_Lua: TToolButton;
+    btnNew_C: TToolButton;
     btnOpenGITEE: TSpeedButton;
     btnOpenGITHUB: TSpeedButton;
     btnOpenGITHUB1: TSpeedButton;
@@ -71,16 +75,21 @@ type
     btnHelp_MPY: TToolButton;
     btnNew_MPY: TToolButton;
     btnOpen_Calc: TToolButton;
+    btnOpen_C: TToolButton;
     btnOpen_MPY: TToolButton;
     btnOpen_Lua: TToolButton;
+    btnRun_C: TToolButton;
     btnRun_MPY: TToolButton;
     btnRun_Lua: TToolButton;
     btnSaveAs_Calc: TToolButton;
     btnSaveAs_Lua: TToolButton;
+    btnSaveAs_C: TToolButton;
     btnSave_Calc: TToolButton;
+    btnSave_C: TToolButton;
     btnSave_MPY: TToolButton;
     btnSaveAs_MPY: TToolButton;
     btnSave_Lua: TToolButton;
+    btnStop_C: TToolButton;
     btnStop_MPY: TToolButton;
     btnStop_Lua: TToolButton;
     cbbCalc: TComboBox;
@@ -89,8 +98,10 @@ type
     chkCrcInvIn: TCheckBox;
     dlgOpen_Calc: TOpenDialog;
     dlgOpen_Lua: TOpenDialog;
+    dlgOpen_C: TOpenDialog;
     dlgSave_Calc: TSaveDialog;
     dlgSave_Lua: TSaveDialog;
+    dlgSave_C: TSaveDialog;
     edtConvertTimeWeek: TLabeledEdit;
     edtConvertTimeYHour: TLabeledEdit;
     edtConvertTimeYMin: TLabeledEdit;
@@ -140,6 +151,7 @@ type
     miPascalScriptHelpDemo8: TMenuItem;
     miPascalScriptHelpDemo9: TMenuItem;
     mmoOutCalc: TMemo;
+    mmoOutC: TMemo;
     mmoOutPascalScript: TMemo;
     dlgOpen_PascalScript: TOpenDialog;
     mmoOutMPY: TMemo;
@@ -149,8 +161,10 @@ type
     pcCalcMode: TPageControl;
     pmHelp_Calc: TPopupMenu;
     pmHelp_Lua: TPopupMenu;
+    pmHelp_C: TPopupMenu;
     pmHis_Calc: TPopupMenu;
     pmHis_Lua: TPopupMenu;
+    pmHis_C: TPopupMenu;
     pnlCalc: TPanel;
     pcScript: TPageControl;
     pcConvert: TPageControl;
@@ -184,6 +198,7 @@ type
     pmHelp_PascalScript: TPopupMenu;
     pmHis_MPY: TPopupMenu;
     pmHelp_MPY: TPopupMenu;
+    ProcessC: TProcess;
     ProcessMPY: TProcess;
     dlgSave_MPY: TSaveDialog;
     ProcessLua: TProcess;
@@ -216,6 +231,7 @@ type
     Splitter11: TSplitter;
     Splitter12: TSplitter;
     Splitter13: TSplitter;
+    Splitter14: TSplitter;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
     sgConstantMath: TStringGrid;
@@ -227,7 +243,9 @@ type
     StaticText5: TStaticText;
     StaticText6: TStaticText;
     StaticText7: TStaticText;
+    SynCppSyn: TSynCppSyn;
     SynEditFunc_Calc: TSynEdit;
+    SynEditC: TSynEdit;
     SynEditPascalScript: TSynEdit;
     SynEditMPY: TSynEdit;
     SynEditLua: TSynEdit;
@@ -236,6 +254,10 @@ type
     btnCaret_PascalScript: TToolButton;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    ToolBar12: TToolBar;
+    ToolButton30: TToolButton;
+    ToolButton38: TToolButton;
+    tsC: TTabSheet;
     tsLicense: TTabSheet;
     ToolBar11: TToolBar;
     btnBigFloatNRoot: TToolButton;
@@ -356,6 +378,7 @@ type
     procedure btnBigFloatAddClick(Sender: TObject);
     procedure btnBigIntAddClick(Sender: TObject);
     procedure btnClear_CalcClick(Sender: TObject);
+    procedure btnClear_CClick(Sender: TObject);
     procedure btnClear_LuaClick(Sender: TObject);
     procedure btnClear_MPYClick(Sender: TObject);
     procedure btnClear_PascalScriptClick(Sender: TObject);
@@ -379,26 +402,32 @@ type
     procedure btnCrc_CRC8_MAXIMClick(Sender: TObject);
     procedure btnCrc_CRC8_ROHCClick(Sender: TObject);
     procedure btnNew_CalcClick(Sender: TObject);
+    procedure btnNew_CClick(Sender: TObject);
     procedure btnNew_LuaClick(Sender: TObject);
     procedure btnNew_MPYClick(Sender: TObject);
     procedure btnNew_PascalScriptClick(Sender: TObject);
     procedure btnOpenGITEEClick(Sender: TObject);
     procedure btnOpenGITHUBClick(Sender: TObject);
     procedure btnOpen_CalcClick(Sender: TObject);
+    procedure btnOpen_CClick(Sender: TObject);
     procedure btnOpen_LuaClick(Sender: TObject);
     procedure btnOpen_MPYClick(Sender: TObject);
     procedure btnOpen_PascalScriptClick(Sender: TObject);
+    procedure btnRun_CClick(Sender: TObject);
     procedure btnRun_LuaClick(Sender: TObject);
     procedure btnRun_MPYClick(Sender: TObject);
     procedure btnRun_PascalScriptClick(Sender: TObject);
     procedure btnSaveAs_CalcClick(Sender: TObject);
+    procedure btnSaveAs_CClick(Sender: TObject);
     procedure btnSaveAs_LuaClick(Sender: TObject);
     procedure btnSaveAs_MPYClick(Sender: TObject);
     procedure btnSaveAs_PascalScriptClick(Sender: TObject);
     procedure btnSave_CalcClick(Sender: TObject);
+    procedure btnSave_CClick(Sender: TObject);
     procedure btnSave_LuaClick(Sender: TObject);
     procedure btnSave_MPYClick(Sender: TObject);
     procedure btnSave_PascalScriptClick(Sender: TObject);
+    procedure btnStop_CClick(Sender: TObject);
     procedure btnStop_LuaClick(Sender: TObject);
     procedure btnStop_MPYClick(Sender: TObject);
     procedure btnStop_PascalScriptClick(Sender: TObject);
@@ -437,6 +466,8 @@ type
     procedure sgExpr_CalcEditingDone(Sender: TObject);
     procedure sgExpr_CalcKeyPress(Sender: TObject; var Key: char);
     procedure sgVar_CalcEditingDone(Sender: TObject);
+    procedure SynEditCChange(Sender: TObject);
+    procedure SynEditCStatusChange(Sender: TObject; Changes: TSynStatusChanges);
     procedure SynEditLuaChange(Sender: TObject);
     procedure SynEditLuaStatusChange(Sender: TObject; Changes: TSynStatusChanges);
     procedure SynEditMPYChange(Sender: TObject);
@@ -472,6 +503,7 @@ type
     EditorAutoSaveFileName_PascalScript: string;
     EditorAutoSaveFileName_micropython: string;
     EditorAutoSaveFileName_Lua: string;
+    EditorAutoSaveFileName_C: string;
     EditorAutoSaveFileName_calc: string;
 
     Script_Calc_CodeVar, Script_Calc_CodeFunc, Script_Calc_CodeMain: string;
@@ -482,12 +514,14 @@ type
     procedure mmoOutAdd_PascalScript(msg: string);
     procedure mmoOutAdd_MPY(msg: string);
     procedure mmoOutAdd_Lua(msg: string);
+    procedure mmoOutAdd_C(msg: string);
     procedure mmoOutAdd_Calc(msg: string);
 
     procedure pmAddHis(var pm: TPopupMenu; FileName: string);
     procedure pmHisClick_PascalScript(Sender: TObject);
     procedure pmHisClick_MPY(Sender: TObject);
     procedure pmHisClick_Lua(Sender: TObject);
+    procedure pmHisClick_C(Sender: TObject);
     procedure pmHisClick_Calc(Sender: TObject);
 
     procedure LoadFile_PascalScript(FileName: string);
@@ -496,8 +530,19 @@ type
     procedure SaveFile_MPY(FileName: string);
     procedure LoadFile_Lua(FileName: string);
     procedure SaveFile_Lua(FileName: string);
+    procedure LoadFile_C(FileName: string);
+    procedure SaveFile_C(FileName: string);
     procedure LoadFile_Calc(FileName: string);
     procedure SaveFile_Calc(FileName: string);
+
+  public
+    use_external_micropython: boolean;
+    external_micropython_bin_name: string;
+
+    use_external_lua: boolean;
+    external_lua_bin_name: string;
+
+    external_c_bin_name: string;
 
   public
     MinimizeToTray, CloseToTray: boolean;
@@ -516,7 +561,6 @@ type
     function StrBytesToChrs(s: string; Len: integer): string;
     procedure setCrcMode(bit: integer; poly: longword; v0: longword;
       XOROUT: longword; InvIn: boolean; InvOut: boolean);
-    //function pyBytesTo
 
     procedure updateTime(d: TDateTime);
 
@@ -848,6 +892,11 @@ begin
     for i := 1 to ini.ReadInteger('HisFile_micropython', 'Count', 0) do
       pmAddHis(pmHis_MPY, ini.ReadString('HisFile_micropython', IntToStr(i), ''));
 
+    use_external_micropython      :=
+      ini.ReadBool('micropython', 'use_external_micropython', False);
+    external_micropython_bin_name :=
+      ini.ReadString('micropython', 'external_micropythn_bin', '');
+
     // Lua
     SynEditLua.Height := ini.ReadInteger('Lua', 'Height', 300);
     EditorAutoSaveFileName_Lua :=
@@ -860,10 +909,26 @@ begin
     for i := 1 to ini.ReadInteger('HisFile_Lua', 'Count', 0) do
       pmAddHis(pmHis_Lua, ini.ReadString('HisFile_Lua', IntToStr(i), ''));
 
+    use_external_lua      := ini.ReadBool('lua', 'use_external_lua', False);
+    external_lua_bin_name := ini.ReadString('lua', 'external_lua_bin', '');
+
+    // C
+    SynEditC.Height := ini.ReadInteger('C', 'Height', 300);
+    EditorAutoSaveFileName_C :=
+      ExtractFilePath(Application.ExeName) + 'autosave.c';
+    if FileExists(EditorAutoSaveFileName_C) then
+      SynEditC.Lines.LoadFromFile(EditorAutoSaveFileName_C)
+    else
+      btnNew_CClick(Sender);
+
+    for i := 1 to ini.ReadInteger('HisFile_C', 'Count', 0) do
+      pmAddHis(pmHis_C, ini.ReadString('HisFile_C', IntToStr(i), ''));
+
+    external_c_bin_name := ini.ReadString('C', 'TinyC_bin', '');
+
 
     // Constant
     pcConstant.PageIndex := ini.ReadInteger('last', 'page_constant', 0);
-
 
   except
 
@@ -980,6 +1045,16 @@ begin
       for i := 0 to pmHis_Lua.Items.Count - 1 do
         ini.WriteString('HisFile_Lua', IntToStr(i + 1),
           pmHis_Lua.Items[i].Caption);
+
+      // C
+      ini.WriteInteger('C', 'Height', SynEditC.Height);
+      SynEditC.Lines.SaveToFile(EditorAutoSaveFileName_C);
+
+      ini.EraseSection('HisFile_C');
+      ini.WriteInteger('HisFile_C', 'Count', pmHis_C.Items.Count);
+      for i := 0 to pmHis_C.Items.Count - 1 do
+        ini.WriteString('HisFile_C', IntToStr(i + 1),
+          pmHis_C.Items[i].Caption);
 
       // COnstant
       ini.WriteInteger('last', 'page_constant', pcConstant.ActivePageIndex);
@@ -1307,6 +1382,11 @@ begin
     0: mmoOutCalc.Clear;
     1: sgExpr_Calc.Clean;
   end;
+end;
+
+procedure TFormMain.btnClear_CClick(Sender: TObject);
+begin
+  mmoOutC.Clear;
 end;
 
 procedure TFormMain.btnClear_LuaClick(Sender: TObject);
@@ -1719,6 +1799,20 @@ begin
 
 end;
 
+procedure TFormMain.SynEditCChange(Sender: TObject);
+begin
+  btnSave_C.Enabled   := SynEditC.Modified;
+  btnSaveAs_C.Enabled := SynEditC.Modified;
+end;
+
+procedure TFormMain.SynEditCStatusChange(Sender: TObject; Changes: TSynStatusChanges);
+begin
+  btnCaret_C.Caption := IntToStr(SynEditC.CaretX) + ', ' + IntToStr(SynEditC.CaretY);
+  if SynEditC.SelAvail then
+    btnCaret_C.Caption := btnCaret_C.Caption + ' Sel: ' +
+      IntToStr(Length(SynEditC.SelText));
+end;
+
 procedure TFormMain.SynEditLuaChange(Sender: TObject);
 begin
   btnSave_Lua.Enabled   := SynEditLua.Modified;
@@ -1870,6 +1964,18 @@ begin
   pmHis_Calc.Items[0].Checked := False;
 end;
 
+procedure TFormMain.btnNew_CClick(Sender: TObject);
+begin
+  if Sender <> nil then
+    SynEditC.Text := NewFileTemplate_C;
+  SynEditC.Modified := False;
+  btnSave_C.Enabled := False;
+  btnSaveAs_C.Enabled := False;
+  tsC.Caption := 'C';
+  dlgSave_C.FileName := '';
+  pmHis_C.Items[0].Checked := False;
+end;
+
 procedure TFormMain.btnNew_LuaClick(Sender: TObject);
 begin
   if Sender <> nil then
@@ -1926,6 +2032,15 @@ begin
   end;
 end;
 
+procedure TFormMain.btnOpen_CClick(Sender: TObject);
+begin
+  if dlgOpen_C.Execute then
+  begin
+    LoadFile_C(dlgOpen_C.FileName);
+    pmAddHis(pmHis_C, dlgOpen_C.FileName);
+  end;
+end;
+
 procedure TFormMain.btnOpen_LuaClick(Sender: TObject);
 begin
   if dlgOpen_Lua.Execute then
@@ -1953,6 +2068,66 @@ begin
   end;
 end;
 
+procedure TFormMain.btnRun_CClick(Sender: TObject);
+var
+  tmpfile: string;
+  s: string;
+  CharBuffer: array [0..511] of char;
+  ReadCount: integer;
+begin
+  btnStop_C.Enabled := True;
+  btnRun_C.Enabled  := False;
+  try
+    try
+      tmpfile := GetTempFileName + '.c';
+      SynEditC.Lines.SaveToFile(tmpfile);
+
+      ProcessC.Executable := external_c_bin_name;
+      ProcessC.Parameters.Clear;
+      ProcessC.Parameters.Add('-run');
+      ProcessC.Parameters.Add(tmpfile);
+
+      if FileExists(ProcessC.Executable) then
+      begin
+        ProcessC.Execute;
+      end
+      else
+      begin
+        mmoOutAdd_C(#13#10 +
+          'C interpreter not found. Please check the settings in the options.' +
+          #13#10);
+      end;
+
+      while ProcessC.Running or (ProcessC.Output.NumBytesAvailable > 0) or
+        (ProcessC.Stderr.NumBytesAvailable > 0) do
+      begin
+        while ProcessC.Output.NumBytesAvailable > 0 do
+        begin
+          ReadCount := Min(512, ProcessC.Output.NumBytesAvailable);
+          //Read up to buffer, not more
+          ProcessC.Output.Read(CharBuffer, ReadCount);
+          mmoOutAdd_C(Copy(CharBuffer, 0, ReadCount));
+          Application.ProcessMessages;
+        end;
+        // read stderr and write to our stderr
+        while ProcessC.Stderr.NumBytesAvailable > 0 do
+        begin
+          ReadCount := Min(512, ProcessC.Stderr.NumBytesAvailable);
+          //Read up to buffer, not more
+          ProcessC.Stderr.Read(CharBuffer, ReadCount);
+          mmoOutAdd_C(Copy(CharBuffer, 0, ReadCount));
+          Application.ProcessMessages;
+        end;
+      end;
+    except
+
+    end;
+  finally
+    btnStop_C.Enabled := False;
+    btnRun_C.Enabled  := True;
+  end;
+end;
+
 procedure TFormMain.btnRun_LuaClick(Sender: TObject);
 var
   tmpfile: string;
@@ -1966,8 +2141,14 @@ begin
     try
       tmpfile := GetTempFileName + '.lua';
       SynEditLua.Lines.SaveToFile(tmpfile);
-      ProcessLua.Executable :=
-        ExtractFilePath(Application.ExeName) + LUA_BIN_NAME;
+
+      if use_external_lua then
+        ProcessLua.Executable := external_lua_bin_name
+      else
+        ProcessLua.Executable :=
+          ExtractFilePath(Application.ExeName) + LUA_BIN_NAME;
+
+      ProcessLua.Parameters.Clear;
       ProcessLua.Parameters.Add(tmpfile);
 
       if FileExists(ProcessLua.Executable) then
@@ -1977,7 +2158,9 @@ begin
       else
       begin
         mmoOutAdd_Lua(#13#10 +
-          'Lua interpreter not found. Please check the settings in the options.' + #13#10);
+          'Lua interpreter not found. Please check the settings in the options.'
+          +
+          #13#10);
       end;
 
       while ProcessLua.Running or (ProcessLua.Output.NumBytesAvailable > 0) or
@@ -2023,8 +2206,14 @@ begin
     try
       tmpfile := GetTempFileName + '.py';
       SynEditMPY.Lines.SaveToFile(tmpfile);
-      ProcessMPY.Executable :=
-        ExtractFilePath(Application.ExeName) + MICROPYTHON_BIN_NAME;
+
+      if use_external_micropython then
+        ProcessMPY.Executable := external_micropython_bin_name
+      else
+        ProcessMPY.Executable :=
+          ExtractFilePath(Application.ExeName) + MICROPYTHON_BIN_NAME;
+
+      ProcessMPY.Parameters.Clear;
       ProcessMPY.Parameters.Add(tmpfile);
 
       if FileExists(ProcessMPY.Executable) then
@@ -2034,7 +2223,9 @@ begin
       else
       begin
         mmoOutAdd_MPY(#13#10 +
-          'micropython interpreter not found. Please check the settings in the options.' + #13#10);
+          'micropython interpreter not found. Please check the settings in the options.'
+          +
+          #13#10);
       end;
 
       ProcessMPY.Execute;
@@ -2148,6 +2339,15 @@ begin
   end;
 end;
 
+procedure TFormMain.btnSaveAs_CClick(Sender: TObject);
+begin
+  if dlgSave_C.Execute then
+  begin
+    SaveFile_C(dlgSave_C.FileName);
+    pmAddHis(pmHis_C, dlgSave_C.FileName);
+  end;
+end;
+
 procedure TFormMain.btnSaveAs_LuaClick(Sender: TObject);
 begin
   if dlgSave_Lua.Execute then
@@ -2186,6 +2386,17 @@ begin
   SaveFile_Calc(dlgSave_Calc.FileName);
 end;
 
+procedure TFormMain.btnSave_CClick(Sender: TObject);
+begin
+  if dlgSave_C.FileName = '' then
+  begin
+    if not dlgSave_C.Execute then
+      Exit;
+    pmAddHis(pmHis_C, dlgSave_C.FileName);
+  end;
+  SaveFile_C(dlgSave_C.FileName);
+end;
+
 procedure TFormMain.btnSave_LuaClick(Sender: TObject);
 begin
   if dlgSave_Lua.FileName = '' then
@@ -2217,6 +2428,16 @@ begin
     pmAddHis(pmHis_PascalScript, dlgSave_PascalScript.FileName);
   end;
   SaveFile_PascalScript(dlgSave_PascalScript.FileName);
+end;
+
+procedure TFormMain.btnStop_CClick(Sender: TObject);
+begin
+  btnStop_C.Enabled := False;
+  btnRun_C.Enabled  := True;
+  if ProcessC.Running then
+  begin
+    ProcessC.Terminate(0);
+  end;
 end;
 
 procedure TFormMain.btnStop_LuaClick(Sender: TObject);
@@ -2264,6 +2485,22 @@ begin
       Font := FormOption.Font;
       saveFont;
     end;
+
+    use_external_micropython := FormOption.chkUse_external_micropython.Checked;
+    external_micropython_bin_name := FormOption.edtExternal_micropython_bin.Text;
+    use_external_lua      := FormOption.chkUse_external_lua.Checked;
+    external_lua_bin_name := FormOption.edtExternal_lua_bin.Text;
+    external_c_bin_name   := FormOption.edtExternal_c_bin.Text;
+
+    ini.WriteBool('micropython', 'use_external_micropython', use_external_micropython);
+    ini.WriteString('micropython', 'external_micropythn_bin',
+      external_micropython_bin_name);
+    ini.WriteBool('lua', 'use_external_lua', use_external_lua);
+    ini.WriteString('lua', 'external_lua_bin', external_lua_bin_name);
+    ini.WriteString('C', 'TinyC_bin', external_c_bin_name);
+
+    if writeable then
+      ini.UpdateFile;
   end;
 end;
 
@@ -3155,6 +3392,7 @@ begin
   tsPascalScript.TabVisible := ini.ReadBool('Option', 'Pascal_Enabled', True);
   tsMicropython.TabVisible := ini.ReadBool('Option', 'micropython_Enabled', True);
   tsLua.TabVisible    := ini.ReadBool('Option', 'Lua_Enabled', True);
+  tsC.TabVisible      := ini.ReadBool('Option', 'C_Enabled', True);
   tsScript.TabVisible := ini.ReadBool('Option', 'Script_Enabled', True);
   updateTSPC(tsScript, pcScript);
 
@@ -3206,6 +3444,11 @@ begin
   mmoOutAdd(mmoOutLua, msg);
 end;
 
+procedure TFormMain.mmoOutAdd_C(msg: string);
+begin
+  mmoOutAdd(mmoOutC, msg);
+end;
+
 procedure TFormMain.mmoOutAdd_Calc(msg: string);
 begin
   mmoOutAdd(mmoOutCalc, msg);
@@ -3235,13 +3478,17 @@ begin
       begin
         mi.OnClick := @pmHisClick_MPY;
       end
-      else if pm = pmHis_Calc then
-      begin
-        mi.OnClick := @pmHisClick_Calc;
-      end
       else if pm = pmHis_Lua then
       begin
         mi.OnClick := @pmHisClick_Lua;
+      end
+      else if pm = pmHis_C then
+      begin
+        mi.OnClick := @pmHisClick_C;
+      end
+      else if pm = pmHis_Calc then
+      begin
+        mi.OnClick := @pmHisClick_Calc;
       end;
 
       mi.GroupIndex := 1;
@@ -3285,6 +3532,14 @@ begin
   LoadFile_Lua(TMenuItem(Sender).Caption);
   // move to first
   pmAddHis(pmHis_Lua, TMenuItem(Sender).Caption);
+end;
+
+procedure TFormMain.pmHisClick_C(Sender: TObject);
+begin
+  // load history file
+  LoadFile_C(TMenuItem(Sender).Caption);
+  // move to first
+  pmAddHis(pmHis_C, TMenuItem(Sender).Caption);
 end;
 
 procedure TFormMain.pmHisClick_Calc(Sender: TObject);
@@ -3354,9 +3609,30 @@ begin
     SynEditLua.Lines.SaveToFile(FileName);
     SynEditLua.Modified := False;
     btnSave_Lua.Enabled := False;
-
     btnSaveAs_Lua.Enabled := False;
     tsLua.Caption := 'Lua - ' + shortFileName(FileName);
+  except
+
+  end;
+end;
+
+procedure TFormMain.LoadFile_C(FileName: string);
+begin
+  btnNew_CClick(nil);
+  SynEditC.Lines.LoadFromFile(FileName);
+  dlgSave_C.FileName := FileName;
+  SynEditC.Hint := FileName;
+  tsC.Caption := 'C - ' + shortFileName(FileName);
+end;
+
+procedure TFormMain.SaveFile_C(FileName: string);
+begin
+  try
+    SynEditC.Lines.SaveToFile(FileName);
+    SynEditC.Modified := False;
+    btnSave_C.Enabled := False;
+    btnSaveAs_C.Enabled := False;
+    tsC.Caption := 'C - ' + shortFileName(FileName);
   except
 
   end;
