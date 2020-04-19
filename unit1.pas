@@ -207,6 +207,7 @@ type
     rbLittleBytes: TRadioButton;
     dlgSave_PascalScript: TSaveDialog;
     Script_Calc: TPSScript;
+    sgConvertPower: TStringGrid;
     sgConvertTime: TStringGrid;
     sgBytes: TStringGrid;
     sgBase: TStringGrid;
@@ -245,6 +246,7 @@ type
     btnCaret_PascalScript: TToolButton;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    tsConvertPower: TTabSheet;
     tsConvertTemperature: TTabSheet;
     tsConvertTime: TTabSheet;
     ToolBar12: TToolBar;
@@ -455,6 +457,7 @@ type
     procedure sgConstantMathClick(Sender: TObject);
     procedure sgBaseEditingDone(Sender: TObject);
     procedure edtBaseCustomChange(Sender: TObject);
+    procedure sgConvertPowerEditingDone(Sender: TObject);
     procedure sgConvertTemperatureEditingDone(Sender: TObject);
     procedure sgConvertTimeEditingDone(Sender: TObject);
     procedure sgExpr_CalcEditingDone(Sender: TObject);
@@ -561,6 +564,7 @@ type
 
     procedure updateTime(d: TDateTime);
     procedure updateTemperature(C: Float);
+    procedure updatePower(P: Float);
 
     procedure updateTabVisible;
     procedure updateTSPC(ts: TTabSheet; pc: TPageControl);
@@ -1683,6 +1687,25 @@ begin
   sgBase.Cells[0, 5] := 'custom[' + IntToStr(edtBaseCustom.Value) + ']';
   sgBase.Selection   := Rect(1, 5, 1, 5);
   sgBaseEditingDone(Sender);
+end;
+
+procedure TFormMain.sgConvertPowerEditingDone(Sender: TObject);
+var
+  P: Float;
+  sy: integer;
+begin
+  sy := sgConvertPower.Row;
+  if not TryStrToFloat(sgConvertPower.Cells[1, sy], P) then
+    Exit;
+  case sy of
+    1: // watt
+      updatePower(P);
+    2: // mW
+      updatePower(P / 1000.0);
+    3: // dBm
+      updatePower(power(10, P / 10) / 1000);
+    else
+  end;
 end;
 
 procedure TFormMain.sgConvertTemperatureEditingDone(Sender: TObject);
@@ -3437,12 +3460,19 @@ end;
 
 procedure TFormMain.updateTemperature(C: Float);
 begin
-  sgConvertTemperature.Cells[1, 1] := FloatToStr(C);
-  sgConvertTemperature.Cells[1, 2] := FloatToStr(C * 1.8 + 32);
-  sgConvertTemperature.Cells[1, 3] := FloatToStr(C + 273.15);
-  sgConvertTemperature.Cells[1, 4] := FloatToStr(C * 0.33);
-  sgConvertTemperature.Cells[1, 5] := FloatToStr(C * 0.8);
-  sgConvertTemperature.Cells[1, 6] := FloatToStr((C + 273.15) * 1.8);
+  sgConvertTemperature.Cells[1, 1] := FloatToStrF(C, ffFixed, 0, 2);
+  sgConvertTemperature.Cells[1, 2] := FloatToStrF(C * 1.8 + 32, ffFixed, 0, 2);
+  sgConvertTemperature.Cells[1, 3] := FloatToStrF(C + 273.15, ffFixed, 0, 2);
+  sgConvertTemperature.Cells[1, 4] := FloatToStrF(C * 0.33, ffFixed, 0, 2);
+  sgConvertTemperature.Cells[1, 5] := FloatToStrF(C * 0.8, ffFixed, 0, 2);
+  sgConvertTemperature.Cells[1, 6] := FloatToStrF((C + 273.15) * 1.8, ffFixed, 0, 2);
+end;
+
+procedure TFormMain.updatePower(P: Float);
+begin
+  sgConvertPower.Cells[1, 1] := FloatToStrF(P, ffFixed, 0, 2);
+  sgConvertPower.Cells[1, 2] := FloatToStrF(P * 1000, ffFixed, 0, 2);
+  sgConvertPower.Cells[1, 3] := FloatToStrF(10 * log10(P * 1000), ffFixed, 0, 2);
 end;
 
 procedure TFormMain.updateTabVisible;
