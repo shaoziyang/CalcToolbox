@@ -20,7 +20,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '1.2.1';
+  VERSION = '1.2.2';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -211,6 +211,7 @@ type
     sgBytes: TStringGrid;
     sgBase: TStringGrid;
     sgConstantPhysics: TStringGrid;
+    sgConvertTemperature: TStringGrid;
     sgExpr_Calc: TStringGrid;
     sgVar_Calc: TStringGrid;
     btnShowOption: TSpeedButton;
@@ -244,6 +245,7 @@ type
     btnCaret_PascalScript: TToolButton;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    tsConvertTemperature: TTabSheet;
     tsConvertTime: TTabSheet;
     ToolBar12: TToolBar;
     btnCmd_MPY: TToolButton;
@@ -453,6 +455,7 @@ type
     procedure sgConstantMathClick(Sender: TObject);
     procedure sgBaseEditingDone(Sender: TObject);
     procedure edtBaseCustomChange(Sender: TObject);
+    procedure sgConvertTemperatureEditingDone(Sender: TObject);
     procedure sgConvertTimeEditingDone(Sender: TObject);
     procedure sgExpr_CalcEditingDone(Sender: TObject);
     procedure sgExpr_CalcKeyPress(Sender: TObject; var Key: char);
@@ -557,6 +560,7 @@ type
       XOROUT: longword; InvIn: boolean; InvOut: boolean);
 
     procedure updateTime(d: TDateTime);
+    procedure updateTemperature(C: Float);
 
     procedure updateTabVisible;
     procedure updateTSPC(ts: TTabSheet; pc: TPageControl);
@@ -754,7 +758,6 @@ end;
 procedure TFormMain.FormCreate(Sender: TObject);
 var
   i: integer;
-  s: string;
 begin
 
   path := ExtractFilePath(Application.ExeName);
@@ -809,7 +812,7 @@ begin
 
     // Digit
     rbBigBytes.Checked      := ini.ReadBool('Digit', 'BigBytes', True);
-    pcDigit.ActivePageIndex := ini.ReadInteger('Digit', 'Page', 0);
+    pcDigit.ActivePageIndex := ini.ReadInteger('last', 'page_digit', 0);
 
     // crc
     edtCrcPolygon.Text   := ini.ReadString('CRC', 'poly', '1021');
@@ -857,6 +860,7 @@ begin
 
     // Convert Time
     btnConvertTimeNowClick(nil);
+    pcConvert.ActivePageIndex := ini.ReadInteger('last', 'page_convert', 0);
 
     // Script
     pcScript.PageIndex := ini.ReadInteger('last', 'page_script', 0);
@@ -971,7 +975,7 @@ begin
 
       // Digit
       ini.WriteBool('Digit', 'BigBytes', rbBigBytes.Checked);
-      ini.WriteInteger('Digit', 'Page', pcDigit.ActivePageIndex);
+      ini.WriteInteger('last', 'page_digit', pcDigit.ActivePageIndex);
 
       // crc
       ini.WriteString('CRC', 'poly', edtCrcPolygon.Text);
@@ -1008,6 +1012,9 @@ begin
 
       ini.WriteInteger('calc', 'tab_col1', sgExpr_Calc.ColWidths[1]);
       ini.WriteInteger('calc', 'mode', pcCalcMode.ActivePageIndex);
+
+      // convert
+      ini.WriteInteger('last', 'page_convert', pcConvert.ActivePageIndex);
 
       // Script
       ini.WriteInteger('last', 'page_script', pcScript.ActivePageIndex);
@@ -1546,6 +1553,8 @@ begin
         bufN := Length(ss);
         i    := 1;
         len  := 0;
+        s1   := '';
+        s2   := '';
         while i <= bufN do
         begin
           if ss[i] = '\' then
@@ -1674,6 +1683,31 @@ begin
   sgBase.Cells[0, 5] := 'custom[' + IntToStr(edtBaseCustom.Value) + ']';
   sgBase.Selection   := Rect(1, 5, 1, 5);
   sgBaseEditingDone(Sender);
+end;
+
+procedure TFormMain.sgConvertTemperatureEditingDone(Sender: TObject);
+var
+  T: Float;
+  sy: integer;
+begin
+  sy := sgConvertTemperature.Row;
+  if not TryStrToFloat(sgConvertTemperature.Cells[1, sy], T) then
+    Exit;
+  case sy of
+    1: // C
+      updateTemperature(T);
+    2: // F
+      updateTemperature((T - 32) / 1.8);
+    3: // Kelvin
+      updateTemperature(T - 273.15);
+    4: // newton
+      updateTemperature(T / 0.33);
+    5: // Reaumur
+      updateTemperature(T * 1.25);
+    6: // rankine
+      updateTemperature((T - 273.15) / 1.8);
+    else
+  end;
 end;
 
 procedure TFormMain.sgConvertTimeEditingDone(Sender: TObject);
@@ -2098,7 +2132,6 @@ end;
 procedure TFormMain.btnRun_CClick(Sender: TObject);
 var
   tmpfile: string;
-  s: string;
   CharBuffer: array [0..511] of char;
   ReadCount: integer;
 begin
@@ -2158,7 +2191,6 @@ end;
 procedure TFormMain.btnRun_LuaClick(Sender: TObject);
 var
   tmpfile: string;
-  s: string;
   CharBuffer: array [0..511] of char;
   ReadCount: integer;
 begin
@@ -2223,7 +2255,6 @@ end;
 procedure TFormMain.btnRun_MPYClick(Sender: TObject);
 var
   tmpfile: string;
-  s: string;
   CharBuffer: array [0..511] of char;
   ReadCount: integer;
 begin
@@ -3027,9 +3058,8 @@ end;
 // 5: express error
 function TFormMain.CalcExpression(Sender: TObject; expr: string): integer;
 var
-  s: string;
   res: boolean;
-  i, n: integer;
+  i: integer;
 begin
   Result := 2;
   expr   := Trim(expr);
@@ -3403,27 +3433,16 @@ begin
   except
 
   end;
-  //try
-  //  edtConvertTime.Text      := DateTimeToStr(d, DateTimefmt);
-  //  edtConvertTimeYear.Text  := IntToStr(YearOf(d));
-  //  edtConvertTimeMonth.Text := IntToStr(MonthOf(d));
-  //  edtConvertTimeDay.Text   := IntToStr(DayOf(d));
-  //  edtConvertTimeHour.Text  := IntToStr(HourOf(d));
-  //  edtConvertTimeMin.Text   := IntToStr(MinuteOf(d));
-  //  edtConvertTimeSec.Text   := IntToStr(SecondOf(d));
-  //  edtConvertTimeWeek.Text  := IntToStr(DayOfTheWeek(d));
-  //  edtConvertTimeYWeek.Text := IntToStr(WeekOf(d));
-  //  edtConvertTimeYDay.Text  := IntToStr(DayOfTheYear(d));
-  //  edtConvertTimeYHour.Text := IntToStr(HourOfTheYear(d));
-  //  edtConvertTimeYMin.Text  := IntToStr(MinuteOfTheYear(d));
-  //  edtConvertTimeYSec.Text  := IntToStr(SecondOfTheYear(d));
-  //  edtConvertTimeUTC.Text   := IntToStr(DateTimeToUnix(d));
-  //  edtPythonConvertTime.Text :=
-  //    Format('(%d, %d, %d, %d, %d, %d, %d, %d, %d)',
-  //    [YearOf(d), MonthOf(d), DayOf(d), HourOf(d), MinuteOf(d),
-  //    SecondOf(d), DayOfTheWeek(d) - 1, DayOfTheYear(d), 0]);
-  //except
-  //end;
+end;
+
+procedure TFormMain.updateTemperature(C: Float);
+begin
+  sgConvertTemperature.Cells[1, 1] := FloatToStr(C);
+  sgConvertTemperature.Cells[1, 2] := FloatToStr(C * 1.8 + 32);
+  sgConvertTemperature.Cells[1, 3] := FloatToStr(C + 273.15);
+  sgConvertTemperature.Cells[1, 4] := FloatToStr(C * 0.33);
+  sgConvertTemperature.Cells[1, 5] := FloatToStr(C * 0.8);
+  sgConvertTemperature.Cells[1, 6] := FloatToStr((C + 273.15) * 1.8);
 end;
 
 procedure TFormMain.updateTabVisible;

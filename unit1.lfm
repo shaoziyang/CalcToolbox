@@ -470,7 +470,7 @@ object FormMain: TFormMain
         Transparent = True
         object ToolButton1: TToolButton
           Left = 185
-          Height = 22
+          Height = 8
           Top = 0
           AutoSize = True
           Caption = ' '
@@ -506,7 +506,7 @@ object FormMain: TFormMain
         end
         object ToolButton4: TToolButton
           Left = 353
-          Height = 22
+          Height = 8
           Top = 0
           Caption = ' '
           Style = tbsSeparator
@@ -534,7 +534,7 @@ object FormMain: TFormMain
         end
         object ToolButton21: TToolButton
           Left = 505
-          Height = 22
+          Height = 8
           Top = 0
           Caption = 'ToolButton21'
           Style = tbsSeparator
@@ -782,49 +782,49 @@ object FormMain: TFormMain
         end
         object ToolButton9: TToolButton
           Left = 519
-          Height = 22
+          Height = 5
           Top = 2
           Caption = 'ToolButton9'
           Style = tbsDivider
         end
         object ToolButton8: TToolButton
           Left = 187
-          Height = 22
+          Height = 5
           Top = 24
           Caption = 'ToolButton8'
           Style = tbsDivider
         end
         object ToolButton10: TToolButton
           Left = 580
-          Height = 22
+          Height = 5
           Top = 46
           Caption = 'ToolButton10'
           Style = tbsDivider
         end
         object ToolButton11: TToolButton
           Left = 352
-          Height = 22
+          Height = 5
           Top = 46
           Caption = 'ToolButton11'
           Style = tbsDivider
         end
         object ToolButton12: TToolButton
           Left = 487
-          Height = 22
+          Height = 5
           Top = 46
           Caption = 'ToolButton12'
           Style = tbsDivider
         end
         object ToolButton15: TToolButton
           Left = 602
-          Height = 22
+          Height = 5
           Top = 24
           Caption = 'ToolButton15'
           Style = tbsDivider
         end
         object ToolButton16: TToolButton
           Left = 107
-          Height = 22
+          Height = 5
           Top = 46
           Caption = 'ToolButton16'
           Style = tbsDivider
@@ -874,27 +874,27 @@ object FormMain: TFormMain
     end
     object tsDigit: TTabSheet
       Caption = 'Digit'
-      ClientHeight = 488
-      ClientWidth = 684
+      ClientHeight = 479
+      ClientWidth = 656
       ImageIndex = 9
       object pcDigit: TPageControl
         Left = 0
-        Height = 488
+        Height = 479
         Top = 0
-        Width = 684
+        Width = 656
         ActivePage = tsBytes
         Align = alClient
         TabIndex = 0
         TabOrder = 0
         object tsBytes: TTabSheet
           Caption = 'Bytes'
-          ClientHeight = 458
-          ClientWidth = 676
+          ClientHeight = 449
+          ClientWidth = 648
           object ToolBar3: TToolBar
             Left = 0
             Height = 25
             Top = 0
-            Width = 676
+            Width = 648
             AutoSize = True
             Caption = 'ToolBar3'
             EdgeBorders = []
@@ -949,9 +949,9 @@ object FormMain: TFormMain
           end
           object sgBytes: TStringGrid
             Left = 0
-            Height = 433
+            Height = 424
             Top = 25
-            Width = 676
+            Width = 648
             Align = alClient
             AutoFillColumns = True
             ColCount = 2
@@ -969,7 +969,7 @@ object FormMain: TFormMain
             OnEditingDone = sgBytesEditingDone
             ColWidths = (
               159
-              513
+              468
             )
             Cells = (
               13
@@ -1040,7 +1040,7 @@ object FormMain: TFormMain
             OnEditingDone = sgBaseEditingDone
             ColWidths = (
               99
-              573
+              556
             )
             Cells = (
               6
@@ -1344,7 +1344,7 @@ object FormMain: TFormMain
               end
               object ToolButton26: TToolButton
                 Left = 560
-                Height = 22
+                Height = 8
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1594,7 +1594,7 @@ object FormMain: TFormMain
               end
               object ToolButton25: TToolButton
                 Left = 350
-                Height = 22
+                Height = 8
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1605,7 +1605,7 @@ object FormMain: TFormMain
               end
               object ToolButton24: TToolButton
                 Left = 381
-                Height = 22
+                Height = 8
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1625,7 +1625,7 @@ object FormMain: TFormMain
               end
               object ToolButton27: TToolButton
                 Left = 412
-                Height = 22
+                Height = 8
                 Top = 0
                 Caption = 'ToolButton27'
                 Style = tbsSeparator
@@ -1687,9 +1687,9 @@ object FormMain: TFormMain
         Height = 479
         Top = 0
         Width = 656
-        ActivePage = tsConvertTime
+        ActivePage = tsConvertTemperature
         Align = alClient
-        TabIndex = 0
+        TabIndex = 1
         TabOrder = 0
         object tsConvertTime: TTabSheet
           Caption = 'Time'
@@ -1716,7 +1716,7 @@ object FormMain: TFormMain
             OnEditingDone = sgConvertTimeEditingDone
             ColWidths = (
               267
-              377
+              360
             )
             Cells = (
               10
@@ -1847,27 +1847,83 @@ object FormMain: TFormMain
             OnEditingDone = edtConvertTimeYearEditingDone
           end
         end
+        object tsConvertTemperature: TTabSheet
+          Caption = 'Temperature'
+          ClientHeight = 449
+          ClientWidth = 648
+          object sgConvertTemperature: TStringGrid
+            Left = 0
+            Height = 449
+            Top = 0
+            Width = 648
+            Align = alClient
+            AutoFillColumns = True
+            ColCount = 2
+            DefaultColWidth = 80
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goSmoothScroll]
+            RowCount = 7
+            TabOrder = 0
+            TitleFont.CharSet = ANSI_CHARSET
+            TitleFont.Color = clBlack
+            TitleFont.Height = -14
+            TitleFont.Name = 'Courier New'
+            TitleFont.Pitch = fpFixed
+            TitleFont.Quality = fqDraft
+            OnEditingDone = sgConvertTemperatureEditingDone
+            ColWidths = (
+              209
+              435
+            )
+            Cells = (
+              8
+              0
+              0
+              'Thermometric Scale'
+              0
+              1
+              'Celsius'
+              0
+              2
+              'Fahrenheit'
+              0
+              3
+              'Kelvin'
+              0
+              4
+              'newton'
+              0
+              5
+              'Reaumur'
+              0
+              6
+              'rankine'
+              1
+              0
+              'Value'
+            )
+          end
+        end
       end
     end
     object tsCalc: TTabSheet
       Caption = 'Calc'
-      ClientHeight = 490
-      ClientWidth = 684
+      ClientHeight = 479
+      ClientWidth = 656
       object Splitter11: TSplitter
         Left = 300
-        Height = 490
+        Height = 479
         Top = 0
         Width = 5
         ResizeStyle = rsLine
       end
       object pnlCalc: TPanel
         Left = 0
-        Height = 490
+        Height = 479
         Top = 0
         Width = 300
         Align = alLeft
         BevelOuter = bvNone
-        ClientHeight = 490
+        ClientHeight = 479
         ClientWidth = 300
         TabOrder = 1
         object ToolBar10: TToolBar
@@ -1933,7 +1989,7 @@ object FormMain: TFormMain
         end
         inline SynEditFunc_Calc: TSynEdit
           Left = 0
-          Height = 321
+          Height = 310
           Top = 169
           Width = 300
           Align = alClient
@@ -2507,9 +2563,9 @@ object FormMain: TFormMain
       end
       object pcCalcMode: TPageControl
         Left = 305
-        Height = 490
+        Height = 479
         Top = 0
-        Width = 379
+        Width = 351
         ActivePage = TabSheet2
         Align = alClient
         TabIndex = 1
@@ -2556,13 +2612,13 @@ object FormMain: TFormMain
         end
         object TabSheet2: TTabSheet
           Caption = 'Table'
-          ClientHeight = 460
-          ClientWidth = 371
+          ClientHeight = 449
+          ClientWidth = 343
           object sgExpr_Calc: TStringGrid
             Left = 0
-            Height = 460
+            Height = 449
             Top = 0
-            Width = 371
+            Width = 343
             Align = alClient
             AlternateColor = 16775673
             AutoFillColumns = True
@@ -2581,7 +2637,7 @@ object FormMain: TFormMain
                 MaxSize = 180
                 SizePriority = 0
                 Title.Caption = 'Result'
-                Width = 145
+                Width = 117
               end>
             DefaultColWidth = 64
             DoubleBuffered = True
@@ -2601,7 +2657,7 @@ object FormMain: TFormMain
             ColWidths = (
               38
               167
-              145
+              117
             )
           end
         end
@@ -3289,7 +3345,7 @@ object FormMain: TFormMain
             end
             object ToolButton35: TToolButton
               Left = 128
-              Height = 22
+              Height = 8
               Top = 0
               Caption = 'ToolButton34'
               Style = tbsSeparator
@@ -3317,7 +3373,7 @@ object FormMain: TFormMain
             end
             object ToolButton28: TToolButton
               Left = 205
-              Height = 22
+              Height = 8
               Top = 0
               Caption = 'ToolButton17'
               Style = tbsSeparator
@@ -3913,7 +3969,7 @@ object FormMain: TFormMain
             end
             object ToolButton37: TToolButton
               Left = 128
-              Height = 22
+              Height = 8
               Top = 0
               Caption = 'ToolButton34'
               Style = tbsSeparator
@@ -3941,7 +3997,7 @@ object FormMain: TFormMain
             end
             object ToolButton29: TToolButton
               Left = 205
-              Height = 22
+              Height = 8
               Top = 0
               Caption = 'ToolButton17'
               Style = tbsSeparator
@@ -4533,7 +4589,7 @@ object FormMain: TFormMain
             end
             object ToolButton38: TToolButton
               Left = 128
-              Height = 22
+              Height = 8
               Top = 0
               Caption = 'ToolButton34'
               Style = tbsSeparator
@@ -4561,7 +4617,7 @@ object FormMain: TFormMain
             end
             object ToolButton30: TToolButton
               Left = 182
-              Height = 22
+              Height = 8
               Top = 0
               Caption = 'ToolButton17'
               Style = tbsSeparator
