@@ -1,13 +1,13 @@
 object FormMain: TFormMain
   Left = 319
-  Height = 480
+  Height = 509
   Top = 135
-  Width = 692
+  Width = 664
   AlphaBlend = True
   AlphaBlendValue = 0
   Caption = 'Calc Toolbox'
-  ClientHeight = 480
-  ClientWidth = 692
+  ClientHeight = 509
+  ClientWidth = 664
   Constraints.MinHeight = 480
   Constraints.MinWidth = 640
   Font.CharSet = ANSI_CHARSET
@@ -444,18 +444,18 @@ object FormMain: TFormMain
   LCLVersion = '2.0.6.0'
   object pcMain: TPageControl
     Left = 0
-    Height = 480
+    Height = 509
     Top = 0
-    Width = 692
-    ActivePage = tsAbout
+    Width = 664
+    ActivePage = tsConvert
     Align = alClient
     MultiLine = True
-    TabIndex = 6
+    TabIndex = 2
     TabOrder = 0
     Options = [nboMultiLine]
     object tsCRC: TTabSheet
       Caption = 'CRC'
-      ClientHeight = 490
+      ClientHeight = 488
       ClientWidth = 684
       object ToolBar1: TToolBar
         Left = 0
@@ -470,7 +470,7 @@ object FormMain: TFormMain
         Transparent = True
         object ToolButton1: TToolButton
           Left = 185
-          Height = 8
+          Height = 22
           Top = 0
           AutoSize = True
           Caption = ' '
@@ -506,7 +506,7 @@ object FormMain: TFormMain
         end
         object ToolButton4: TToolButton
           Left = 353
-          Height = 8
+          Height = 22
           Top = 0
           Caption = ' '
           Style = tbsSeparator
@@ -534,7 +534,7 @@ object FormMain: TFormMain
         end
         object ToolButton21: TToolButton
           Left = 505
-          Height = 8
+          Height = 22
           Top = 0
           Caption = 'ToolButton21'
           Style = tbsSeparator
@@ -629,7 +629,7 @@ object FormMain: TFormMain
       end
       object mmoCRC: TMemo
         Left = 0
-        Height = 309
+        Height = 307
         Top = 156
         Width = 684
         Align = alClient
@@ -782,49 +782,49 @@ object FormMain: TFormMain
         end
         object ToolButton9: TToolButton
           Left = 519
-          Height = 5
+          Height = 22
           Top = 2
           Caption = 'ToolButton9'
           Style = tbsDivider
         end
         object ToolButton8: TToolButton
           Left = 187
-          Height = 5
+          Height = 22
           Top = 24
           Caption = 'ToolButton8'
           Style = tbsDivider
         end
         object ToolButton10: TToolButton
           Left = 580
-          Height = 5
+          Height = 22
           Top = 46
           Caption = 'ToolButton10'
           Style = tbsDivider
         end
         object ToolButton11: TToolButton
           Left = 352
-          Height = 5
+          Height = 22
           Top = 46
           Caption = 'ToolButton11'
           Style = tbsDivider
         end
         object ToolButton12: TToolButton
           Left = 487
-          Height = 5
+          Height = 22
           Top = 46
           Caption = 'ToolButton12'
           Style = tbsDivider
         end
         object ToolButton15: TToolButton
           Left = 602
-          Height = 5
+          Height = 22
           Top = 24
           Caption = 'ToolButton15'
           Style = tbsDivider
         end
         object ToolButton16: TToolButton
           Left = 107
-          Height = 5
+          Height = 22
           Top = 46
           Caption = 'ToolButton16'
           Style = tbsDivider
@@ -833,7 +833,7 @@ object FormMain: TFormMain
       object ToolBar5: TToolBar
         Left = 0
         Height = 25
-        Top = 465
+        Top = 463
         Width = 684
         Align = alBottom
         AutoSize = True
@@ -874,27 +874,27 @@ object FormMain: TFormMain
     end
     object tsDigit: TTabSheet
       Caption = 'Digit'
-      ClientHeight = 490
+      ClientHeight = 488
       ClientWidth = 684
       ImageIndex = 9
       object pcDigit: TPageControl
         Left = 0
-        Height = 490
+        Height = 488
         Top = 0
         Width = 684
-        ActivePage = tsBigFloat
+        ActivePage = tsBytes
         Align = alClient
-        TabIndex = 2
+        TabIndex = 0
         TabOrder = 0
         object tsBytes: TTabSheet
           Caption = 'Bytes'
-          ClientHeight = 460
-          ClientWidth = 681
+          ClientHeight = 458
+          ClientWidth = 676
           object ToolBar3: TToolBar
             Left = 0
             Height = 25
             Top = 0
-            Width = 681
+            Width = 676
             AutoSize = True
             Caption = 'ToolBar3'
             EdgeBorders = []
@@ -949,9 +949,9 @@ object FormMain: TFormMain
           end
           object sgBytes: TStringGrid
             Left = 0
-            Height = 435
+            Height = 433
             Top = 25
-            Width = 681
+            Width = 676
             Align = alClient
             AutoFillColumns = True
             ColCount = 2
@@ -969,7 +969,7 @@ object FormMain: TFormMain
             OnEditingDone = sgBytesEditingDone
             ColWidths = (
               159
-              501
+              513
             )
             Cells = (
               13
@@ -1017,13 +1017,13 @@ object FormMain: TFormMain
         end
         object tsBase: TTabSheet
           Caption = 'Base'
-          ClientHeight = 460
-          ClientWidth = 681
+          ClientHeight = 458
+          ClientWidth = 676
           object sgBase: TStringGrid
             Left = 0
-            Height = 435
+            Height = 433
             Top = 25
-            Width = 681
+            Width = 676
             Align = alClient
             AutoFillColumns = True
             ColCount = 2
@@ -1037,11 +1037,10 @@ object FormMain: TFormMain
             TitleFont.Name = 'Courier New'
             TitleFont.Pitch = fpFixed
             TitleFont.Quality = fqDraft
-            OnClick = sgConstantMathClick
             OnEditingDone = sgBaseEditingDone
             ColWidths = (
               99
-              561
+              573
             )
             Cells = (
               6
@@ -1069,7 +1068,7 @@ object FormMain: TFormMain
             Left = 0
             Height = 25
             Top = 0
-            Width = 681
+            Width = 676
             AutoSize = True
             Caption = 'ToolBar6'
             EdgeBorders = []
@@ -1097,7 +1096,7 @@ object FormMain: TFormMain
         end
         object tsBigFloat: TTabSheet
           Caption = 'BigFloat'
-          ClientHeight = 460
+          ClientHeight = 458
           ClientWidth = 676
           object pnlBigFloatA: TPanel
             Left = 0
@@ -1189,12 +1188,12 @@ object FormMain: TFormMain
           end
           object pnlBigFloatC: TPanel
             Left = 0
-            Height = 210
+            Height = 208
             Top = 250
             Width = 676
             Align = alClient
             BevelOuter = bvNone
-            ClientHeight = 210
+            ClientHeight = 208
             ClientWidth = 676
             Constraints.MinHeight = 120
             TabOrder = 4
@@ -1345,7 +1344,7 @@ object FormMain: TFormMain
               end
               object ToolButton26: TToolButton
                 Left = 560
-                Height = 8
+                Height = 22
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1364,7 +1363,7 @@ object FormMain: TFormMain
             end
             object StaticText4: TStaticText
               Left = 0
-              Height = 185
+              Height = 183
               Top = 25
               Width = 32
               Align = alLeft
@@ -1374,7 +1373,7 @@ object FormMain: TFormMain
             end
             object mmoBigFloatC: TMemo
               Left = 32
-              Height = 185
+              Height = 183
               Top = 25
               Width = 644
               Align = alClient
@@ -1387,24 +1386,24 @@ object FormMain: TFormMain
         end
         object tsBigInt: TTabSheet
           Caption = 'BigInt'
-          ClientHeight = 460
-          ClientWidth = 681
+          ClientHeight = 458
+          ClientWidth = 676
           object pnlBigIntA: TPanel
             Left = 0
             Height = 120
             Top = 0
-            Width = 681
+            Width = 676
             Align = alTop
             BevelOuter = bvNone
             Caption = 'pnlBigIntA'
             ClientHeight = 120
-            ClientWidth = 681
+            ClientWidth = 676
             TabOrder = 0
             object mmoBigIntA: TMemo
               Left = 32
               Height = 120
               Top = 0
-              Width = 649
+              Width = 644
               Align = alClient
               Lines.Strings = (
                 ''
@@ -1428,7 +1427,7 @@ object FormMain: TFormMain
             Left = 0
             Height = 5
             Top = 120
-            Width = 681
+            Width = 676
             Align = alTop
             AutoSnap = False
             ResizeAnchor = akTop
@@ -1438,17 +1437,17 @@ object FormMain: TFormMain
             Left = 0
             Height = 120
             Top = 125
-            Width = 681
+            Width = 676
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 120
-            ClientWidth = 681
+            ClientWidth = 676
             TabOrder = 2
             object mmoBigIntB: TMemo
               Left = 32
               Height = 120
               Top = 0
-              Width = 649
+              Width = 644
               Align = alClient
               Lines.Strings = (
                 ''
@@ -1469,20 +1468,20 @@ object FormMain: TFormMain
           end
           object pnlBigIntC: TPanel
             Left = 0
-            Height = 210
+            Height = 208
             Top = 250
-            Width = 681
+            Width = 676
             Align = alClient
             BevelOuter = bvNone
-            ClientHeight = 210
-            ClientWidth = 681
+            ClientHeight = 208
+            ClientWidth = 676
             Constraints.MinHeight = 120
             TabOrder = 3
             object tbBigInt: TToolBar
               Left = 0
               Height = 22
               Top = 0
-              Width = 681
+              Width = 676
               AutoSize = True
               EdgeBorders = []
               Images = ilDigit
@@ -1595,7 +1594,7 @@ object FormMain: TFormMain
               end
               object ToolButton25: TToolButton
                 Left = 350
-                Height = 8
+                Height = 22
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1606,7 +1605,7 @@ object FormMain: TFormMain
               end
               object ToolButton24: TToolButton
                 Left = 381
-                Height = 8
+                Height = 22
                 Top = 0
                 Enabled = False
                 Style = tbsSeparator
@@ -1626,7 +1625,7 @@ object FormMain: TFormMain
               end
               object ToolButton27: TToolButton
                 Left = 412
-                Height = 8
+                Height = 22
                 Top = 0
                 Caption = 'ToolButton27'
                 Style = tbsSeparator
@@ -1645,7 +1644,7 @@ object FormMain: TFormMain
             end
             object StaticText7: TStaticText
               Left = 0
-              Height = 188
+              Height = 186
               Top = 22
               Width = 32
               Align = alLeft
@@ -1655,9 +1654,9 @@ object FormMain: TFormMain
             end
             object mmoBigIntC: TMemo
               Left = 32
-              Height = 188
+              Height = 186
               Top = 22
-              Width = 649
+              Width = 644
               Align = alClient
               OnMouseUp = mmoBigIntCMouseUp
               ReadOnly = True
@@ -1670,7 +1669,7 @@ object FormMain: TFormMain
             Left = 0
             Height = 5
             Top = 245
-            Width = 681
+            Width = 676
             Align = alTop
             AutoSnap = False
             ResizeAnchor = akTop
@@ -1681,50 +1680,92 @@ object FormMain: TFormMain
     end
     object tsConvert: TTabSheet
       Caption = 'Convert'
-      ClientHeight = 490
-      ClientWidth = 684
+      ClientHeight = 479
+      ClientWidth = 656
       object pcConvert: TPageControl
         Left = 0
-        Height = 490
+        Height = 479
         Top = 0
-        Width = 684
+        Width = 656
         ActivePage = tsConvertTime
         Align = alClient
         TabIndex = 0
         TabOrder = 0
         object tsConvertTime: TTabSheet
           Caption = 'Time'
-          ClientHeight = 460
-          ClientWidth = 676
-          object edtConvertTimeUTC: TEdit
-            Left = 104
-            Height = 25
-            Top = 192
-            Width = 130
-            OnEditingDone = edtConvertTimeUTCEditingDone
-            TabOrder = 13
-            Text = '0'
+          ClientHeight = 449
+          ClientWidth = 648
+          object sgConvertTime: TStringGrid
+            Left = 0
+            Height = 304
+            Top = 0
+            Width = 648
+            Align = alTop
+            AutoFillColumns = True
+            ColCount = 2
+            DefaultColWidth = 80
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goSmoothScroll]
+            RowCount = 11
+            TabOrder = 0
+            TitleFont.CharSet = ANSI_CHARSET
+            TitleFont.Color = clBlack
+            TitleFont.Height = -14
+            TitleFont.Name = 'Courier New'
+            TitleFont.Pitch = fpFixed
+            TitleFont.Quality = fqDraft
+            OnEditingDone = sgConvertTimeEditingDone
+            ColWidths = (
+              267
+              377
+            )
+            Cells = (
+              10
+              0
+              1
+              'DataTime (YYYY-MM-DD HH:MM:SS)'
+              0
+              2
+              'UTC'
+              0
+              3
+              'python time.localtime()'
+              0
+              5
+              'Weeks of the year'
+              0
+              6
+              'Days of the year'
+              0
+              7
+              'Hours of the year'
+              0
+              8
+              'Minutes of the year'
+              0
+              9
+              'Seconds of the year'
+              0
+              10
+              'Days of the week'
+              1
+              0
+              'Value'
+            )
           end
-          object Label3: TLabel
-            Left = 16
-            Height = 17
-            Top = 26
-            Width = 64
-            Caption = 'DateTime'
-            ParentColor = False
-          end
-          object Label4: TLabel
-            Left = 16
-            Height = 17
-            Top = 194
+          object btnConvertTimeNow: TSpeedButton
+            Left = 360
+            Height = 24
+            Top = 361
             Width = 24
-            Caption = 'UTC'
-            ParentColor = False
+            Flat = True
+            Images = ilMain
+            ImageIndex = 31
+            OnClick = btnConvertTimeNowClick
           end
           object edtConvertTimeYear: TLabeledEdit
-            Left = 104
+            Left = 8
             Height = 25
-            Top = 88
+            Top = 360
             Width = 48
             Alignment = taCenter
             EditLabel.Height = 17
@@ -1736,9 +1777,9 @@ object FormMain: TFormMain
             OnEditingDone = edtConvertTimeYearEditingDone
           end
           object edtConvertTimeMonth: TLabeledEdit
-            Left = 168
+            Left = 72
             Height = 25
-            Top = 88
+            Top = 360
             Width = 40
             Alignment = taCenter
             EditLabel.Height = 17
@@ -1750,9 +1791,9 @@ object FormMain: TFormMain
             OnEditingDone = edtConvertTimeYearEditingDone
           end
           object edtConvertTimeDay: TLabeledEdit
-            Left = 223
+            Left = 127
             Height = 25
-            Top = 88
+            Top = 360
             Width = 40
             Alignment = taCenter
             EditLabel.Height = 17
@@ -1764,9 +1805,9 @@ object FormMain: TFormMain
             OnEditingDone = edtConvertTimeYearEditingDone
           end
           object edtConvertTimeHour: TLabeledEdit
-            Left = 280
+            Left = 184
             Height = 25
-            Top = 88
+            Top = 360
             Width = 40
             Alignment = taCenter
             EditLabel.Height = 17
@@ -1778,9 +1819,9 @@ object FormMain: TFormMain
             OnEditingDone = edtConvertTimeYearEditingDone
           end
           object edtConvertTimeMin: TLabeledEdit
-            Left = 336
+            Left = 240
             Height = 25
-            Top = 88
+            Top = 360
             Width = 40
             Alignment = taCenter
             EditLabel.Height = 17
@@ -1792,9 +1833,9 @@ object FormMain: TFormMain
             OnEditingDone = edtConvertTimeYearEditingDone
           end
           object edtConvertTimeSec: TLabeledEdit
-            Left = 392
+            Left = 296
             Height = 25
-            Top = 88
+            Top = 360
             Width = 40
             Alignment = taCenter
             EditLabel.Height = 17
@@ -1802,143 +1843,6 @@ object FormMain: TFormMain
             EditLabel.Caption = 'Sec'
             EditLabel.ParentColor = False
             TabOrder = 6
-            Text = '1'
-            OnEditingDone = edtConvertTimeYearEditingDone
-          end
-          object btnConvertTimeNow: TSpeedButton
-            Left = 256
-            Height = 20
-            Top = 194
-            Width = 20
-            AutoSize = True
-            Flat = True
-            Images = ilMain
-            ImageIndex = 31
-            OnClick = btnConvertTimeNowClick
-          end
-          object edtConvertTime: TEdit
-            Left = 104
-            Height = 25
-            Top = 24
-            Width = 384
-            OnEditingDone = edtConvertTimeEditingDone
-            TabOrder = 0
-          end
-          object edtPythonConvertTime: TEdit
-            Left = 104
-            Height = 25
-            Hint = 'python time.localtime()'
-            Top = 240
-            Width = 384
-            OnEditingDone = edtPythonConvertTimeEditingDone
-            TabOrder = 14
-          end
-          object Label5: TLabel
-            Left = 16
-            Height = 17
-            Top = 243
-            Width = 48
-            Caption = 'python'
-            ParentColor = False
-          end
-          object edtConvertTimeWeek: TLabeledEdit
-            Left = 448
-            Height = 25
-            Hint = 'weekday'
-            Top = 88
-            Width = 40
-            Alignment = taCenter
-            EditLabel.Height = 17
-            EditLabel.Width = 40
-            EditLabel.Caption = 'Week'
-            EditLabel.ParentColor = False
-            ReadOnly = True
-            TabOrder = 7
-            Text = '1'
-            OnEditingDone = edtConvertTimeYearEditingDone
-          end
-          object edtConvertTimeYWeek: TLabeledEdit
-            Left = 104
-            Height = 25
-            Hint = 'Weeks of the year'
-            Top = 144
-            Width = 40
-            Alignment = taCenter
-            EditLabel.Height = 17
-            EditLabel.Hint = 'Weeks of the year'
-            EditLabel.Width = 40
-            EditLabel.Caption = 'YWeek'
-            EditLabel.ParentColor = False
-            ReadOnly = True
-            TabOrder = 8
-            Text = '1'
-            OnEditingDone = edtConvertTimeYearEditingDone
-          end
-          object edtConvertTimeYDay: TLabeledEdit
-            Left = 160
-            Height = 25
-            Hint = 'Days of the year'
-            Top = 144
-            Width = 48
-            Alignment = taCenter
-            EditLabel.Height = 17
-            EditLabel.Hint = 'Days of the year'
-            EditLabel.Width = 48
-            EditLabel.Caption = 'YDay'
-            EditLabel.ParentColor = False
-            ReadOnly = True
-            TabOrder = 9
-            Text = '1'
-            OnEditingDone = edtConvertTimeYearEditingDone
-          end
-          object edtConvertTimeYHour: TLabeledEdit
-            Left = 223
-            Height = 25
-            Hint = 'Hours of the year'
-            Top = 144
-            Width = 57
-            Alignment = taCenter
-            EditLabel.Height = 17
-            EditLabel.Hint = 'Hours of the year'
-            EditLabel.Width = 57
-            EditLabel.Caption = 'YHour'
-            EditLabel.ParentColor = False
-            ReadOnly = True
-            TabOrder = 10
-            Text = '1'
-            OnEditingDone = edtConvertTimeYearEditingDone
-          end
-          object edtConvertTimeYMin: TLabeledEdit
-            Left = 296
-            Height = 25
-            Hint = 'Minutes of the year'
-            Top = 144
-            Width = 72
-            Alignment = taCenter
-            EditLabel.Height = 17
-            EditLabel.Hint = 'Minutes of the year'
-            EditLabel.Width = 72
-            EditLabel.Caption = 'YMin'
-            EditLabel.ParentColor = False
-            ReadOnly = True
-            TabOrder = 11
-            Text = '1'
-            OnEditingDone = edtConvertTimeYearEditingDone
-          end
-          object edtConvertTimeYSec: TLabeledEdit
-            Left = 384
-            Height = 25
-            Hint = 'Seconds of the year'
-            Top = 144
-            Width = 104
-            Alignment = taCenter
-            EditLabel.Height = 17
-            EditLabel.Hint = 'Seconds of the year'
-            EditLabel.Width = 104
-            EditLabel.Caption = 'YSec'
-            EditLabel.ParentColor = False
-            ReadOnly = True
-            TabOrder = 12
             Text = '1'
             OnEditingDone = edtConvertTimeYearEditingDone
           end
@@ -2705,21 +2609,21 @@ object FormMain: TFormMain
     end
     object tsScript: TTabSheet
       Caption = 'Script'
-      ClientHeight = 450
+      ClientHeight = 488
       ClientWidth = 684
       object pcScript: TPageControl
         Left = 0
-        Height = 450
+        Height = 488
         Top = 0
         Width = 684
-        ActivePage = tsC
+        ActivePage = tsMicropython
         Align = alClient
         Images = ilMain
-        TabIndex = 3
+        TabIndex = 1
         TabOrder = 0
         object tsPascalScript: TTabSheet
           Caption = 'Pascal'
-          ClientHeight = 460
+          ClientHeight = 420
           ClientWidth = 676
           ImageIndex = 36
           inline SynEditPascalScript: TSynEdit
@@ -3292,7 +3196,7 @@ object FormMain: TFormMain
             end
             object ToolButton34: TToolButton
               Left = 128
-              Height = 22
+              Height = 8
               Top = 0
               Caption = 'ToolButton34'
               Style = tbsSeparator
@@ -3320,7 +3224,7 @@ object FormMain: TFormMain
             end
             object ToolButton17: TToolButton
               Left = 182
-              Height = 22
+              Height = 8
               Top = 0
               Caption = 'ToolButton17'
               Style = tbsSeparator
@@ -3334,7 +3238,7 @@ object FormMain: TFormMain
         end
         object tsMicropython: TTabSheet
           Caption = 'micropython'
-          ClientHeight = 460
+          ClientHeight = 458
           ClientWidth = 676
           ImageIndex = 39
           object ToolBar9: TToolBar
@@ -3398,7 +3302,7 @@ object FormMain: TFormMain
               OnClick = btnStop_MPYClick
             end
             object btnHelp_MPY: TToolButton
-              Left = 190
+              Left = 213
               Top = 0
               DropdownMenu = pmHelp_MPY
               ImageIndex = 28
@@ -3412,16 +3316,22 @@ object FormMain: TFormMain
               OnClick = btnClear_MPYClick
             end
             object ToolButton28: TToolButton
-              Left = 182
+              Left = 205
               Height = 22
               Top = 0
               Caption = 'ToolButton17'
               Style = tbsSeparator
             end
             object btnCaret_MPY: TToolButton
-              Left = 225
+              Left = 248
               Top = 0
               Caption = '1,1'
+            end
+            object btnCmd_MPY: TToolButton
+              Left = 182
+              Top = 0
+              ImageIndex = 42
+              OnClick = btnCmd_MPYClick
             end
           end
           inline SynEditMPY: TSynEdit
@@ -3941,7 +3851,7 @@ object FormMain: TFormMain
           end
           object mmoOutMPY: TMemo
             Left = 0
-            Height = 133
+            Height = 131
             Top = 327
             Width = 676
             Align = alClient
@@ -3952,7 +3862,7 @@ object FormMain: TFormMain
         end
         object tsLua: TTabSheet
           Caption = 'Lua'
-          ClientHeight = 460
+          ClientHeight = 458
           ClientWidth = 676
           ImageIndex = 40
           object ToolBar11: TToolBar
@@ -4016,7 +3926,7 @@ object FormMain: TFormMain
               OnClick = btnStop_LuaClick
             end
             object btnHelp_Lua: TToolButton
-              Left = 190
+              Left = 213
               Top = 0
               DropdownMenu = pmHelp_PascalScript
               ImageIndex = 28
@@ -4030,16 +3940,22 @@ object FormMain: TFormMain
               OnClick = btnClear_LuaClick
             end
             object ToolButton29: TToolButton
-              Left = 182
+              Left = 205
               Height = 22
               Top = 0
               Caption = 'ToolButton17'
               Style = tbsSeparator
             end
             object btnCaret_Lua: TToolButton
-              Left = 225
+              Left = 248
               Top = 0
               Caption = '1,1'
+            end
+            object btnCmd_Lua: TToolButton
+              Left = 182
+              Top = 0
+              ImageIndex = 42
+              OnClick = btnCmd_LuaClick
             end
           end
           inline SynEditLua: TSynEdit
@@ -4555,7 +4471,7 @@ object FormMain: TFormMain
           end
           object mmoOutLua: TMemo
             Left = 0
-            Height = 133
+            Height = 131
             Top = 327
             Width = 676
             Align = alClient
@@ -4566,7 +4482,7 @@ object FormMain: TFormMain
         end
         object tsC: TTabSheet
           Caption = 'C'
-          ClientHeight = 420
+          ClientHeight = 458
           ClientWidth = 676
           ImageIndex = 35
           object ToolBar12: TToolBar
@@ -5170,7 +5086,7 @@ object FormMain: TFormMain
           end
           object mmoOutC: TMemo
             Left = 0
-            Height = 93
+            Height = 131
             Top = 327
             Width = 676
             Align = alClient
@@ -5183,25 +5099,25 @@ object FormMain: TFormMain
     end
     object tsConstant: TTabSheet
       Caption = 'constant'
-      ClientHeight = 490
+      ClientHeight = 488
       ClientWidth = 684
       ImageIndex = 10
       object pcConstant: TPageControl
         Left = 0
-        Height = 490
+        Height = 488
         Top = 0
         Width = 684
-        ActivePage = tsConstantMath
+        ActivePage = tsConstantPhysics
         Align = alClient
-        TabIndex = 0
+        TabIndex = 1
         TabOrder = 0
         object tsConstantMath: TTabSheet
           Caption = 'Math'
-          ClientHeight = 460
+          ClientHeight = 420
           ClientWidth = 676
           object sgConstantMath: TStringGrid
             Left = 0
-            Height = 460
+            Height = 420
             Top = 0
             Width = 676
             Align = alClient
@@ -5231,7 +5147,7 @@ object FormMain: TFormMain
               end>
             DefaultColWidth = 64
             FixedCols = 0
-            RowCount = 50
+            RowCount = 13
             TabOrder = 0
             TitleFont.CharSet = ANSI_CHARSET
             TitleFont.Color = clBlack
@@ -5354,13 +5270,13 @@ object FormMain: TFormMain
         end
         object tsConstantPhysics: TTabSheet
           Caption = 'Physics'
-          ClientHeight = 460
-          ClientWidth = 681
+          ClientHeight = 458
+          ClientWidth = 676
           object sgConstantPhysics: TStringGrid
             Left = 0
-            Height = 460
+            Height = 458
             Top = 0
-            Width = 681
+            Width = 676
             Align = alClient
             AlternateColor = 16316664
             AutoEdit = False
@@ -5391,11 +5307,11 @@ object FormMain: TFormMain
               end            
               item
                 Title.Caption = 'Description'
-                Width = 348
+                Width = 343
               end>
             DefaultColWidth = 64
             FixedCols = 0
-            RowCount = 50
+            RowCount = 26
             TabOrder = 0
             TitleFont.CharSet = ANSI_CHARSET
             TitleFont.Color = clBlack
@@ -5408,7 +5324,7 @@ object FormMain: TFormMain
               58
               169
               85
-              348
+              343
             )
             Cells = (
               73
@@ -5638,16 +5554,16 @@ object FormMain: TFormMain
     end
     object tsAbout: TTabSheet
       Caption = 'About'
-      ClientHeight = 450
+      ClientHeight = 488
       ClientWidth = 684
       object Panel5: TPanel
         Left = 160
-        Height = 450
+        Height = 488
         Top = 0
         Width = 524
         Align = alClient
         BevelOuter = bvNone
-        ClientHeight = 450
+        ClientHeight = 488
         ClientWidth = 524
         TabOrder = 0
         object Panel6: TPanel
@@ -6067,18 +5983,18 @@ object FormMain: TFormMain
         end
         object Panel7: TPanel
           Left = 0
-          Height = 370
+          Height = 408
           Top = 80
           Width = 524
           Align = alClient
           BevelOuter = bvNone
           BorderWidth = 16
-          ClientHeight = 370
+          ClientHeight = 408
           ClientWidth = 524
           TabOrder = 1
           object pcAbout: TPageControl
             Left = 16
-            Height = 338
+            Height = 376
             Top = 16
             Width = 492
             ActivePage = tsChangeLog
@@ -6087,11 +6003,11 @@ object FormMain: TFormMain
             TabOrder = 0
             object tsChangeLog: TTabSheet
               Caption = 'Change Log'
-              ClientHeight = 308
+              ClientHeight = 346
               ClientWidth = 484
               object rmoAboutChangeLog: TRichMemo
                 Left = 0
-                Height = 308
+                Height = 346
                 Top = 0
                 Width = 484
                 Align = alClient
@@ -6224,14 +6140,14 @@ object FormMain: TFormMain
       end
       object Panel8: TPanel
         Left = 0
-        Height = 450
+        Height = 488
         Top = 0
         Width = 160
         Align = alLeft
         AutoSize = True
         BevelOuter = bvNone
         BorderWidth = 16
-        ClientHeight = 450
+        ClientHeight = 488
         ClientWidth = 160
         TabOrder = 1
         object imgLogo1: TImage
@@ -8364,7 +8280,7 @@ object FormMain: TFormMain
           Cursor = crHandPoint
           Left = 16
           Height = 57
-          Top = 377
+          Top = 415
           Width = 128
           Align = alBottom
           AutoSize = True
@@ -10728,7 +10644,7 @@ object FormMain: TFormMain
     left = 24
     top = 272
     Bitmap = {
-      4C692A0000001000000010000000D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
+      4C692B0000001000000010000000D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
@@ -12072,7 +11988,39 @@ object FormMain: TFormMain
       F200E5F2F200E5F2F200E5F2F200E5F2F200E5F2F200E5F2F200E5F2F200E5F2
       F200E5F2F200E5F2F200E5F2F200E5F2F200E5F2F200E5F2F200E5F2F200E5F2
       F200E5F2F200E5F2F200E5F2F200E5F2F200E5F2F200E5F2F200E5F2F200E5F2
-      F200E5F2F200E5F2F200E5F2F200
+      F200E5F2F200E5F2F200E5F2F200000001000000010000000100000001000000
+      0100000001000000010000000100000001000000010000000100000001000000
+      0100000001000000010000000100000001000000010000000100000001000000
+      0100000001000000010000000100000001000000010000000100000001000000
+      010000000100000001000000010097928FFF97928FFF97928FFF97928FFF9792
+      8FFF97928FFF97928FFF97928FFF97928FFF97928FFF97928FFF97928FFF9792
+      8FFF97928FFF97928FFF97928FFF97928FFFE0D9D3FFE0D9D3FFE0D9D3FFE0D9
+      D3FFE0D9D3FFE0D9D3FFE0D9D3FFE0D9D3FFE0D9D3FF917968FFE0D9D3FF9179
+      68FFE0D9D3FF917968FF97928FFF97928FFFCDCCCAFFCDCCCAFFCDCCCAFFCDCC
+      CAFFCDCCCAFFCDCCCAFFCDCCCAFFCDCCCAFFCDCCCAFFCDCCCAFFCDCCCAFFCDCC
+      CAFFCDCCCAFFCDCCCAFF97928FFF97928FFF000000FF000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF000000FF97928FFF97928FFF000000FF000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF000000FF97928FFF97928FFF000000FF000000FFFFFFFFFFFFFF
+      FFFF000000FF000000FF000000FF000000FFFFFFFFFF000000FF000000FF0000
+      00FF000000FF000000FF97928FFF97928FFF000000FFFFFFFFFF000000FF0000
+      00FFFFFFFFFF000000FFFFFFFFFF000000FFFFFFFFFF000000FF000000FF0000
+      00FF000000FF000000FF97928FFF97928FFF000000FFFFFFFFFF000000FF0000
+      00FF000000FF000000FF000000FF000000FFFFFFFFFFFFFFFFFF000000FF0000
+      00FF000000FF000000FF97928FFF97928FFF000000FFFFFFFFFF000000FF0000
+      00FFFFFFFFFF000000FFFFFFFFFF000000FF000000FFFFFFFFFF000000FF0000
+      00FF000000FF000000FF97928FFF97928FFF000000FF000000FFFFFFFFFFFFFF
+      FFFF000000FF000000FF000000FF000000FF000000FFFFFFFFFF000000FFFFFF
+      FFFFFFFFFFFF000000FF97928FFF97928FFF000000FF000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF000000FF97928FFF97928FFF000000FF000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF000000FF97928FFF97928FFF97928FFF97928FFF97928FFF9792
+      8FFF97928FFF97928FFF97928FFF97928FFF97928FFF97928FFF97928FFF9792
+      8FFF97928FFF97928FFF97928FFF000001000000010000000100000001000000
+      0100000001000000010000000100000001000000010000000100000001000000
+      0100000001000000010000000100
     }
   end
   object tmrAlpha: TTimer

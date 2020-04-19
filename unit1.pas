@@ -60,6 +60,8 @@ type
     btnClear_Calc: TToolButton;
     btnClear_Lua: TToolButton;
     btnClear_C: TToolButton;
+    btnCmd_Lua: TToolButton;
+    btnConvertTimeNow: TSpeedButton;
     btnHelp_Calc: TToolButton;
     btnHelp_Lua: TToolButton;
     btnHelp_C: TToolButton;
@@ -102,15 +104,12 @@ type
     dlgSave_Calc: TSaveDialog;
     dlgSave_Lua: TSaveDialog;
     dlgSave_C: TSaveDialog;
-    edtConvertTimeWeek: TLabeledEdit;
-    edtConvertTimeYHour: TLabeledEdit;
-    edtConvertTimeYMin: TLabeledEdit;
-    edtConvertTimeYSec: TLabeledEdit;
-    edtConvertTimeYWeek: TLabeledEdit;
-    edtConvertTimeYDay: TLabeledEdit;
-    edtPythonConvertTime: TEdit;
-    edtConvertTime: TEdit;
-    edtConvertTimeUTC: TEdit;
+    edtConvertTimeDay: TLabeledEdit;
+    edtConvertTimeHour: TLabeledEdit;
+    edtConvertTimeMin: TLabeledEdit;
+    edtConvertTimeMonth: TLabeledEdit;
+    edtConvertTimeSec: TLabeledEdit;
+    edtConvertTimeYear: TLabeledEdit;
     edtBigFloatPrec: TEdit;
     edtBytesNum: TEdit;
     edtCrcXOROUT: TEdit;
@@ -128,15 +127,6 @@ type
     Label1: TLabel;
     lbName: TLabel;
     Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
-    edtConvertTimeYear: TLabeledEdit;
-    edtConvertTimeMonth: TLabeledEdit;
-    edtConvertTimeDay: TLabeledEdit;
-    edtConvertTimeHour: TLabeledEdit;
-    edtConvertTimeMin: TLabeledEdit;
-    edtConvertTimeSec: TLabeledEdit;
-    Label5: TLabel;
     lbFont: TLabel;
     lbVer: TLabel;
     Memo1: TMemo;
@@ -217,13 +207,13 @@ type
     rbLittleBytes: TRadioButton;
     dlgSave_PascalScript: TSaveDialog;
     Script_Calc: TPSScript;
+    sgConvertTime: TStringGrid;
     sgBytes: TStringGrid;
     sgBase: TStringGrid;
     sgConstantPhysics: TStringGrid;
     sgExpr_Calc: TStringGrid;
     sgVar_Calc: TStringGrid;
     btnShowOption: TSpeedButton;
-    btnConvertTimeNow: TSpeedButton;
     edtBaseCustom: TSpinEdit;
     Shape2: TShape;
     Splitter1: TSplitter;
@@ -254,7 +244,9 @@ type
     btnCaret_PascalScript: TToolButton;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    tsConvertTime: TTabSheet;
     ToolBar12: TToolBar;
+    btnCmd_MPY: TToolButton;
     ToolButton30: TToolButton;
     ToolButton38: TToolButton;
     tsC: TTabSheet;
@@ -286,7 +278,6 @@ type
     tsScript: TTabSheet;
     tsChangeLog: TTabSheet;
     tsReadme: TTabSheet;
-    tsConvertTime: TTabSheet;
     tsConvert: TTabSheet;
     TrayIcon: TTrayIcon;
     tbBigInt: TToolBar;
@@ -382,6 +373,8 @@ type
     procedure btnClear_LuaClick(Sender: TObject);
     procedure btnClear_MPYClick(Sender: TObject);
     procedure btnClear_PascalScriptClick(Sender: TObject);
+    procedure btnCmd_LuaClick(Sender: TObject);
+    procedure btnCmd_MPYClick(Sender: TObject);
     procedure btnConvertTimeNowClick(Sender: TObject);
     procedure btnCrcCalcClick(Sender: TObject);
     procedure btnCrc_CRC16_CCITTClick(Sender: TObject);
@@ -438,11 +431,8 @@ type
       Shift: TShiftState; X, Y: integer);
     procedure edtBigFloatPrecEditingDone(Sender: TObject);
     procedure edtBytesNumChange(Sender: TObject);
-    procedure edtConvertTimeEditingDone(Sender: TObject);
-    procedure edtConvertTimeUTCEditingDone(Sender: TObject);
     procedure edtConvertTimeYearEditingDone(Sender: TObject);
     procedure edtCrcResultClick(Sender: TObject);
-    procedure edtPythonConvertTimeEditingDone(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -463,6 +453,7 @@ type
     procedure sgConstantMathClick(Sender: TObject);
     procedure sgBaseEditingDone(Sender: TObject);
     procedure edtBaseCustomChange(Sender: TObject);
+    procedure sgConvertTimeEditingDone(Sender: TObject);
     procedure sgExpr_CalcEditingDone(Sender: TObject);
     procedure sgExpr_CalcKeyPress(Sender: TObject; var Key: char);
     procedure sgVar_CalcEditingDone(Sender: TObject);
@@ -1279,29 +1270,6 @@ begin
 
 end;
 
-procedure TFormMain.edtConvertTimeEditingDone(Sender: TObject);
-var
-  d: TDateTime;
-begin
-  if TryStrToDateTime(edtConvertTime.Text, d, DateTimefmt) then
-    updateTime(d);
-end;
-
-procedure TFormMain.edtConvertTimeUTCEditingDone(Sender: TObject);
-var
-  d: TDateTime;
-  n: int64;
-begin
-  try
-    if TryStrToInt64(edtConvertTimeUTC.Text, n) then
-    begin
-      d := UnixToDateTime(n);
-      updateTime(d);
-    end;
-  except
-  end;
-end;
-
 procedure TFormMain.edtConvertTimeYearEditingDone(Sender: TObject);
 var
   d: TDateTime;
@@ -1327,42 +1295,6 @@ procedure TFormMain.edtCrcResultClick(Sender: TObject);
 begin
   if edtCrcResult.Text <> '' then
     Clipboard.AsText := edtCrcResult.Text;
-end;
-
-procedure TFormMain.edtPythonConvertTimeEditingDone(Sender: TObject);
-var
-  d: TDateTime;
-  ss: TStringList;
-  i: integer;
-  year, mon, day, hour, min, sec: dword;
-begin
-  ss := TStringList.Create;
-  try
-    try
-      if ExtractStrings([','], [' ', '(', ')'], PChar(edtPythonConvertTime.Text),
-        ss) > 5 then
-      begin
-        year := 0;
-        mon  := 0;
-        day  := 0;
-        hour := 0;
-        min  := 0;
-        sec  := 0;
-        TryStrToDWord(ss[0], year);
-        TryStrToDWord(ss[1], mon);
-        TryStrToDWord(ss[2], day);
-        TryStrToDWord(ss[3], hour);
-        TryStrToDWord(ss[4], min);
-        TryStrToDWord(ss[5], sec);
-        if TryEncodeDateTime(year, mon, day, hour, min, sec, 0, d) then
-          updateTime(d);
-      end;
-    except
-
-    end
-  finally
-    ss.Free;
-  end;
 end;
 
 procedure TFormMain.btnBigFloatAddClick(Sender: TObject);
@@ -1406,6 +1338,32 @@ end;
 procedure TFormMain.btnClear_PascalScriptClick(Sender: TObject);
 begin
   mmoOutPascalScript.Clear;
+end;
+
+procedure TFormMain.btnCmd_LuaClick(Sender: TObject);
+var
+  AProcess: TProcess;
+begin
+  AProcess := TProcess.Create(nil);
+  if use_external_lua then
+    AProcess.Executable := external_lua_bin_name
+  else
+    AProcess.Executable := ExtractFilePath(Application.ExeName) + LUA_BIN_NAME;
+  AProcess.Execute;
+  AProcess.Free;
+end;
+
+procedure TFormMain.btnCmd_MPYClick(Sender: TObject);
+var
+  AProcess: TProcess;
+begin
+  AProcess := TProcess.Create(nil);
+  if use_external_micropython then
+    AProcess.Executable := external_micropython_bin_name
+  else
+    AProcess.Executable := ExtractFilePath(Application.ExeName) + MICROPYTHON_BIN_NAME;
+  AProcess.Execute;
+  AProcess.Free;
 end;
 
 procedure TFormMain.btnConvertTimeNowClick(Sender: TObject);
@@ -1716,6 +1674,68 @@ begin
   sgBase.Cells[0, 5] := 'custom[' + IntToStr(edtBaseCustom.Value) + ']';
   sgBase.Selection   := Rect(1, 5, 1, 5);
   sgBaseEditingDone(Sender);
+end;
+
+procedure TFormMain.sgConvertTimeEditingDone(Sender: TObject);
+var
+  d: TDateTime;
+  sy: integer;
+  n: int64;
+  ss: TStringList;
+  year, mon, day, hour, min, sec: dword;
+begin
+  sy := sgConvertTime.Row;
+
+  case sy of
+    1: // DateTime
+    begin
+      if TryStrToDateTime(sgConvertTime.Cells[1, 1], d, DateTimefmt) then
+        updateTime(d);
+    end;
+    2:// UTC
+    begin
+      try
+        if TryStrToInt64(sgConvertTime.Cells[1, 2], n) then
+        begin
+          d := UnixToDateTime(n);
+          updateTime(d);
+        end;
+      except
+      end;
+    end;
+    3:// python
+    begin
+      ss := TStringList.Create;
+      try
+        try
+          if ExtractStrings([','], [' ', '(', ')'], PChar(sgConvertTime.Cells[1, 3]),
+            ss) > 5 then
+          begin
+            year := 0;
+            mon  := 0;
+            day  := 0;
+            hour := 0;
+            min  := 0;
+            sec  := 0;
+            TryStrToDWord(ss[0], year);
+            TryStrToDWord(ss[1], mon);
+            TryStrToDWord(ss[2], day);
+            TryStrToDWord(ss[3], hour);
+            TryStrToDWord(ss[4], min);
+            TryStrToDWord(ss[5], sec);
+            if TryEncodeDateTime(year, mon, day, hour, min, sec, 0, d) then
+              updateTime(d);
+          end;
+        except
+
+        end
+      finally
+        ss.Free;
+      end;
+    end;
+    else
+
+  end;
 end;
 
 procedure TFormMain.sgExpr_CalcEditingDone(Sender: TObject);
@@ -3359,26 +3379,51 @@ end;
 procedure TFormMain.updateTime(d: TDateTime);
 begin
   try
-    edtConvertTime.Text      := DateTimeToStr(d, DateTimefmt);
     edtConvertTimeYear.Text  := IntToStr(YearOf(d));
     edtConvertTimeMonth.Text := IntToStr(MonthOf(d));
     edtConvertTimeDay.Text   := IntToStr(DayOf(d));
     edtConvertTimeHour.Text  := IntToStr(HourOf(d));
     edtConvertTimeMin.Text   := IntToStr(MinuteOf(d));
     edtConvertTimeSec.Text   := IntToStr(SecondOf(d));
-    edtConvertTimeWeek.Text  := IntToStr(DayOfTheWeek(d));
-    edtConvertTimeYWeek.Text := IntToStr(WeekOf(d));
-    edtConvertTimeYDay.Text  := IntToStr(DayOfTheYear(d));
-    edtConvertTimeYHour.Text := IntToStr(HourOfTheYear(d));
-    edtConvertTimeYMin.Text  := IntToStr(MinuteOfTheYear(d));
-    edtConvertTimeYSec.Text  := IntToStr(SecondOfTheYear(d));
-    edtConvertTimeUTC.Text   := IntToStr(DateTimeToUnix(d));
-    edtPythonConvertTime.Text :=
+
+    sgConvertTime.Cells[1, 1] := DateTimeToStr(d, DateTimefmt);
+    sgConvertTime.Cells[1, 2] := IntToStr(DateTimeToUnix(d));
+    sgConvertTime.Cells[1, 3] :=
       Format('(%d, %d, %d, %d, %d, %d, %d, %d, %d)',
       [YearOf(d), MonthOf(d), DayOf(d), HourOf(d), MinuteOf(d),
       SecondOf(d), DayOfTheWeek(d) - 1, DayOfTheYear(d), 0]);
+
+    sgConvertTime.Cells[1, 4]  := '';
+    sgConvertTime.Cells[1, 5]  := IntToStr(WeekOfTheYear(d));
+    sgConvertTime.Cells[1, 6]  := IntToStr(DayOfTheYear(d));
+    sgConvertTime.Cells[1, 7]  := IntToStr(HourOfTheYear(d));
+    sgConvertTime.Cells[1, 8]  := IntToStr(DayOfTheYear(d));
+    sgConvertTime.Cells[1, 9]  := IntToStr(MinuteOfTheYear(d));
+    sgConvertTime.Cells[1, 10] := IntToStr(SecondOfTheYear(d));
   except
+
   end;
+  //try
+  //  edtConvertTime.Text      := DateTimeToStr(d, DateTimefmt);
+  //  edtConvertTimeYear.Text  := IntToStr(YearOf(d));
+  //  edtConvertTimeMonth.Text := IntToStr(MonthOf(d));
+  //  edtConvertTimeDay.Text   := IntToStr(DayOf(d));
+  //  edtConvertTimeHour.Text  := IntToStr(HourOf(d));
+  //  edtConvertTimeMin.Text   := IntToStr(MinuteOf(d));
+  //  edtConvertTimeSec.Text   := IntToStr(SecondOf(d));
+  //  edtConvertTimeWeek.Text  := IntToStr(DayOfTheWeek(d));
+  //  edtConvertTimeYWeek.Text := IntToStr(WeekOf(d));
+  //  edtConvertTimeYDay.Text  := IntToStr(DayOfTheYear(d));
+  //  edtConvertTimeYHour.Text := IntToStr(HourOfTheYear(d));
+  //  edtConvertTimeYMin.Text  := IntToStr(MinuteOfTheYear(d));
+  //  edtConvertTimeYSec.Text  := IntToStr(SecondOfTheYear(d));
+  //  edtConvertTimeUTC.Text   := IntToStr(DateTimeToUnix(d));
+  //  edtPythonConvertTime.Text :=
+  //    Format('(%d, %d, %d, %d, %d, %d, %d, %d, %d)',
+  //    [YearOf(d), MonthOf(d), DayOf(d), HourOf(d), MinuteOf(d),
+  //    SecondOf(d), DayOfTheWeek(d) - 1, DayOfTheYear(d), 0]);
+  //except
+  //end;
 end;
 
 procedure TFormMain.updateTabVisible;
