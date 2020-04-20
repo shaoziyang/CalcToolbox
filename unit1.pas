@@ -20,7 +20,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '1.2.2';
+  VERSION = '1.2.4';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -116,6 +116,8 @@ type
     edtCrcResult: TEdit;
     edtCrcPolygon: TEdit;
     edtCrcInitV: TEdit;
+    edtDecimalDigitsConvertPower: TSpinEdit;
+    edtDecimalDigitsConvertDistance: TSpinEdit;
     ilMain: TImageList;
     ilDigit: TImageList;
     ilOption: TImageList;
@@ -207,7 +209,9 @@ type
     rbLittleBytes: TRadioButton;
     dlgSave_PascalScript: TSaveDialog;
     Script_Calc: TPSScript;
+    sgConstantDecimalMultiple: TStringGrid;
     sgConvertPower: TStringGrid;
+    sgConvertDistance: TStringGrid;
     sgConvertTime: TStringGrid;
     sgBytes: TStringGrid;
     sgBase: TStringGrid;
@@ -218,6 +222,7 @@ type
     btnShowOption: TSpeedButton;
     edtBaseCustom: TSpinEdit;
     Shape2: TShape;
+    edtDecimalDigitsConvertTemperature: TSpinEdit;
     Splitter1: TSplitter;
     Splitter10: TSplitter;
     Splitter11: TSplitter;
@@ -246,6 +251,14 @@ type
     btnCaret_PascalScript: TToolButton;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    ToolBar13: TToolBar;
+    ToolBar14: TToolBar;
+    ToolBar7: TToolBar;
+    ToolButton14: TToolButton;
+    ToolButton23: TToolButton;
+    ToolButton31: TToolButton;
+    tsConstantDecimalMultiple: TTabSheet;
+    tsDistance: TTabSheet;
     tsConvertPower: TTabSheet;
     tsConvertTemperature: TTabSheet;
     tsConvertTime: TTabSheet;
@@ -457,6 +470,7 @@ type
     procedure sgConstantMathClick(Sender: TObject);
     procedure sgBaseEditingDone(Sender: TObject);
     procedure edtBaseCustomChange(Sender: TObject);
+    procedure sgConvertDistanceEditingDone(Sender: TObject);
     procedure sgConvertPowerEditingDone(Sender: TObject);
     procedure sgConvertTemperatureEditingDone(Sender: TObject);
     procedure sgConvertTimeEditingDone(Sender: TObject);
@@ -565,6 +579,7 @@ type
     procedure updateTime(d: TDateTime);
     procedure updateTemperature(C: Float);
     procedure updatePower(P: Float);
+    procedure updateDistance(V: Float);
 
     procedure updateTabVisible;
     procedure updateTSPC(ts: TTabSheet; pc: TPageControl);
@@ -866,6 +881,11 @@ begin
     btnConvertTimeNowClick(nil);
     pcConvert.ActivePageIndex := ini.ReadInteger('last', 'page_convert', 0);
 
+    edtDecimalDigitsConvertTemperature.Value :=
+      ini.ReadInteger('convert', 'DigitTemperature', 2);
+    edtDecimalDigitsConvertPower.Value    := ini.ReadInteger('convert', 'DigitPower', 3);
+    edtDecimalDigitsConvertDistance.Value := ini.ReadInteger('convert', 'DigitDistance', 4);
+
     // Script
     pcScript.PageIndex := ini.ReadInteger('last', 'page_script', 0);
 
@@ -1019,6 +1039,11 @@ begin
 
       // convert
       ini.WriteInteger('last', 'page_convert', pcConvert.ActivePageIndex);
+
+      ini.WriteInteger('convert',
+        'DigitTemperature', edtDecimalDigitsConvertTemperature.Value);
+      ini.WriteInteger('convert', 'DigitPower', edtDecimalDigitsConvertPower.Value);
+      ini.WriteInteger('convert', 'DigitDistance', edtDecimalDigitsConvertDistance.Value);
 
       // Script
       ini.WriteInteger('last', 'page_script', pcScript.ActivePageIndex);
@@ -1687,6 +1712,45 @@ begin
   sgBase.Cells[0, 5] := 'custom[' + IntToStr(edtBaseCustom.Value) + ']';
   sgBase.Selection   := Rect(1, 5, 1, 5);
   sgBaseEditingDone(Sender);
+end;
+
+procedure TFormMain.sgConvertDistanceEditingDone(Sender: TObject);
+var
+  V: Float;
+  sy: integer;
+begin
+  sy := sgConvertDistance.Row;
+  if not TryStrToFloat(sgConvertDistance.Cells[1, sy], V) then
+    Exit;
+  case sy of
+    1: // mm
+      updateDistance(V / 1000);
+    2: // m
+      updateDistance(V);
+    3: // km
+      updateDistance(V * 1000);
+    5: // mil
+      updateDistance(V * 0.0000254);
+    6: // inch
+      updateDistance(V * 0.0254);
+    7: // foot
+      updateDistance(V * 0.0254 * 12);
+    8: // yard
+      updateDistance(V * 0.0254 * 36);
+    9: // mile
+    updateDistance(V * 0.0254 * 36*1760);
+    10: //nautical mile (NM)
+    updateDistance(V * 1852);
+    11: //nautical mile (UK)
+    updateDistance(V * 1854.55);
+    12: //nautical mile (US)
+    updateDistance(V * 1851.01);
+    14: // chi
+    updateDistance(V /3);
+    15: // zhang
+    updateDistance(V *10/3);
+    else
+  end;
 end;
 
 procedure TFormMain.sgConvertPowerEditingDone(Sender: TObject);
@@ -3450,9 +3514,9 @@ begin
     sgConvertTime.Cells[1, 5]  := IntToStr(WeekOfTheYear(d));
     sgConvertTime.Cells[1, 6]  := IntToStr(DayOfTheYear(d));
     sgConvertTime.Cells[1, 7]  := IntToStr(HourOfTheYear(d));
-    sgConvertTime.Cells[1, 8]  := IntToStr(DayOfTheYear(d));
-    sgConvertTime.Cells[1, 9]  := IntToStr(MinuteOfTheYear(d));
-    sgConvertTime.Cells[1, 10] := IntToStr(SecondOfTheYear(d));
+    sgConvertTime.Cells[1, 8]  := IntToStr(MinuteOfTheYear(d));
+    sgConvertTime.Cells[1, 9]  := IntToStr(SecondOfTheYear(d));
+    sgConvertTime.Cells[1, 10] := IntToStr(DayOfTheWeek(d));
   except
 
   end;
@@ -3460,49 +3524,95 @@ end;
 
 procedure TFormMain.updateTemperature(C: Float);
 begin
-  sgConvertTemperature.Cells[1, 1] := FloatToStrF(C, ffFixed, 0, 2);
-  sgConvertTemperature.Cells[1, 2] := FloatToStrF(C * 1.8 + 32, ffFixed, 0, 2);
-  sgConvertTemperature.Cells[1, 3] := FloatToStrF(C + 273.15, ffFixed, 0, 2);
-  sgConvertTemperature.Cells[1, 4] := FloatToStrF(C * 0.33, ffFixed, 0, 2);
-  sgConvertTemperature.Cells[1, 5] := FloatToStrF(C * 0.8, ffFixed, 0, 2);
-  sgConvertTemperature.Cells[1, 6] := FloatToStrF((C + 273.15) * 1.8, ffFixed, 0, 2);
+  sgConvertTemperature.Cells[1, 1] :=
+    FloatToStrF(C, ffFixed, 0, edtDecimalDigitsConvertTemperature.Value);
+  sgConvertTemperature.Cells[1, 2] :=
+    FloatToStrF(C * 1.8 + 32, ffFixed, 0, edtDecimalDigitsConvertTemperature.Value);
+  sgConvertTemperature.Cells[1, 3] :=
+    FloatToStrF(C + 273.15, ffFixed, 0, edtDecimalDigitsConvertTemperature.Value);
+  sgConvertTemperature.Cells[1, 4] :=
+    FloatToStrF(C * 0.33, ffFixed, 0, edtDecimalDigitsConvertTemperature.Value);
+  sgConvertTemperature.Cells[1, 5] :=
+    FloatToStrF(C * 0.8, ffFixed, 0, edtDecimalDigitsConvertTemperature.Value);
+  sgConvertTemperature.Cells[1, 6] :=
+    FloatToStrF((C + 273.15) * 1.8, ffFixed, 0,
+    edtDecimalDigitsConvertTemperature.Value);
 end;
 
 procedure TFormMain.updatePower(P: Float);
 begin
-  sgConvertPower.Cells[1, 1] := FloatToStrF(P, ffFixed, 0, 2);
-  sgConvertPower.Cells[1, 2] := FloatToStrF(P * 1000, ffFixed, 0, 2);
-  sgConvertPower.Cells[1, 3] := FloatToStrF(10 * log10(P * 1000), ffFixed, 0, 2);
+  sgConvertPower.Cells[1, 1] :=
+    FloatToStrF(P, ffFixed, 0, edtDecimalDigitsConvertPower.Value);
+  sgConvertPower.Cells[1, 2] :=
+    FloatToStrF(P * 1000, ffFixed, 0, edtDecimalDigitsConvertPower.Value);
+  sgConvertPower.Cells[1, 3] :=
+    FloatToStrF(10 * log10(P * 1000), ffFixed, 0, edtDecimalDigitsConvertPower.Value);
+end;
+
+procedure TFormMain.updateDistance(V: Float);
+begin
+  sgConvertDistance.Cells[1, 1] :=
+    FloatToStrF(V * 1000, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 2] :=
+    FloatToStrF(V, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 3] :=
+    FloatToStrF(V / 1000, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 4] := '';
+  sgConvertDistance.Cells[1, 5] :=
+    FloatToStrF(V / 0.0000254, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 6] :=
+    FloatToStrF(V / 0.0254, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 7] :=
+    FloatToStrF(V / 0.0254 / 12, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 8] :=
+    FloatToStrF(V / 0.0254 / 36, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 9] :=
+    FloatToStrF(V / 0.0254 / 36/1760, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 10] :=
+    FloatToStrF(V / 1852, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 11] :=
+    FloatToStrF(V / 1854.55, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 12] :=
+    FloatToStrF(V / 1851.01, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 13] :=  '';
+  sgConvertDistance.Cells[1, 14] :=
+    FloatToStrF(V *3, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 15] :=
+    FloatToStrF(V *3/10, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
 end;
 
 procedure TFormMain.updateTabVisible;
 begin
-  tsCRC.TabVisible := ini.ReadBool('Option', 'CRC_Enabled', True);
+  tsCRC.TabVisible := ini.ReadBool('Enabled', 'CRC', True);
 
-  tsBase.TabVisible     := ini.ReadBool('Option', 'Base_Enabled', True);
-  tsBigFloat.TabVisible := ini.ReadBool('Option', 'BigFloat_Enabled', True);
-  tsBigInt.TabVisible   := ini.ReadBool('Option', 'BigInt_Enabled', True);
-  tsBytes.TabVisible    := ini.ReadBool('Option', 'Bytes_Enabled', True);
-  tsDigit.TabVisible    := ini.ReadBool('Option', 'Dital_Enabled', True);
+  tsBase.TabVisible     := ini.ReadBool('Enabled', 'Dital_Base', True);
+  tsBigFloat.TabVisible := ini.ReadBool('Enabled', 'Dital_BigFloat', True);
+  tsBigInt.TabVisible   := ini.ReadBool('Enabled', 'Dital_BigInt', True);
+  tsBytes.TabVisible    := ini.ReadBool('Enabled', 'Dital_Bytes', True);
+  tsDigit.TabVisible    := ini.ReadBool('Enabled', 'Dital', True);
   updateTSPC(tsDigit, pcDigit);
 
-  tsConvertTime.TabVisible := ini.ReadBool('Option', 'Time_Enabled', True);
-  tsConvert.TabVisible     := ini.ReadBool('Option', 'Convert_Enabled', True);
+  tsConvertTime.TabVisible  := ini.ReadBool('Enabled', 'Convert_Time', True);
+  tsConvertTemperature.TabVisible :=
+    ini.ReadBool('Enabled', 'Convert_Temperature', True);
+  tsConvertPower.TabVisible := ini.ReadBool('Enabled', 'Convert_Power', True);
+  tsConvert.TabVisible      := ini.ReadBool('Enabled', 'Convert', True);
   updateTSPC(tsConvert, pcConvert);
 
-  tsCalc.TabVisible := ini.ReadBool('Option', 'Calc_Enabled', True);
+  tsCalc.TabVisible := ini.ReadBool('Enabled', 'Calc', True);
 
-  tsPascalScript.TabVisible := ini.ReadBool('Option', 'Pascal_Enabled', True);
-  tsMicropython.TabVisible := ini.ReadBool('Option', 'micropython_Enabled', True);
-  tsLua.TabVisible    := ini.ReadBool('Option', 'Lua_Enabled', True);
-  tsC.TabVisible      := ini.ReadBool('Option', 'C_Enabled', True);
-  tsScript.TabVisible := ini.ReadBool('Option', 'Script_Enabled', True);
+  tsPascalScript.TabVisible := ini.ReadBool('Enabled', 'Script_Pascal', True);
+  tsMicropython.TabVisible := ini.ReadBool('Enabled', 'Script_micropython', True);
+  tsLua.TabVisible    := ini.ReadBool('Enabled', 'Script_Lua', True);
+  tsC.TabVisible      := ini.ReadBool('Enabled', 'Script_C', True);
+  tsScript.TabVisible := ini.ReadBool('Enabled', 'Script', True);
   updateTSPC(tsScript, pcScript);
 
-  tsConstantMath.TabVisible := ini.ReadBool('Option', 'ConstantMath_Enabled', True);
-  tsConstantPhysics.TabVisible :=
-    ini.ReadBool('Option', 'ConstantPhysics_Enabled', True);
-  tsConstant.TabVisible := ini.ReadBool('Option', 'Constant_Enabled', True);
+  tsConstantMath.TabVisible := ini.ReadBool('Enabled', 'Constant_Math', True);
+  tsConstantPhysics.TabVisible := ini.ReadBool('Enabled', 'Constant_Physics', True);
+  tsConstantDecimalMultiple.TabVisible :=
+    ini.ReadBool('Enabled', 'Constant_DecimalMultiple', True);
+  tsConstant.TabVisible := ini.ReadBool('Enabled', 'Constant', True);
   updateTSPC(tsConstant, pcConstant);
 end;
 
@@ -3510,6 +3620,8 @@ procedure TFormMain.updateTSPC(ts: TTabSheet; pc: TPageControl);
 var
   i, n, p: integer;
 begin
+  if not ts.TabVisible then
+    Exit;
   n := 0;
   for i := 0 to pc.PageCount - 1 do
   begin
