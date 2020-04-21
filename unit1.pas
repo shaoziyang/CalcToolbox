@@ -68,6 +68,8 @@ type
     btnNew_Calc: TToolButton;
     btnNew_Lua: TToolButton;
     btnNew_C: TToolButton;
+    btnNoteConvertTemperature: TSpeedButton;
+    btnNoteConvertPower: TSpeedButton;
     btnOpenGITEE: TSpeedButton;
     btnOpenGITHUB: TSpeedButton;
     btnOpenGITHUB1: TSpeedButton;
@@ -123,6 +125,7 @@ type
     ilOption: TImageList;
     ilTray: TImageList;
     ilAB: TImageList;
+    ilNoteIcon: TImageList;
     imgLaz: TImage;
     imgLogo: TImage;
     imgLogo1: TImage;
@@ -132,6 +135,8 @@ type
     lbFont: TLabel;
     lbVer: TLabel;
     Memo1: TMemo;
+    mmoNoteConvertTemperature: TMemo;
+    mmoNoteConvertDistance: TMemo;
     miPascalScriptHelpDemo10: TMenuItem;
     miPascalScriptHelpDemo5: TMenuItem;
     miPascalScriptHelpDemo4: TMenuItem;
@@ -142,6 +147,7 @@ type
     miPascalScriptHelpDemo7: TMenuItem;
     miPascalScriptHelpDemo8: TMenuItem;
     miPascalScriptHelpDemo9: TMenuItem;
+    mmoNoteConvertPower: TMemo;
     mmoOutCalc: TMemo;
     mmoOutC: TMemo;
     mmoOutPascalScript: TMemo;
@@ -223,6 +229,7 @@ type
     edtBaseCustom: TSpinEdit;
     Shape2: TShape;
     edtDecimalDigitsConvertTemperature: TSpinEdit;
+    btnNoteConvertDistance: TSpeedButton;
     Splitter1: TSplitter;
     Splitter10: TSplitter;
     Splitter11: TSplitter;
@@ -416,6 +423,7 @@ type
     procedure btnNew_LuaClick(Sender: TObject);
     procedure btnNew_MPYClick(Sender: TObject);
     procedure btnNew_PascalScriptClick(Sender: TObject);
+    procedure btnNoteConvertDistanceClick(Sender: TObject);
     procedure btnOpenGITEEClick(Sender: TObject);
     procedure btnOpenGITHUBClick(Sender: TObject);
     procedure btnOpen_CalcClick(Sender: TObject);
@@ -777,6 +785,7 @@ end;
 procedure TFormMain.FormCreate(Sender: TObject);
 var
   i: integer;
+  s: string;
 begin
 
   path := ExtractFilePath(Application.ExeName);
@@ -884,7 +893,8 @@ begin
     edtDecimalDigitsConvertTemperature.Value :=
       ini.ReadInteger('convert', 'DigitTemperature', 2);
     edtDecimalDigitsConvertPower.Value    := ini.ReadInteger('convert', 'DigitPower', 3);
-    edtDecimalDigitsConvertDistance.Value := ini.ReadInteger('convert', 'DigitDistance', 4);
+    edtDecimalDigitsConvertDistance.Value :=
+      ini.ReadInteger('convert', 'DigitDistance', 4);
 
     // Script
     pcScript.PageIndex := ini.ReadInteger('last', 'page_script', 0);
@@ -953,6 +963,19 @@ begin
 
     // Constant
     pcConstant.PageIndex := ini.ReadInteger('last', 'page_constant', 0);
+
+    for i := 0 to ComponentCount - 1 do
+    begin
+      if copy(Components[i].Name, 1, Length('mmoNote')) = 'mmoNote' then
+      begin
+        s := Components[i].Name;
+        Delete(s, 1, 3);
+        TMemo(FindComponent(Components[i].Name)).Visible :=
+          ini.ReadBool('Note', s, True);
+        TSpeedButton((FindComponent('btn' + s))).ImageIndex :=
+          1 - ini.ReadInteger('Note', s, 1);
+      end;
+    end;
 
   except
 
@@ -1043,7 +1066,8 @@ begin
       ini.WriteInteger('convert',
         'DigitTemperature', edtDecimalDigitsConvertTemperature.Value);
       ini.WriteInteger('convert', 'DigitPower', edtDecimalDigitsConvertPower.Value);
-      ini.WriteInteger('convert', 'DigitDistance', edtDecimalDigitsConvertDistance.Value);
+      ini.WriteInteger('convert', 'DigitDistance',
+        edtDecimalDigitsConvertDistance.Value);
 
       // Script
       ini.WriteInteger('last', 'page_script', pcScript.ActivePageIndex);
@@ -1738,17 +1762,17 @@ begin
     8: // yard
       updateDistance(V * 0.0254 * 36);
     9: // mile
-    updateDistance(V * 0.0254 * 36*1760);
+      updateDistance(V * 0.0254 * 36 * 1760);
     10: //nautical mile (NM)
-    updateDistance(V * 1852);
+      updateDistance(V * 1852);
     11: //nautical mile (UK)
-    updateDistance(V * 1854.55);
+      updateDistance(V * 1854.55);
     12: //nautical mile (US)
-    updateDistance(V * 1851.01);
+      updateDistance(V * 1851.01);
     14: // chi
-    updateDistance(V /3);
+      updateDistance(V / 3);
     15: // zhang
-    updateDistance(V *10/3);
+      updateDistance(V * 10 / 3);
     else
   end;
 end;
@@ -2159,6 +2183,24 @@ begin
   Compiled_PascalScript  := False;
   if pmHis_PascalScript.Items.Count > 0 then
     pmHis_PascalScript.Items[0].Checked := False;
+end;
+
+procedure TFormMain.btnNoteConvertDistanceClick(Sender: TObject);
+var
+  mmo: TMemo;
+  btn: TSpeedButton;
+  s: string;
+begin
+  btn := TSpeedButton(Sender);
+  btn.ImageIndex := 1 - btn.ImageIndex;
+  s   := btn.Name;
+  Delete(s, 1, 3);
+  mmo := TMemo(FindComponent('mmo' + s));
+  if mmo <> nil then
+  begin
+    mmo.Visible := btn.ImageIndex = 0;
+    ini.WriteBool('Note', s, mmo.Visible);
+  end;
 end;
 
 procedure TFormMain.btnOpenGITEEClick(Sender: TObject);
@@ -3551,34 +3593,35 @@ end;
 
 procedure TFormMain.updateDistance(V: Float);
 begin
-  sgConvertDistance.Cells[1, 1] :=
+  sgConvertDistance.Cells[1, 1]  :=
     FloatToStrF(V * 1000, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
-  sgConvertDistance.Cells[1, 2] :=
+  sgConvertDistance.Cells[1, 2]  :=
     FloatToStrF(V, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
-  sgConvertDistance.Cells[1, 3] :=
+  sgConvertDistance.Cells[1, 3]  :=
     FloatToStrF(V / 1000, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
-  sgConvertDistance.Cells[1, 4] := '';
-  sgConvertDistance.Cells[1, 5] :=
+  sgConvertDistance.Cells[1, 4]  := '';
+  sgConvertDistance.Cells[1, 5]  :=
     FloatToStrF(V / 0.0000254, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
-  sgConvertDistance.Cells[1, 6] :=
+  sgConvertDistance.Cells[1, 6]  :=
     FloatToStrF(V / 0.0254, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
-  sgConvertDistance.Cells[1, 7] :=
+  sgConvertDistance.Cells[1, 7]  :=
     FloatToStrF(V / 0.0254 / 12, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
-  sgConvertDistance.Cells[1, 8] :=
+  sgConvertDistance.Cells[1, 8]  :=
     FloatToStrF(V / 0.0254 / 36, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
-  sgConvertDistance.Cells[1, 9] :=
-    FloatToStrF(V / 0.0254 / 36/1760, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+  sgConvertDistance.Cells[1, 9]  :=
+    FloatToStrF(V / 0.0254 / 36 / 1760, ffFixed, 0,
+    edtDecimalDigitsConvertDistance.Value);
   sgConvertDistance.Cells[1, 10] :=
     FloatToStrF(V / 1852, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
   sgConvertDistance.Cells[1, 11] :=
     FloatToStrF(V / 1854.55, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
   sgConvertDistance.Cells[1, 12] :=
     FloatToStrF(V / 1851.01, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
-  sgConvertDistance.Cells[1, 13] :=  '';
+  sgConvertDistance.Cells[1, 13] := '';
   sgConvertDistance.Cells[1, 14] :=
-    FloatToStrF(V *3, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+    FloatToStrF(V * 3, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
   sgConvertDistance.Cells[1, 15] :=
-    FloatToStrF(V *3/10, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+    FloatToStrF(V * 3 / 10, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
 end;
 
 procedure TFormMain.updateTabVisible;
