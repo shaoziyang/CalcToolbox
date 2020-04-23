@@ -20,7 +20,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '1.2.4';
+  VERSION = '1.2.8';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -55,19 +55,24 @@ type
     btnBigIntMod: TToolButton;
     btnBigIntSqrt: TToolButton;
     btnBigIntSub: TToolButton;
+    btnCaret_Graph: TToolButton;
     btnCaret_Lua: TToolButton;
     btnCaret_C: TToolButton;
+    btnClear_Graph: TToolButton;
     btnClear_Calc: TToolButton;
     btnClear_Lua: TToolButton;
     btnClear_C: TToolButton;
     btnCmd_Lua: TToolButton;
     btnConvertTimeNow: TSpeedButton;
+    btnHelp_Graph: TToolButton;
     btnHelp_Calc: TToolButton;
     btnHelp_Lua: TToolButton;
     btnHelp_C: TToolButton;
+    btnNew_Graph: TToolButton;
     btnNew_Calc: TToolButton;
     btnNew_Lua: TToolButton;
     btnNew_C: TToolButton;
+    btnNoteConvertMass: TSpeedButton;
     btnNoteConvertTemperature: TSpeedButton;
     btnNoteConvertPower: TSpeedButton;
     btnOpenGITEE: TSpeedButton;
@@ -78,22 +83,30 @@ type
     btnClear_MPY: TToolButton;
     btnHelp_MPY: TToolButton;
     btnNew_MPY: TToolButton;
+    btnOpen_Graph: TToolButton;
     btnOpen_Calc: TToolButton;
     btnOpen_C: TToolButton;
     btnOpen_MPY: TToolButton;
     btnOpen_Lua: TToolButton;
+    btnPanelMode_MPY: TToolButton;
+    btnPanelMode_Lua: TToolButton;
+    btnPanelMode_C: TToolButton;
     btnRun_C: TToolButton;
+    btnRun_Graph: TToolButton;
     btnRun_MPY: TToolButton;
     btnRun_Lua: TToolButton;
+    btnSaveAs_Graph: TToolButton;
     btnSaveAs_Calc: TToolButton;
     btnSaveAs_Lua: TToolButton;
     btnSaveAs_C: TToolButton;
+    btnSave_Graph: TToolButton;
     btnSave_Calc: TToolButton;
     btnSave_C: TToolButton;
     btnSave_MPY: TToolButton;
     btnSaveAs_MPY: TToolButton;
     btnSave_Lua: TToolButton;
     btnStop_C: TToolButton;
+    btnStop_Graph: TToolButton;
     btnStop_MPY: TToolButton;
     btnStop_Lua: TToolButton;
     cbbCalc: TComboBox;
@@ -118,6 +131,7 @@ type
     edtCrcResult: TEdit;
     edtCrcPolygon: TEdit;
     edtCrcInitV: TEdit;
+    edtDecimalDigitsConvertMass: TSpinEdit;
     edtDecimalDigitsConvertPower: TSpinEdit;
     edtDecimalDigitsConvertDistance: TSpinEdit;
     ilMain: TImageList;
@@ -135,6 +149,7 @@ type
     lbFont: TLabel;
     lbVer: TLabel;
     Memo1: TMemo;
+    mmoNoteConvertMass: TMemo;
     mmoNoteConvertTemperature: TMemo;
     mmoNoteConvertDistance: TMemo;
     miPascalScriptHelpDemo10: TMenuItem;
@@ -216,6 +231,7 @@ type
     dlgSave_PascalScript: TSaveDialog;
     Script_Calc: TPSScript;
     sgConstantDecimalMultiple: TStringGrid;
+    sgConvertMass: TStringGrid;
     sgConvertPower: TStringGrid;
     sgConvertDistance: TStringGrid;
     sgConvertTime: TStringGrid;
@@ -231,16 +247,16 @@ type
     edtDecimalDigitsConvertTemperature: TSpinEdit;
     btnNoteConvertDistance: TSpeedButton;
     Splitter1: TSplitter;
-    Splitter10: TSplitter;
+    splMPY: TSplitter;
     Splitter11: TSplitter;
     Splitter12: TSplitter;
-    Splitter13: TSplitter;
-    Splitter14: TSplitter;
+    splLua: TSplitter;
+    splC: TSplitter;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
     sgConstantMath: TStringGrid;
     Splitter5: TSplitter;
-    Splitter9: TSplitter;
+    splPascalScript: TSplitter;
     StaticText2: TStaticText;
     StaticText3: TStaticText;
     StaticText4: TStaticText;
@@ -248,6 +264,7 @@ type
     StaticText6: TStaticText;
     StaticText7: TStaticText;
     SynCppSyn: TSynCppSyn;
+    SynEditGraph: TSynEdit;
     SynEditFunc_Calc: TSynEdit;
     SynEditC: TSynEdit;
     SynEditPascalScript: TSynEdit;
@@ -258,12 +275,25 @@ type
     btnCaret_PascalScript: TToolButton;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    ToolBar16: TToolBar;
+    ToolButton42: TToolButton;
+    ToolButton43: TToolButton;
+    ToolButton44: TToolButton;
+    tsGraph: TTabSheet;
+    ToolBar15: TToolBar;
+    ToolButton41: TToolButton;
+    tsMass: TTabSheet;
     ToolBar13: TToolBar;
     ToolBar14: TToolBar;
     ToolBar7: TToolBar;
     ToolButton14: TToolButton;
     ToolButton23: TToolButton;
     ToolButton31: TToolButton;
+    btnPanelMode_PascalScript: TToolButton;
+    ToolButton32: TToolButton;
+    ToolButton33: TToolButton;
+    ToolButton39: TToolButton;
+    ToolButton40: TToolButton;
     tsConstantDecimalMultiple: TTabSheet;
     tsDistance: TTabSheet;
     tsConvertPower: TTabSheet;
@@ -431,6 +461,7 @@ type
     procedure btnOpen_LuaClick(Sender: TObject);
     procedure btnOpen_MPYClick(Sender: TObject);
     procedure btnOpen_PascalScriptClick(Sender: TObject);
+    procedure btnPanelMode_PascalScriptClick(Sender: TObject);
     procedure btnRun_CClick(Sender: TObject);
     procedure btnRun_LuaClick(Sender: TObject);
     procedure btnRun_MPYClick(Sender: TObject);
@@ -462,6 +493,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormWindowStateChange(Sender: TObject);
     procedure imgLazClick(Sender: TObject);
@@ -479,12 +511,16 @@ type
     procedure sgBaseEditingDone(Sender: TObject);
     procedure edtBaseCustomChange(Sender: TObject);
     procedure sgConvertDistanceEditingDone(Sender: TObject);
+    procedure sgConvertMassEditingDone(Sender: TObject);
     procedure sgConvertPowerEditingDone(Sender: TObject);
     procedure sgConvertTemperatureEditingDone(Sender: TObject);
     procedure sgConvertTimeEditingDone(Sender: TObject);
     procedure sgExpr_CalcEditingDone(Sender: TObject);
     procedure sgExpr_CalcKeyPress(Sender: TObject; var Key: char);
     procedure sgVar_CalcEditingDone(Sender: TObject);
+    procedure splPascalScriptMoved(Sender: TObject);
+    procedure SynEditGraphStatusChange(Sender: TObject;
+      Changes: TSynStatusChanges);
     procedure SynEditCChange(Sender: TObject);
     procedure SynEditCStatusChange(Sender: TObject; Changes: TSynStatusChanges);
     procedure SynEditLuaChange(Sender: TObject);
@@ -527,9 +563,10 @@ type
 
     Script_Calc_CodeVar, Script_Calc_CodeFunc, Script_Calc_CodeMain: string;
 
-    procedure mmoOutAdd(var mmo: TMemo; msg: string);
+    procedure mmoOutPosCheck(syn: TSynEdit; mmo: TMemo);
 
     function shortFileName(FileName: string): string;
+    procedure mmoOutAdd(var mmo: TMemo; msg: string);
     procedure mmoOutAdd_PascalScript(msg: string);
     procedure mmoOutAdd_MPY(msg: string);
     procedure mmoOutAdd_Lua(msg: string);
@@ -588,6 +625,7 @@ type
     procedure updateTemperature(C: Float);
     procedure updatePower(P: Float);
     procedure updateDistance(V: Float);
+    procedure updateMass(M: Float);
 
     procedure updateTabVisible;
     procedure updateTSPC(ts: TTabSheet; pc: TPageControl);
@@ -607,15 +645,31 @@ var
 implementation
 
 uses
-  uCRC, uBase, unit2;
+  uCRC, uBase, unit2, unit3;
 
 
 {$R *.lfm}
 
 {$I NewFileTemplate.pas}
 
-{ pascal script addon functions
-}
+{ pascal script grapg addon functions }
+
+procedure PSG_Widows(Left, Top, Width, Height:integer);
+begin
+  FormGraph.Left:=Left;
+  FormGraph.Top:=Top;
+  FormGraph.ClientWidth:=Width;
+  FormGraph.ClientHeight:=Height;
+end;
+
+procedure PSG_Widows(Caption:string);
+begin
+  FormGraph.Caption:=Caption;
+end;
+
+{ graph addon end }
+
+{ pascal script addon functions }
 
 procedure PSreservedprint(sep: string; v: array of variant);
 var
@@ -895,12 +949,20 @@ begin
     edtDecimalDigitsConvertPower.Value    := ini.ReadInteger('convert', 'DigitPower', 3);
     edtDecimalDigitsConvertDistance.Value :=
       ini.ReadInteger('convert', 'DigitDistance', 4);
+    edtDecimalDigitsConvertMass.Value     :=
+      ini.ReadInteger('convert', 'DigitMass', 3);
+
 
     // Script
     pcScript.PageIndex := ini.ReadInteger('last', 'page_script', 0);
 
     // pascal script
-    SynEditPascalScript.Height := ini.ReadInteger('PascalScript', 'Height', 300);
+    if ini.ReadBool('PascalScript', 'Vert', False) then
+      splPascalScript.Align := alTop
+    else
+      splPascalScript.Align := alLeft;
+    btnPanelMode_PascalScriptClick(btnPanelMode_PascalScript);
+
     EditorAutoSaveFileName_PascalScript :=
       ExtractFilePath(Application.ExeName) + 'autosave.pas';
     if FileExists(EditorAutoSaveFileName_PascalScript) then
@@ -915,7 +977,12 @@ begin
     Compiled_PascalScript := False;
 
     // micropython
-    SynEditMPY.Height := ini.ReadInteger('micropython', 'Height', 300);
+    if ini.ReadBool('MPY', 'Vert', False) then
+      splMPY.Align := alTop
+    else
+      splMPY.Align := alLeft;
+    btnPanelMode_PascalScriptClick(btnPanelMode_MPY);
+
     EditorAutoSaveFileName_micropython :=
       ExtractFilePath(Application.ExeName) + 'autosave.py';
     if FileExists(EditorAutoSaveFileName_micropython) then
@@ -927,12 +994,17 @@ begin
       pmAddHis(pmHis_MPY, ini.ReadString('HisFile_micropython', IntToStr(i), ''));
 
     use_external_micropython      :=
-      ini.ReadBool('micropython', 'use_external_micropython', False);
+      ini.ReadBool('MPY', 'use_external_micropython', False);
     external_micropython_bin_name :=
-      ini.ReadString('micropython', 'external_micropythn_bin', '');
+      ini.ReadString('MPY', 'external_micropythn_bin', '');
 
     // Lua
-    SynEditLua.Height := ini.ReadInteger('Lua', 'Height', 300);
+    if ini.ReadBool('Lua', 'Vert', False) then
+      splLua.Align := alTop
+    else
+      splLua.Align := alLeft;
+    btnPanelMode_PascalScriptClick(btnPanelMode_Lua);
+
     EditorAutoSaveFileName_Lua :=
       ExtractFilePath(Application.ExeName) + 'autosave.lua';
     if FileExists(EditorAutoSaveFileName_Lua) then
@@ -947,7 +1019,12 @@ begin
     external_lua_bin_name := ini.ReadString('lua', 'external_lua_bin', '');
 
     // C
-    SynEditC.Height := ini.ReadInteger('C', 'Height', 300);
+    if ini.ReadBool('C', 'Vert', False) then
+      splC.Align := alTop
+    else
+      splC.Align := alLeft;
+    btnPanelMode_PascalScriptClick(btnPanelMode_C);
+
     EditorAutoSaveFileName_C :=
       ExtractFilePath(Application.ExeName) + 'autosave.c';
     if FileExists(EditorAutoSaveFileName_C) then
@@ -1068,12 +1145,12 @@ begin
       ini.WriteInteger('convert', 'DigitPower', edtDecimalDigitsConvertPower.Value);
       ini.WriteInteger('convert', 'DigitDistance',
         edtDecimalDigitsConvertDistance.Value);
+      ini.WriteInteger('convert', 'DigitMass', edtDecimalDigitsConvertMass.Value);
 
       // Script
       ini.WriteInteger('last', 'page_script', pcScript.ActivePageIndex);
 
       // pascal script
-      ini.WriteInteger('PascalScript', 'Height', SynEditPascalScript.Height);
       SynEditPascalScript.Lines.SaveToFile(EditorAutoSaveFileName_PascalScript);
 
       ini.EraseSection('HisFile_PascalScript');
@@ -1083,7 +1160,6 @@ begin
           pmHis_PascalScript.Items[i].Caption);
 
       // micropython
-      ini.WriteInteger('micropython', 'Height', SynEditMPY.Height);
       SynEditMPY.Lines.SaveToFile(EditorAutoSaveFileName_micropython);
 
       ini.EraseSection('HisFile_micropython');
@@ -1093,7 +1169,6 @@ begin
           pmHis_MPY.Items[i].Caption);
 
       // Lua
-      ini.WriteInteger('Lua', 'Height', SynEditLua.Height);
       SynEditLua.Lines.SaveToFile(EditorAutoSaveFileName_Lua);
 
       ini.EraseSection('HisFile_Lua');
@@ -1103,7 +1178,6 @@ begin
           pmHis_Lua.Items[i].Caption);
 
       // C
-      ini.WriteInteger('C', 'Height', SynEditC.Height);
       SynEditC.Lines.SaveToFile(EditorAutoSaveFileName_C);
 
       ini.EraseSection('HisFile_C');
@@ -1174,6 +1248,16 @@ begin
       end;
     end;
   end;
+end;
+
+procedure TFormMain.FormResize(Sender: TObject);
+begin
+  mmoOutPosCheck(SynEditPascalScript, mmoOutPascalScript);
+  mmoOutPosCheck(SynEditMPY, mmoOutMPY);
+  mmoOutPosCheck(SynEditLua, mmoOutLua);
+  mmoOutPosCheck(SynEditC, mmoOutC);
+  if pcCalcMode.Width = 0 then
+    pnlCalc.Width := Width - 40;
 end;
 
 procedure TFormMain.FormShow(Sender: TObject);
@@ -1777,6 +1861,54 @@ begin
   end;
 end;
 
+procedure TFormMain.sgConvertMassEditingDone(Sender: TObject);
+var
+  M: Float;
+  sy: integer;
+begin
+  sy := sgConvertMass.Row;
+  if not TryStrToFloat(sgConvertMass.Cells[1, sy], M) then
+    Exit;
+  case sy of
+    1: // gram
+      updateMass(M / 1000);
+    2: // kilogram
+      updateMass(M);
+    3: // tonne
+      updateMass(M * 1000);
+    4: // ton (UK)
+      updateMass(M * 1000 / 0.984206527611061);
+    5: // ton (US)
+      updateMass(M * 1000 / 1.10231131092439);
+    6: // carat
+      updateMass(M / 5000);
+    7: // ounce (oz)
+      updateMass(M / 35.2739619495804);
+    8: // ounce (troy)
+      updateMass(M / 32.150746568628);
+    9: // pound (lb)
+      updateMass(M / 2.20462262184878);
+    10: // pound (troy)
+      updateMass(M / 2.679228880719);
+    11: // stone (st)
+      updateMass(M / 0.15747304441777);
+    12: // slug
+      updateMass(M / 0.068521765843675);
+    13: // hundredweight (UK)
+      updateMass(M / 0.019684130552221);
+    14: // hundredweight (UK)
+      updateMass(M / 0.022046226218488);
+
+    16: // qian
+      updateMass(M / 200);
+    17: // liang
+      updateMass(M / 20);
+    18: // jin
+      updateMass(M / 2);
+    else
+  end;
+end;
+
 procedure TFormMain.sgConvertPowerEditingDone(Sender: TObject);
 var
   P: Float;
@@ -1966,6 +2098,33 @@ begin
   if sgVar_Calc.Cells[0, sgVar_Calc.RowCount - 1] <> '' then
     sgVar_Calc.RowCount := sgVar_Calc.RowCount + 1;
 
+end;
+
+procedure TFormMain.splPascalScriptMoved(Sender: TObject);
+var
+  spl: TSplitter;
+  syn: TSynEdit;
+  btn: TToolButton;
+  s: string;
+begin
+  spl := TSplitter(Sender);
+  s   := spl.Name;
+  Delete(s, 1, Length('spl'));
+  syn := TSynEdit(FindComponent('SynEdit' + s));
+  if spl.Align = alLeft then
+    ini.WriteInteger(s, 'Width', syn.Width)
+  else
+    ini.WriteInteger(s, 'Height', syn.Height);
+end;
+
+procedure TFormMain.SynEditGraphStatusChange(Sender: TObject;
+  Changes: TSynStatusChanges);
+begin
+  btnCaret_Graph.Caption := IntToStr(SynEditGraph.CaretX) + ', ' +
+    IntToStr(SynEditGraph.CaretY);
+  if SynEditGraph.SelAvail then
+    btnCaret_Graph.Caption := btnCaret_Graph.Caption + ' Sel: ' +
+      IntToStr(Length(SynEditGraph.SelText));
 end;
 
 procedure TFormMain.SynEditCChange(Sender: TObject);
@@ -2199,6 +2358,7 @@ begin
   if mmo <> nil then
   begin
     mmo.Visible := btn.ImageIndex = 0;
+    mmo.Top     := btn.Top + 20;
     ini.WriteBool('Note', s, mmo.Visible);
   end;
 end;
@@ -2256,6 +2416,38 @@ begin
     LoadFile_PascalScript(dlgOpen_PascalScript.FileName);
     pmAddHis(pmHis_PascalScript, dlgOpen_PascalScript.FileName);
   end;
+end;
+
+procedure TFormMain.btnPanelMode_PascalScriptClick(Sender: TObject);
+var
+  spl: TSplitter;
+  syn: TSynEdit;
+  btn: TToolButton;
+  s: string;
+begin
+  btn := TToolButton(Sender);
+  s   := btn.Name;
+  Delete(s, 1, Length('btnPanelMode_'));
+  spl := TSplitter(FindComponent('spl' + s));
+  syn := TSynEdit(FindComponent('SynEdit' + s));
+  if spl.Align = alTop then
+  begin
+    syn.Align := alLeft;
+    syn.Width := ini.ReadInteger(s, 'Width', 320);
+    spl.Align := alLeft;
+    spl.Left  := syn.Left + 10;
+    btn.ImageIndex := 44;
+  end
+  else
+  begin
+    syn.Align  := alTop;
+    syn.Height := ini.ReadInteger(s, 'Height', 300);
+    ;
+    spl.Align := alTop;
+    spl.Top   := syn.Top + 10;
+    btn.ImageIndex := 43;
+  end;
+  ini.WriteBool(s, 'Vert', spl.Align = alLeft);
 end;
 
 procedure TFormMain.btnRun_CClick(Sender: TObject);
@@ -2681,8 +2873,8 @@ begin
     external_lua_bin_name := FormOption.edtExternal_lua_bin.Text;
     external_c_bin_name   := FormOption.edtExternal_c_bin.Text;
 
-    ini.WriteBool('micropython', 'use_external_micropython', use_external_micropython);
-    ini.WriteString('micropython', 'external_micropythn_bin',
+    ini.WriteBool('MPY', 'use_external_micropython', use_external_micropython);
+    ini.WriteString('MPY', 'external_micropythn_bin',
       external_micropython_bin_name);
     ini.WriteBool('lua', 'use_external_lua', use_external_lua);
     ini.WriteString('lua', 'external_lua_bin', external_lua_bin_name);
@@ -3303,6 +3495,20 @@ begin
   end;
 end;
 
+procedure TFormMain.mmoOutPosCheck(syn: TSynEdit; mmo: TMemo);
+begin
+  if syn.Align = alLeft then
+  begin
+    if mmo.Width = 0 then
+      syn.Width := pcScript.Width - 40;
+  end
+  else
+  begin
+    if mmo.Height = 0 then
+      syn.Height := pcScript.Height - 70;
+  end;
+end;
+
 function TFormMain.BufferToStr(buf: TByteArray; N: integer): string;
 var
   i: integer;
@@ -3622,6 +3828,48 @@ begin
     FloatToStrF(V * 3, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
   sgConvertDistance.Cells[1, 15] :=
     FloatToStrF(V * 3 / 10, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
+end;
+
+procedure TFormMain.updateMass(M: Float);
+begin
+  sgConvertMass.Cells[1, 1]  :=
+    FloatToStrF(M * 1000, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 2]  :=
+    FloatToStrF(M, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 3]  :=
+    FloatToStrF(M / 1000, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 4]  :=
+    FloatToStrF(M * 0.984206527611061 / 1000, ffFixed, 0,
+    edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 5]  :=
+    FloatToStrF(M * 1.10231131092439 / 1000, ffFixed, 0,
+    edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 6]  :=
+    FloatToStrF(M * 5000, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 7]  :=
+    FloatToStrF(M * 35.2739619495804, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 8]  :=
+    FloatToStrF(M * 32.150746568628, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 9]  :=
+    FloatToStrF(M * 2.20462262184878, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 10] :=
+    FloatToStrF(M * 2.679228880719, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 11] :=
+    FloatToStrF(M * 0.15747304441777, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 12] :=
+    FloatToStrF(M * 0.068521765843675, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 13] :=
+    FloatToStrF(M * 0.019684130552221, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 14] :=
+    FloatToStrF(M * 0.022046226218488, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 15] := '';
+  sgConvertMass.Cells[1, 16] :=
+    FloatToStrF(M * 200, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 17] :=
+    FloatToStrF(M * 20, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+  sgConvertMass.Cells[1, 18] :=
+    FloatToStrF(M * 2, ffFixed, 0, edtDecimalDigitsConvertMass.Value);
+
 end;
 
 procedure TFormMain.updateTabVisible;
