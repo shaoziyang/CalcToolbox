@@ -17,8 +17,8 @@ type
     Bevel2: TBevel;
     Bevel3: TBevel;
     Bevel4: TBevel;
-    btnOptionCancel: TBitBtn;
     btnOptionOK: TBitBtn;
+    btnOptionCancel: TBitBtn;
     btnOptionSelectFont: TBitBtn;
     chkErrlog_En: TCheckBox;
     chkUse_external_micropython: TCheckBox;
@@ -118,7 +118,7 @@ end;
 
 procedure TFormOption.FormCreate(Sender: TObject);
 begin
-  pcOption.ActivePageIndex:=0;
+  pcOption.ActivePageIndex := 0;
 end;
 
 procedure TFormOption.FormShow(Sender: TObject);
@@ -143,8 +143,8 @@ begin
       s := ''
     else
       s := tvFunctions.Items[i].Parent.Text + '_';
-    tvSetCheck(tvFunctions.Items[i], ini.ReadBool('Enabled',
-      s + tvFunctions.Items[i].Text, True));
+    tvSetCheck(tvFunctions.Items[i], ini.ReadBool('Enabled', s +
+      tvFunctions.Items[i].Text, True));
   end;
 
   chkUse_external_micropython.Checked := FormMain.use_external_micropython;
