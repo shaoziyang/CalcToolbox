@@ -1,0 +1,22 @@
+object FormGraph: TFormGraph
+  Left = 483
+  Height = 240
+  Top = 535
+  Width = 320
+  AlphaBlend = True
+  Caption = 'Graph'
+  ClientHeight = 240
+  ClientWidth = 320
+  KeyPreview = True
+  OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
+  LCLVersion = '2.0.6.0'
+  object image: TImage
+    Left = 0
+    Height = 240
+    Top = 0
+    Width = 320
+    Align = alClient
+    Transparent = True
+  end
+end
