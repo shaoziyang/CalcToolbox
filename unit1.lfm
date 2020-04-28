@@ -448,10 +448,10 @@ object FormMain: TFormMain
     Height = 497
     Top = 0
     Width = 640
-    ActivePage = tsScript
+    ActivePage = tsAbout
     Align = alClient
     MultiLine = True
-    TabIndex = 4
+    TabIndex = 6
     TabOrder = 0
     Options = [nboMultiLine]
     object tsCRC: TTabSheet
@@ -1688,19 +1688,21 @@ object FormMain: TFormMain
         Height = 467
         Top = 0
         Width = 632
-        ActivePage = tsMass
+        ActivePage = tsConvertSpeed
         Align = alClient
+        Images = ilMain
         TabIndex = 4
         TabOrder = 0
         object tsConvertTime: TTabSheet
           Caption = 'Time'
-          ClientHeight = 452
-          ClientWidth = 648
+          ClientHeight = 437
+          ClientWidth = 624
+          ImageIndex = 49
           object sgConvertTime: TStringGrid
             Left = 0
             Height = 304
             Top = 0
-            Width = 648
+            Width = 624
             Align = alTop
             AutoFillColumns = True
             ColCount = 2
@@ -1717,7 +1719,7 @@ object FormMain: TFormMain
             OnEditingDone = sgConvertTimeEditingDone
             ColWidths = (
               267
-              360
+              336
             )
             Cells = (
               10
@@ -1850,11 +1852,12 @@ object FormMain: TFormMain
         end
         object tsConvertTemperature: TTabSheet
           Caption = 'Temperature'
-          ClientHeight = 420
+          ClientHeight = 437
           ClientWidth = 624
+          ImageIndex = 51
           object sgConvertTemperature: TStringGrid
             Left = 0
-            Height = 286
+            Height = 303
             Top = 26
             Width = 624
             Align = alClient
@@ -1918,6 +1921,7 @@ object FormMain: TFormMain
               Top = 2
               Width = 50
               MaxValue = 15
+              OnChange = edtDecimalDigitsConvertTemperatureChange
               TabOrder = 0
               Value = 1
             end
@@ -1930,7 +1934,7 @@ object FormMain: TFormMain
           object mmoNoteConvertTemperature: TMemo
             Left = 0
             Height = 100
-            Top = 320
+            Top = 337
             Width = 624
             Align = alBottom
             BorderStyle = bsNone
@@ -1948,7 +1952,7 @@ object FormMain: TFormMain
           object btnNoteConvertTemperature: TSpeedButton
             Left = 0
             Height = 8
-            Top = 312
+            Top = 329
             Width = 624
             Align = alBottom
             Flat = True
@@ -1961,6 +1965,7 @@ object FormMain: TFormMain
           Caption = 'Power'
           ClientHeight = 437
           ClientWidth = 624
+          ImageIndex = 53
           object sgConvertPower: TStringGrid
             Left = 0
             Height = 303
@@ -2015,6 +2020,7 @@ object FormMain: TFormMain
               Top = 2
               Width = 50
               MaxValue = 15
+              OnChange = edtDecimalDigitsConvertPowerChange
               TabOrder = 0
               Value = 3
             end
@@ -2054,10 +2060,11 @@ object FormMain: TFormMain
             OnClick = btnNoteConvertDistanceClick
           end
         end
-        object tsDistance: TTabSheet
+        object tsConvertDistance: TTabSheet
           Caption = 'Distance'
           ClientHeight = 437
           ClientWidth = 624
+          ImageIndex = 48
           object sgConvertDistance: TStringGrid
             Left = 0
             Height = 303
@@ -2142,6 +2149,7 @@ object FormMain: TFormMain
               Top = 2
               Width = 50
               MaxValue = 15
+              OnChange = edtDecimalDigitsConvertDistanceChange
               TabOrder = 0
               Value = 4
             end
@@ -2180,10 +2188,174 @@ object FormMain: TFormMain
             OnClick = btnNoteConvertDistanceClick
           end
         end
-        object tsMass: TTabSheet
+        object tsConvertSpeed: TTabSheet
+          Caption = 'Speed'
+          ClientHeight = 437
+          ClientWidth = 624
+          ImageIndex = 50
+          object ToolBar17: TToolBar
+            Left = 0
+            Height = 26
+            Top = 0
+            Width = 624
+            Caption = 'ToolBar17'
+            ShowCaptions = True
+            TabOrder = 0
+            Transparent = True
+            object edtDecimalDigitsConvertSpeed: TSpinEdit
+              Left = 129
+              Height = 25
+              Top = 2
+              Width = 50
+              MaxValue = 15
+              OnChange = edtDecimalDigitsConvertSpeedChange
+              TabOrder = 0
+              Value = 4
+            end
+            object ToolButton45: TToolButton
+              Left = 1
+              Top = 2
+              Caption = 'Decimal Digits '
+            end
+          end
+          object sgConvertSpeed: TStringGrid
+            Left = 0
+            Height = 303
+            Top = 26
+            Width = 624
+            Align = alClient
+            AutoFillColumns = True
+            ColCount = 2
+            DefaultColWidth = 80
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goAlwaysShowEditor, goSmoothScroll]
+            RowCount = 28
+            TabOrder = 1
+            TitleFont.CharSet = ANSI_CHARSET
+            TitleFont.Color = clBlack
+            TitleFont.Height = -14
+            TitleFont.Name = 'Courier New'
+            TitleFont.Pitch = fpFixed
+            TitleFont.Quality = fqDraft
+            OnEditingDone = sgConvertSpeedEditingDone
+            ColWidths = (
+              259
+              344
+            )
+            Cells = (
+              25
+              0
+              1
+              'centimeter/second (cm/sec)'
+              0
+              2
+              'centimeter/minute (cm/min)'
+              0
+              3
+              'centimeter/hour (cm/hr)'
+              0
+              4
+              'meter/second (m/sec)'
+              0
+              5
+              'meter/minute (m/min)'
+              0
+              6
+              'meter/hour (m/hr)'
+              0
+              7
+              'kilometer/second (km/sec)'
+              0
+              8
+              'kilometer/minute (km/min)'
+              0
+              9
+              'kilometer/hour (km/h)'
+              0
+              11
+              'inch/second (ips)'
+              0
+              12
+              'inch/minute (ipm)'
+              0
+              13
+              'foot/second (fps)'
+              0
+              14
+              'foot/minute (fpm)'
+              0
+              15
+              'foot/hour (ft/hr)'
+              0
+              16
+              'yard/second'
+              0
+              17
+              'yard/minute'
+              0
+              18
+              'yard/hour'
+              0
+              19
+              'mile/second (mi/sec)'
+              0
+              20
+              'mile/minute (mi/min)'
+              0
+              21
+              'mile/hour (mph)'
+              0
+              23
+              'knot (kn or kt) (UK)'
+              0
+              24
+              'knot (kn or kt)'
+              0
+              25
+              'mach (M or Ma)'
+              0
+              27
+              'speed of light (c)'
+              1
+              0
+              'Value'
+            )
+          end
+          object btnNoteConvertSpeed: TSpeedButton
+            Left = 0
+            Height = 8
+            Top = 329
+            Width = 624
+            Align = alBottom
+            Flat = True
+            Images = ilNoteIcon
+            ImageIndex = 0
+            OnClick = btnNoteConvertDistanceClick
+          end
+          object mmoNoteConvertSpeed: TMemo
+            Left = 0
+            Height = 100
+            Top = 337
+            Width = 624
+            Align = alBottom
+            BorderStyle = bsNone
+            Lines.Strings = (
+              '1 m/sec = 60 m/min = 3600 m/hr = 100 cm/sec = 6000 cm/min = 360000 cm/hr'
+              '1 m/sec = 39.37 in/sec = 2362.20 in/min = 3.28 ft/sec = 196.85 ft/min'
+              '        = 1.094 yd/sec = 65.62 yd/min = 3937 yd/hr = 2.237 mile/hr'
+              '1 km/sec = 60 km/min = 3600 km/hr = 1000 m/sec'
+              '         = 1943.84 kn = 1942.60 kn (UK) = 3.016 Ma'
+              '1 C = 299792458 m/sec'
+            )
+            ReadOnly = True
+            ScrollBars = ssAutoBoth
+            TabOrder = 2
+          end
+        end
+        object tsConvertMass: TTabSheet
           Caption = 'Mass'
           ClientHeight = 437
           ClientWidth = 624
+          ImageIndex = 52
           object ToolBar15: TToolBar
             Left = 0
             Height = 26
@@ -2199,6 +2371,7 @@ object FormMain: TFormMain
               Top = 2
               Width = 50
               MaxValue = 15
+              OnChange = edtDecimalDigitsConvertMassChange
               TabOrder = 0
               Value = 4
             end
@@ -3680,7 +3853,7 @@ object FormMain: TFormMain
               OnClick = btnStop_PascalScriptClick
             end
             object btnHelp_PascalScript: TToolButton
-              Left = 190
+              Left = 213
               Top = 0
               DropdownMenu = pmHelp_PascalScript
               ImageIndex = 28
@@ -3706,7 +3879,7 @@ object FormMain: TFormMain
               Caption = '1,1'
             end
             object btnPanelMode_PascalScript: TToolButton
-              Left = 225
+              Left = 190
               Top = 0
               ImageIndex = 43
               OnClick = btnPanelMode_PascalScriptClick
@@ -3786,7 +3959,7 @@ object FormMain: TFormMain
               OnClick = btnStop_MPYClick
             end
             object btnHelp_MPY: TToolButton
-              Left = 213
+              Left = 236
               Top = 0
               DropdownMenu = pmHelp_MPY
               ImageIndex = 28
@@ -3797,7 +3970,7 @@ object FormMain: TFormMain
               Left = 1
               Top = 0
               ImageIndex = 30
-              OnClick = btnClear_MPYClick
+              OnClick = btnClear_PascalScriptClick
             end
             object ToolButton28: TToolButton
               Left = 205
@@ -3818,7 +3991,7 @@ object FormMain: TFormMain
               OnClick = btnCmd_MPYClick
             end
             object btnPanelMode_MPY: TToolButton
-              Left = 248
+              Left = 213
               Top = 0
               ImageIndex = 43
               OnClick = btnPanelMode_PascalScriptClick
@@ -4424,7 +4597,7 @@ object FormMain: TFormMain
               OnClick = btnStop_LuaClick
             end
             object btnHelp_Lua: TToolButton
-              Left = 213
+              Left = 236
               Top = 0
               DropdownMenu = pmHelp_PascalScript
               ImageIndex = 28
@@ -4435,7 +4608,7 @@ object FormMain: TFormMain
               Left = 1
               Top = 0
               ImageIndex = 30
-              OnClick = btnClear_LuaClick
+              OnClick = btnClear_PascalScriptClick
             end
             object ToolButton29: TToolButton
               Left = 205
@@ -4456,7 +4629,7 @@ object FormMain: TFormMain
               OnClick = btnCmd_LuaClick
             end
             object btnPanelMode_Lua: TToolButton
-              Left = 248
+              Left = 213
               Top = 0
               ImageIndex = 43
               OnClick = btnPanelMode_PascalScriptClick
@@ -5058,7 +5231,7 @@ object FormMain: TFormMain
               OnClick = btnStop_CClick
             end
             object btnHelp_C: TToolButton
-              Left = 190
+              Left = 213
               Top = 0
               DropdownMenu = pmHelp_PascalScript
               ImageIndex = 28
@@ -5069,7 +5242,7 @@ object FormMain: TFormMain
               Left = 1
               Top = 0
               ImageIndex = 30
-              OnClick = btnClear_CClick
+              OnClick = btnClear_PascalScriptClick
             end
             object ToolButton30: TToolButton
               Left = 182
@@ -5084,7 +5257,7 @@ object FormMain: TFormMain
               Caption = '1,1'
             end
             object btnPanelMode_C: TToolButton
-              Left = 225
+              Left = 190
               Top = 0
               ImageIndex = 43
               OnClick = btnPanelMode_PascalScriptClick
@@ -5625,6 +5798,7 @@ object FormMain: TFormMain
           Caption = 'Graph'
           ClientHeight = 437
           ClientWidth = 624
+          ImageIndex = 46
           object ToolBar16: TToolBar
             Left = 0
             Height = 22
@@ -5641,12 +5815,14 @@ object FormMain: TFormMain
               Left = 24
               Top = 0
               ImageIndex = 13
+              OnClick = btnNew_GraphClick
             end
             object btnOpen_Graph: TToolButton
               Left = 47
               Top = 0
-              DropdownMenu = pmHis_C
+              DropdownMenu = pmHis_Graph
               ImageIndex = 14
+              OnClick = btnOpen_GraphClick
               Style = tbsDropDown
             end
             object btnSave_Graph: TToolButton
@@ -5654,33 +5830,37 @@ object FormMain: TFormMain
               Top = 0
               Enabled = False
               ImageIndex = 15
+              OnClick = btnSave_GraphClick
             end
             object btnSaveAs_Graph: TToolButton
               Left = 105
               Top = 0
               Enabled = False
               ImageIndex = 29
+              OnClick = btnSaveAs_GraphClick
             end
             object btnRun_Graph: TToolButton
-              Left = 136
+              Left = 159
               Top = 0
               ImageIndex = 11
+              OnClick = btnRun_GraphClick
             end
             object ToolButton42: TToolButton
-              Left = 128
-              Height = 22
+              Left = 151
+              Height = 8
               Top = 0
               Caption = 'ToolButton34'
               Style = tbsSeparator
             end
             object btnStop_Graph: TToolButton
-              Left = 159
+              Left = 182
               Top = 0
               Enabled = False
               ImageIndex = 16
+              OnClick = btnStop_GraphClick
             end
             object btnHelp_Graph: TToolButton
-              Left = 190
+              Left = 259
               Top = 0
               DropdownMenu = pmHelp_PascalScript
               ImageIndex = 28
@@ -5691,33 +5871,52 @@ object FormMain: TFormMain
               Left = 1
               Top = 0
               ImageIndex = 30
+              OnClick = btnClear_PascalScriptClick
             end
             object ToolButton43: TToolButton
-              Left = 182
-              Height = 22
+              Left = 228
+              Height = 8
               Top = 0
               Caption = 'ToolButton17'
               Style = tbsSeparator
             end
             object btnCaret_Graph: TToolButton
-              Left = 233
+              Left = 302
               Top = 0
               Caption = '1,1'
             end
             object ToolButton44: TToolButton
-              Left = 225
-              Height = 22
+              Left = 294
+              Height = 8
               Top = 0
               Caption = 'ToolButton40'
               Style = tbsSeparator
             end
+            object btnPanelMode_Graph: TToolButton
+              Left = 236
+              Top = 0
+              ImageIndex = 43
+              OnClick = btnPanelMode_PascalScriptClick
+            end
+            object btnSavePic_Graph: TToolButton
+              Left = 128
+              Top = 0
+              ImageIndex = 45
+              OnClick = btnSavePic_GraphClick
+            end
+            object btnShowGraphForm: TToolButton
+              Left = 205
+              Top = 0
+              ImageIndex = 47
+              OnClick = btnShowGraphFormClick
+            end
           end
           inline SynEditGraph: TSynEdit
             Left = 0
-            Height = 415
+            Height = 293
             Top = 22
             Width = 624
-            Align = alClient
+            Align = alTop
             Font.Height = -13
             Font.Name = 'Courier New'
             Font.Pitch = fpFixed
@@ -5729,6 +5928,7 @@ object FormMain: TFormMain
             Gutter.MouseActions = <>
             RightGutter.Width = 0
             RightGutter.MouseActions = <>
+            Highlighter = SynPasSyn
             Keystrokes = <            
               item
                 Command = ecUp
@@ -6175,7 +6375,7 @@ object FormMain: TFormMain
             MouseLinkColor.Foreground = clBlue
             LineHighlightColor.Background = clNone
             LineHighlightColor.Foreground = clNone
-            OnChange = SynEditCChange
+            OnChange = SynEditGraphChange
             OnStatusChange = SynEditGraphStatusChange
             inline SynLeftGutterPartList1: TSynGutterPartList
               object SynGutterMarks1: TSynGutterMarks
@@ -6213,17 +6413,38 @@ object FormMain: TFormMain
               end
             end
           end
+          object splGraph: TSplitter
+            Cursor = crVSplit
+            Left = 0
+            Height = 5
+            Top = 315
+            Width = 624
+            Align = alTop
+            OnMoved = splPascalScriptMoved
+            ResizeAnchor = akTop
+            ResizeStyle = rsLine
+          end
+          object mmoOutGraph: TMemo
+            Left = 0
+            Height = 117
+            Top = 320
+            Width = 624
+            Align = alClient
+            ReadOnly = True
+            ScrollBars = ssAutoVertical
+            TabOrder = 3
+          end
         end
       end
     end
     object tsConstant: TTabSheet
       Caption = 'constant'
-      ClientHeight = 450
+      ClientHeight = 467
       ClientWidth = 632
       ImageIndex = 10
       object pcConstant: TPageControl
         Left = 0
-        Height = 450
+        Height = 467
         Top = 0
         Width = 632
         ActivePage = tsConstantDecimalMultiple
@@ -6671,11 +6892,11 @@ object FormMain: TFormMain
         end
         object tsConstantDecimalMultiple: TTabSheet
           Caption = 'Decimal Multiple'
-          ClientHeight = 420
+          ClientHeight = 437
           ClientWidth = 624
           object sgConstantDecimalMultiple: TStringGrid
             Left = 0
-            Height = 420
+            Height = 437
             Top = 0
             Width = 624
             Align = alClient
@@ -7380,6 +7601,12 @@ object FormMain: TFormMain
                 Align = alClient
                 HideSelection = False
                 Lines.Strings = (
+                  '2020.4 v1.4.0'
+                  '    + Graph/Logo Script'
+                  '    + Run count/Time'
+                  '    + Speed convert'
+                  '    - bugs'
+                  ''
                   '2020.4 v1.2.8'
                   '    + Temperature convert'
                   '    + Power convert'
@@ -7435,7 +7662,7 @@ object FormMain: TFormMain
                   '    + include CRC, base convert, digit bytes'
                 )
                 ReadOnly = True
-                Rtf = '{\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Courier New;}}'#13#10'{\colortbl ;\red0\green0\blue0;\red64\green0\blue64;\red0\green0\blue160;\red255\green0\blue0;\red0\green0\blue255;\red128\green0\blue255;}'#13#10'{\*\generator Riched20 10.0.17763}\viewkind4\uc1 '#13#10'\pard\cf1\b\f0\fs22\lang2052 2020.4 v1.2.8\par'#13#10'\b0     + \cf2 Temperature convert\par'#13#10'\cf1     + \cf2\lang1033 Power \lang2052 convert\par'#13#10'\cf1     + \cf2 Distance convert\par'#13#10'\cf1     + \cf2 Mass convert\par'#13#10'\cf1     + Script editor \cf2 Hori/Vert mode\cf1\par'#13#10'\par'#13#10'\b 2020.4 v1.2.0\par'#13#10'\b0     + \cf3\b Tiny C\cf1\b0  interpreter\par'#13#10'\par'#13#10'\b 2020.4 v1.1.0\par'#13#10'\b0     + add Calc Mode: Command/Table\par'#13#10'    + \cf3\b Lua\cf1\b0  interpreter\par'#13#10'\par'#13#10'\b 2020.4 v1.0\par'#13#10'\b0     + add \b Constant Table\b0\par'#13#10'    * meger Buffer convert to Digit\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.4 v0.9\par'#13#10'\b0     * use PascalScript as Programmable Calculator interpreter\par'#13#10'    \lang1033 -\lang2052  remove \cf4 ArtFormula\cf1\par'#13#10'\b\par'#13#10'2020.4 v0.8\b0\par'#13#10'    + \cf5\b micropython\cf1\b0\par'#13#10'    * rewrite file open/save/history function\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.3  v0.7\b0\par'#13#10'    + \cf6\b Pascal Script\cf1\b0\par'#13#10'    * Adjust interface\par'#13#10'    * Optimize\par'#13#10'    - Fix bug\par'#13#10'\par'#13#10'\b 2020.3  v0.6\b0\par'#13#10'    + Time convert\par'#13#10'    + Programmable Calculator file history\par'#13#10'    + Hex <-> string\par'#13#10'\par'#13#10'\b 2020.3  v0.5\b0\par'#13#10'    + Programmable Calculator.\par'#13#10'    + Tray Icon\par'#13#10'    * more Option\par'#13#10'\par'#13#10'\b 2020.3  v0.4\b0\par'#13#10'    + add add Buffer convert.\par'#13#10'    + Option Dialog\par'#13#10'\par'#13#10'\b 2020.3  v0.3\b0\par'#13#10'    + add Big Int and Big float.\par'#13#10'\par'#13#10'\b 2020.3  v0.2, first version.\b0\par'#13#10'    \lang1033 +\lang2052  include CRC, base convert, digit bytes\par'#13#10'\par'#13#10'}'#13#10#0
+                Rtf = '{\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Courier New;}}'#13#10'{\colortbl ;\red0\green0\blue0;\red128\green0\blue255;\red128\green128\blue255;\red64\green0\blue64;\red0\green0\blue160;\red255\green0\blue0;\red0\green0\blue255;}'#13#10'{\*\generator Riched20 10.0.17763}\viewkind4\uc1 '#13#10'\pard\cf1\b\f0\fs22\lang2052 2020.4 v1.4.0\par'#13#10'\b0     + \cf2\b Graph\cf1\b0 /\cf2\b Logo\cf3  \cf1\b0 Script\par'#13#10'    + Run count/Time\par'#13#10'    + Speed convert\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.4 v1.2.8\par'#13#10'\b0     + \cf4 Temperature convert\par'#13#10'\cf1     + \cf4\lang1033 Power \lang2052 convert\par'#13#10'\cf1     + \cf4 Distance convert\par'#13#10'\cf1     + \cf4 Mass convert\par'#13#10'\cf1     + Script editor \cf4 Hori/Vert mode\cf1\par'#13#10'\par'#13#10'\b 2020.4 v1.2.0\par'#13#10'\b0     + \cf5\b Tiny C\cf1\b0  interpreter\par'#13#10'\par'#13#10'\b 2020.4 v1.1.0\par'#13#10'\b0     + add Calc Mode: Command/Table\par'#13#10'    + \cf5\b Lua\cf1\b0  interpreter\par'#13#10'\par'#13#10'\b 2020.4 v1.0\par'#13#10'\b0     + add \b Constant Table\b0\par'#13#10'    * meger Buffer convert to Digit\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.4 v0.9\par'#13#10'\b0     * use PascalScript as Programmable Calculator interpreter\par'#13#10'    \lang1033 -\lang2052  remove \cf6 ArtFormula\cf1\par'#13#10'\b\par'#13#10'2020.4 v0.8\b0\par'#13#10'    + \cf7\b micropython\cf1\b0\par'#13#10'    * rewrite file open/save/history function\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.3  v0.7\b0\par'#13#10'    + \cf2\b Pascal Script\cf1\b0\par'#13#10'    * Adjust interface\par'#13#10'    * Optimize\par'#13#10'    - Fix bug\par'#13#10'\par'#13#10'\b 2020.3  v0.6\b0\par'#13#10'    + Time convert\par'#13#10'    + Programmable Calculator file history\par'#13#10'    + Hex <-> string\par'#13#10'\par'#13#10'\b 2020.3  v0.5\b0\par'#13#10'    + Programmable Calculator.\par'#13#10'    + Tray Icon\par'#13#10'    * more Option\par'#13#10'\par'#13#10'\b 2020.3  v0.4\b0\par'#13#10'    + add add Buffer convert.\par'#13#10'    + Option Dialog\par'#13#10'\par'#13#10'\b 2020.3  v0.3\b0\par'#13#10'    + add Big Int and Big float.\par'#13#10'\par'#13#10'\b 2020.3  v0.2, first version.\b0\par'#13#10'    \lang1033 +\lang2052  include CRC, base convert, digit bytes\par'#13#10'\par'#13#10'}'#13#10#0
                 ScrollBars = ssAutoVertical
                 TabOrder = 0
                 ZoomFactor = 1
@@ -7443,13 +7670,13 @@ object FormMain: TFormMain
             end
             object tsReadme: TTabSheet
               Caption = 'Readme'
-              ClientHeight = 348
-              ClientWidth = 489
+              ClientHeight = 337
+              ClientWidth = 456
               object rmoAboutReadme: TRichMemo
                 Left = 0
-                Height = 348
+                Height = 337
                 Top = 0
-                Width = 489
+                Width = 456
                 Align = alClient
                 HideSelection = False
                 Lines.Strings = (
@@ -7484,13 +7711,13 @@ object FormMain: TFormMain
             end
             object tsLicense: TTabSheet
               Caption = 'License'
-              ClientHeight = 348
-              ClientWidth = 489
-              object Memo1: TMemo
+              ClientHeight = 337
+              ClientWidth = 456
+              object mmoLicense: TMemo
                 Left = 0
-                Height = 348
+                Height = 337
                 Top = 0
-                Width = 489
+                Width = 456
                 Align = alClient
                 BorderStyle = bsNone
                 Lines.Strings = (
@@ -7529,6 +7756,7 @@ object FormMain: TFormMain
           Height = 128
           Top = 10
           Width = 128
+          Align = alTop
           AutoSize = True
           OnClick = btnShowOptionClick
           Picture.Data = {
@@ -11986,7 +12214,7 @@ object FormMain: TFormMain
         object lbFont: TLabel
           Left = 10
           Height = 17
-          Top = 138
+          Top = 128
           Width = 32
           Caption = 'Font'
           Font.CharSet = ANSI_CHARSET
@@ -11998,6 +12226,33 @@ object FormMain: TFormMain
           ParentColor = False
           ParentFont = False
           Visible = False
+        end
+        object lbRunCnt: TLabel
+          Left = 10
+          Height = 17
+          Top = 155
+          Width = 128
+          Align = alTop
+          Caption = 'RunCnt'
+          ParentColor = False
+        end
+        object lbRunTime: TLabel
+          Left = 10
+          Height = 17
+          Top = 172
+          Width = 128
+          Align = alTop
+          Caption = 'RunTime'
+          ParentColor = False
+        end
+        object Label3: TLabel
+          Left = 10
+          Height = 17
+          Top = 138
+          Width = 128
+          Align = alTop
+          Caption = '  '
+          ParentColor = False
         end
       end
     end
@@ -12018,7 +12273,7 @@ object FormMain: TFormMain
     left = 24
     top = 272
     Bitmap = {
-      4C692D0000001000000010000000D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
+      4C69360000001000000010000000D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
@@ -13458,7 +13713,295 @@ object FormMain: TFormMain
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
-      0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000A46433FFA46433FFA46433FFCCCCCCFFCECE
+      CEFFD1D1D1FFD3D3D3FFD5D5D5FFBE9E86FFBF9F87FFDBDBDBFFAE754AFF0000
+      0000000000000000000000000000A46433FFA46433FFA46433FFD3D3D3FFD5D5
+      D5FFD8D8D8FFDADADAFFDCDCDCFFA46433FFA46433FFE2E2E2FFA46433FFAD75
+      4AFF000000000000000000000000A46433FFA46433FFA46433FFDADADAFFA8A8
+      A8FF626262FF626262FF626262FF626262FF626262FF626262FF626262FF6262
+      62FF626262FF626262FF626262FFA46433FFA46433FFA46433FFE1E1E1FF6262
+      62FFF1CF7CFFF1CF7CFFF1CF7CFFF1CF7CFFF1CF7CFFF1CF7CFFF1CF7CFFF1CF
+      7CFFF1CF7CFFF1CF7CFFF1CF7CFFA46433FFA46433FFA46433FFE8E8E8FF6262
+      62FFF1CF7CFFEEAA04FFEEAA04FFEEAA04FFEEAA04FFEEAA04FFEEAA04FFEEAA
+      04FFEEAA04FFEEAA04FFEEAA04FFA46433FFA46433FFA46433FFA46433FF6262
+      62FFF1CF7CFFEEAA04FFEEAA04FFA9FFFFFFA9FFFFFFEEAA04FFEEAA04FFEEAA
+      04FFEEAA04FFEEAA04FFEEAA04FFA46433FFA46433FFD2B29AFFD2B29AFF6262
+      62FFF1CF7CFFEEAA04FFA9FFFFFF00FFFFFF00FFFFFFA9FFFFFFEEAA04FFEEAA
+      04FFEEAA04FFEEAA04FFEEAA04FFA46433FFA46433FFFFFFFFFFFFFFFFFF6262
+      62FFF1CF7CFFEEAA04FFA9FFFFFF00FFFFFF00FFFFFFA9FFFFFFEEAA04FFEEAA
+      04FFEEAA04FFEEAA04FFEEAA04FFA46433FFA46433FFFFFFFFFFFFFFFFFF6262
+      62FFF1CF7CFFEEAA04FFEEAA04FFA9FFFFFFA9FFFFFFEEAA04FFEEAA04FFEEAA
+      04FFBF8A08FFBF8A08FFBF8A08FFA46433FFA46433FFFFFFFFFFFFFFFFFF6262
+      62FFF1CF7CFFEEAA04FFEEAA04FFEEAA04FFEEAA04FFEEAA04FFBF8A08FFBF8A
+      08FF20D724FF19C21DFF20D724FFA46433FFA46433FFFFFFFFFFFFFFFFFF6262
+      62FFC36F55FFBB350CFFBB350CFFBB350CFFBB350CFFBB350CFF14BB18FF20D7
+      24FF19C21DFF20D724FF19C21DFFA46433FFA46433FF0000FFFF0000FFFF6262
+      62FFC36F55FFBB350CFFBB350CFFBB350CFFBB350CFF14BB18FF20D724FF19C2
+      1DFF20D724FF19C21DFF20D724FFA46433FFA46433FF0000FFFF0000FFFF6262
+      62FFC36F55FFBB350CFFBB350CFF14BB18FF20D724FF20D724FF19C21DFF20D7
+      24FF19C21DFF20D724FF19C21DFF000000000000000000000000000000006262
+      62FFC36F55FFBB350CFF14BB18FF14BB18FF14BB18FF14BB18FF14BB18FF14BB
+      18FF14BB18FF14BB18FF14BB18FF00000000000000000000000000000000A8A8
+      A8FF626262FF626262FF626262FF626262FF626262FF626262FF626262FF6262
+      62FF626262FF626262FF626262FF131313001414140015151587171717E01818
+      18FF1A1A1AFF1C1C1CFF1D1D1DFF202020FE242424FF353535FC272727FB2323
+      23E01E1E1E861B1B1B001919190014141400151515C1171717FF191919FF1A1A
+      1AFF1C1C1CFF1E1E1EFF212121FF262626FF282828FF474747FF595959FF2B2B
+      2BFE232323FF1E1E1EC11B1B1B0016161687181818FF191919FF1C1C1CFF1E1E
+      1EFF212121FF232323FE282828FF282828FC363636FB717171EC848484DD4343
+      43FD252525FA222222FE1F1F1F86191919E01A1A1AFF1D1D1DFF202020FF2424
+      24FF272727FE2A2A2AFF353535FD5C5C5CFE626262FF747474A26565655F6565
+      65FF494949FF3E3E3EFE212121E01B1B1BFF1E1E1EFF222222FE282828FF2929
+      29FE2B2B2BFB2E2E2EFB525252FF7A7A7AEE545454624242421D606060166868
+      6845757575B95F5F5FFD202020FC202020FF242424FE272727FF3E3E3EFD5757
+      57FF565656FF494949FF6D6D6DF159595932727272004F4F4F00575757007171
+      71004848481B626262EB343434FB232323FF282828FF2E2E2EFD505050FF8888
+      88ED82828282868686CD8282829B8C8C8C00A1A1A106BFBFBF01828282005050
+      500447474700616161B6393939FF494949FF474747FE5D5D5DFC818181D84F4F
+      4F394D4D4D00464646154A4A4A304A4A4A0149494901000000004F4F4F017272
+      7200828282224E4E4EE72C2C2CFC494949FF484848FE5E5E5EFD818181D85454
+      5435585858004C4C4C11464646314C4C4C0149494901000000004F4F4F016868
+      6800818181224E4E4EE52B2B2BFC232323FF282828FF2E2E2EFC505050FF8D8D
+      8DE39D9D9D7B878787C87C7C7CA18383830094949405E9E9E9017A7A7A005E5E
+      5E0458585800646464B3383838FF202020FF242424FE272727FF3E3E3EFD5656
+      56FF525252FF494949FF6D6D6DF3515151346F6F6F00585858005B5B5B008A8A
+      8A006F6F6F1B666666E7333333FB1B1B1BFF1E1E1EFF222222FE282828FF2929
+      29FE2C2C2CFB2F2F2FFA515151FF858585DB808080556E6E6E1A515151146363
+      63476F6F6FBB5F5F5FFD202020FC191919E01A1A1AFF1D1D1DFF202020FF2424
+      24FF272727FE2A2A2AFF353535FE5A5A5AFD5E5E5EFF717171A36666665E6666
+      66FF494949FF3E3E3EFE212121E016161687181818FF1A1A1AFF1C1C1CFF1E1E
+      1EFF212121FF242424FE282828FF272727FD373737FC707070F0838383E04242
+      42FD252525FB222222FE1F1F1F8614141400151515C1171717FF191919FF1A1A
+      1AFF1C1C1CFF1E1E1EFF212121FF262626FF282828FF484848FF5A5A5AFF2B2B
+      2BFE232323FF1E1E1EC11B1B1B00131313001414140015151587161616E01818
+      18FF1A1A1AFF1B1B1BFF1D1D1DFF202020FE242424FF323232FD252525FC2222
+      22E01E1E1E861B1B1B0019191900000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000000000CEA47BFFCFA47BFFD0A5
+      7BFFD0A47BFFCFA47BFFCFA37AFFCEA379FFCCA178FFCAA077FFC89E76FFC69D
+      75FFC49B74FFC29A73FF000000000000000000000000CFA47BFFFF9900FFFF99
+      00FFD0A57BFFD0A47AFFCFA379FFCEA278FFCCA177FFCA9F76FFFFEED2FFFFEE
+      D2FFFFEED2FFC29972FF000000000000000000000000CFA47BFFFF9900FFFF99
+      00FFD0A47AFFD0A479FFCFA378FFCEA277FFCCA076FFCA9F75FFFFEED2FFFFEE
+      D2FFFFEED2FFC29871FF000000000000000000000000CFA47BFFD0A57BFFD0A5
+      7BFFD0A47AFFD0A479FFCFA378FFCEA277FFCCA076FFCA9F75FFC89D73FFC69B
+      72FFC49A71FFC29871FF000000000000000000000000CFA47AFFFBFBFBFFFCFC
+      FCFFFCFCFCFFFCFCFCFFFBFBFBFFFAFAFAFFF8F8F8FFF5F5F5FFF3F3F3FFF0F0
+      F0FFEDEDEDFFC1976FFF000000000000000000000000CEA37AFFFAFAFAFFFAFA
+      FAFFFBFBFBFFFBFBFBFFFAFAFAFFF8F8F8FFF7F7F7FFF5F5F5FFF2F2F2FFF0F0
+      F0FFEDEDEDFFC0966EFF000000000000000000000000CCA279FFF8F8F8FFF9F9
+      F9FFF9F9F9FFF9F9F9FFF8F8F8FFF7F7F7FFF5F5F5FFF3F3F3FFF1F1F1FFEEEE
+      EEFFECECECFFC0956CFF000000000000000000000000CAA078FFF5F5F5FFF6F6
+      F6FFF7F7F7FFF6F6F6FFF5F5F5FFF5F5F5FFF3F3F3FFF2F2F2FFEFEFEFFFEEEE
+      EEFFEBEBEBFFBF946BFF000000000000000000000000C89E76FFF3F3F3FFF3F3
+      F3FFF3F3F3FFF4F4F4FFF3F3F3FFF2F2F2FFF1F1F1FFEFEFEFFFEEEEEEFFECEC
+      ECFFEAEAEAFFBF946AFF000000000000000000000000C69D75FFF0F0F0FFF1F1
+      F1FFF1F1F1FFF0F0F0FFF0F0F0FFF0F0F0FFEFEFEFFFEEEEEEFFEDEDEDFFEBEB
+      EBFFEAEAEAFFBE936AFF000000000000000000000000C49B74FFEEEEEEFFEEEE
+      EEFFEEEEEEFFEEEEEEFFEDEDEDFFEDEDEDFFECECECFFEBEBEBFFEBEBEBFFE9E9
+      E9FFE8E8E8FFBD926AFF000000000000000000000000C29A73FFC29972FFC299
+      71FFC1986FFFC1976EFFC1966DFFC0956BFFBF946BFFBE936AFFBE936AFFBE93
+      69FFBE936AFFBD936AFF00000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000CAE4CA00CAE4CA00CAE4CA00CAE4CA00CAE4
+      CA00CAE4CA00CAE4CA00CAE4CA00CAE4CA00CAE4CA00CAE4CA00CAE4CA00CAE4
+      CA00CAE4CA00CAE4CA00CAE4CA00007800FF007800FF007800FF007800FF0078
+      00FF007800FF007800FF007800FF007800FF007800FF007800FF007800FF0078
+      00FF007800FF007800FF007800FF007800FFBBDDBBFF007800FFBBDDBBFF0078
+      00FFBBDDBBFF007800FFBBDDBBFF007800FFBBDDBBFF007800FFBBDDBBFF0078
+      00FFBBDDBBFF007800FFBBDDBBFF007800FFBBDDBBFFBBDDBBFFBBDDBBFF0078
+      00FFBBDDBBFFBBDDBBFFBBDDBBFF007800FFBBDDBBFFBBDDBBFFBBDDBBFF0078
+      00FFBBDDBBFFBBDDBBFFBBDDBBFF007800FFBBDDBBFFBBDDBBFFBBDDBBFFBBDD
+      BBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDD
+      BBFFBBDDBBFFBBDDBBFFBBDDBBFF007800FFBBDDBBFFBBDDBBFFBBDDBBFFBBDD
+      BBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFF0078
+      00FFBBDDBBFFBBDDBBFFBBDDBBFF007800FFBBDDBBFFBBDDBBFFBBDDBBFFBBDD
+      BBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFF007800FF0078
+      00FFBBDDBBFFBBDDBBFFBBDDBBFF007800FFBBDDBBFFBBDDBBFF007800FF0078
+      00FFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFF0078
+      00FFBBDDBBFFBBDDBBFFBBDDBBFF007800FFBBDDBBFFBBDDBBFF007800FF0078
+      00FFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFF0078
+      00FFBBDDBBFFBBDDBBFFBBDDBBFF007800FFBBDDBBFFBBDDBBFFBBDDBBFFBBDD
+      BBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFF007800FF0078
+      00FF007800FFBBDDBBFFBBDDBBFF007800FFBBDDBBFFBBDDBBFFBBDDBBFFBBDD
+      BBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDD
+      BBFFBBDDBBFFBBDDBBFFBBDDBBFF007800FFBBDDBBFFBBDDBBFFBBDDBBFFBBDD
+      BBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDDBBFFBBDD
+      BBFFBBDDBBFF007800FFBBDDBBFF007800FFBBDDBBFF007800FFBBDDBBFF0078
+      00FFBBDDBBFF007800FFBBDDBBFF007800FFBBDDBBFF007800FFBBDDBBFF0078
+      00FFBBDDBBFF007800FFBBDDBBFF007800FFBBDDBBFF007800FFBBDDBBFF0078
+      00FFBBDDBBFF007800FFBBDDBBFF007800FFBBDDBBFF007800FFBBDDBBFF0078
+      00FFBBDDBBFF007800FFBBDDBBFF007800FF005500FF005500FF005500FF0055
+      00FF005500FF005500FF005500FF005500FF005500FF005500FF005500FF0055
+      00FF005500FF005500FF005500FFCAE4CA00CAE4CA00CAE4CA00CAE4CA00CAE4
+      CA00CAE4CA00CAE4CA00CAE4CA00CAE4CA00CAE4CA00CAE4CA00CAE4CA00CAE4
+      CA00CAE4CA00CAE4CA00CAE4CA00000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000800000FF800000FF800000FF800000FF800000FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000800000FF8000
+      00FF0000000000000000FFCC99FF0000000000000000800000FF800000FF0000
+      00000000000000000000000000000000000000000000800000FF000000000000
+      00000000000000000000800000FF000000000000000000000000000000008000
+      00FF0000000000000000000000000000000000000000800000FF000000000000
+      00000000000000000000800000FF000000000000000000000000000000008000
+      00FF00000000000000000000000000000000800000FF00000000000000000000
+      00000000000000000000800000FF000000000000000000000000000000000000
+      0000800000FF000000000000000000000000800000FF00000000000000000000
+      00000000000000000000800000FF000000000000000000000000000000000000
+      0000800000FF000000000000000000000000800000FFFFCC99FF000000000000
+      000000000000800000FF800000FF800000FF800000FF0000000000000000FFCC
+      99FF800000FF000000000000000000000000800000FF00000000000000000000
+      00000000000000000000800000FF000000000000000000000000000000000000
+      0000800000FF000000000000000000000000800000FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000800000FF00000000000000000000000000000000800000FF000000000000
+      0000000000000000000000000000000000000000000000000000000000008000
+      00FF0000000000000000000000000000000000000000800000FF000000000000
+      0000000000000000000000000000000000000000000000000000000000008000
+      00FF000000000000000000000000000000000000000000000000800000FF8000
+      00FF0000000000000000FFCC99FF0000000000000000800000FF800000FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000800000FF800000FF800000FF800000FF800000FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000FFFF0000FFFF0000FFFF0000FF
+      FF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF00DBF2F8FFF7F7
+      F7FF0000000000000000000000000000000000FFFF0000FFFF0000FFFF0000FF
+      FF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF006BDEF6FFC2EEF6FFF7F7
+      F7FF000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000E8F3F5FF51DAF6FF54CEF0FFF3F4F4FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000D6F1F5FF32D4F4FF0CC0F0FFCDECF6FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000B8ECF5FF1BD7F6FF08D2F4FF62E0F6FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000097E5F4FF0ED1F4FF08D9F6FF07E2F8FF8AEFF8FFF5F5F5FF000000000000
+      000000000000000000000000000000000000000000000000000000000000E8F4
+      F6FF19C7F1FF0BD1F4FF07E2F8FF09EDFAFF0AF0FAFF5BF1FBFFD0F2F6FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000E3F0F4FF7FE2F3FF27E3F6FF1FECF8FF21EDF8FF07E4F8FF0CDAF6FF90E6
+      F5FF000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000DFF4F6FF15E2F7FF0EE2F7FF08DBF6FF2AD5F5FFCCEE
+      F6FF000000000000000000000000000000000000000000000000000000000000
+      000000000000000000009BECF8FF09D2F4FF0CD1F4FF55DBF5FFE9F5F7FF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000BEEEF7FF0FC1F1FF11BFF0FF92E0F3FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000DAF2F6FF1FC6F1FF28C1EFFFC4E9F4FF0000000000000000000000000000
+      000000000000000000000000000000000000000000000000000000000000EAF2
+      F3FF35CEF2FF59CFF3FFE8F2F5FF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000F4F5F5FF60DA
+      F4FF92DEF5FFF5F5F6FF00000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000FFFF00F6F6F6FFA6EAF6FFBDEB
+      F6FFF6F6F6FF0000000000000000000000000000000000000000000000000000
+      00000000000000000000000000000000000000FFFF00F7F7F7FFE8F3F6FFF6F6
+      F6FF000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00000000000000000000E7E6E4FFDFDEDBFFF7F6F4FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000AAA5A1FF5E5751FF59524BFF7F7973FFEDEBEAFF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000D4D2D0FF5D5750FFC3C0BDFFDDDBD9FF77716BFF98938FFF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000BEBBB7FF6B655FFFF7F6F5FFFAF9F8FFAAA6A3FF7C7670FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000BEBBB7FF6C6560FFF7F6F5FFFAF9F8FFADA9A6FF79746EFF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000BEBBB7FF6C6560FFF7F6F5FFFAF9F8FFADA9A6FF79746EFF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000BEBBB7FF6C6560FFF7F6F5FFFAF9F8FFADA9A6FF79746EFF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000BEBBB7FF6C6560FFF1CF9BFFE8C692FFADA9A6FF79746EFF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000BEBBB7FF6C6560FFC19D67FF9F7942FFA6A29EFF79746EFF000000000000
+      000000000000000000000000000000000000000000000000000000000000F9F8
+      F6FF8F8B85FF746E69FFB58F5AFF936D36FFA7A39FFF635C56FFE8E6E4FF0000
+      000000000000000000000000000000000000000000000000000000000000E0DE
+      DCFF5B554EFFC5A16BFFFF9900FFFF9900FFB58F5AFF756F69FFA7A39FFF0000
+      000000000000000000000000000000000000000000000000000000000000D4D1
+      CEFF5D564FFFFF9900FFFF9900FFFF9900FFFF9900FF8C8782FF948F8AFF0000
+      000000000000000000000000000000000000000000000000000000000000E9E7
+      E5FF605952FFC29E68FFFF9900FFFF9900FFC19D68FF6A635DFFB3AFACFF0000
+      000000000000000000000000000000000000000000000000000000000000F9F8
+      F7FFA5A19DFF5F5952FFB7925CFFBC9762FF716B65FF726C66FFEFEEEDFF0000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000F1EFEDFF938E89FF5F5851FF5A534CFF78726CFFD5D3D0FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000F9F8F7FFEDEBEAFFE9E8E6FFF6F5F4FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FEFEFEFF9C9C9CFF8282
+      82FF8B8B8BFF8B8B8BFF8B8B8BFF8B8B8BFF8B8B8BFF8C8C8CFF8B8B8BFF7B7B
+      7BFFF9F9F9FFFFFFFF00FFFFFF00FFFFFF0000000000FCFCFCFF737373FF6565
+      65FFA5A5A5FFA5A5A5FF737373FF4D4D4DFFA5A5A5FFA5A5A5FF7E7E7EFF4B4B
+      4BFFF2F2F2FFFFFFFF00FFFFFF00FFFFFF00FEFEFEFFD8D8D8FFA1A1A1FF8282
+      82FF0000000000000000A6A6A6FF616161FF0000000000000000858585FFC4C4
+      C4FFAEAEAEFFFFFFFF0000000000FFFFFF00FDFDFDFF888888FFF2F2F2FFD0D0
+      D0FFAAAAAAFF00000000A6A6A6FF616161FF00000000D4D4D4FFA5A5A5FFFCFC
+      FCFF848484FFF6F6F6FF00000000FEFEFEFFD0D0D0FFAAAAAAFFFEFEFEFFFDFD
+      FDFF878787FFF0F0F0FFA6A6A6FF616161FFFCFCFCFF838383FFF7F7F7FFFDFD
+      FDFFD4D4D4FFA5A5A5FF00000000FCFCFCFF848484FFF5F5F5FFFFFFFFFFFDFD
+      FDFFD8D8D8FFA1A1A1FFA6A6A6FF616161FFCACACAFFAEAEAEFFFEFEFEFFFEFE
+      FEFFFDFDFDFF878787FFF4F4F4FFF1F1F1FF444444FF484848FF484848FF4747
+      47FF484848FF595959FFA5A5A5FF616161FF919191FF454545FF484848FF4848
+      48FF484848FF3E3E3EFFC1C1C1FFFCFCFCFFC2C2C2FF595959FF333333FF3737
+      37FF686868FFD9D9D9FFA6A6A6FF626262FFF2F2F2FF828282FF3F3F3FFF3030
+      30FF474747FF9D9D9DFF0000000000000000FDFDFDFFFAFAFAFFE8E8E8FFEBEB
+      EBFFFCFCFCFFFEFEFEFFA6A6A6FF616161FF0000000000000000F0F0F0FFE5E5
+      E5FFF6F6F6FF0000000000000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00A6A6A6FF616161FF00000000FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFD
+      FDFFB4B4B4FF7C7C7CFF5C5C5CFF424242FF7C7C7CFF878787FFFAFAFAFFFFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FDFDFDFF9292
+      92FF484848FF2F2F2FFF303030FF303030FF2F2F2FFF313131FF767676FFEBEB
+      EBFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FCFCFCFF4B4B
+      4BFF303030FF303030FF303030FF303030FF303030FF303030FF313131FFD3D3
+      D3FFFFFFFF00FFFFFF00FFFFFF00FFFFFF000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF0000000000FFFFFF00F7F6FEFFF2F2FEFFF2F2
+      FEFFF2F2FEFFF2F2FEFFF2F2FEFFF2F2FEFFF2F2FEFFF2F2FEFFF2F2FEFFF2F2
+      FEFFF2F2FEFFF2F2FEFFFBFBFFFF00000000C2C0FA00251DEDFF241CEDFF241C
+      EDFF241CEDFF241CEDFF241CEDFF241CEDFF241CEDFF241CEDFF241CEDFF241C
+      EDFF241CEDFF241CEDFF3C35EFFFADAAF8FFADAAF8FF342CEEFFC7C5FAFFC7C5
+      FAFFC7C5FAFFC7C5FAFFC4C2FAFFC7C5FAFFC7C5FAFFC7C5FAFFC7C5FAFFC7C5
+      FAFFC7C5FAFF9590F6FF241CEDFF7570F4FF7570F4FF3932EFFFFFFFFF00FFFF
+      FF00FFFFFF00FFFFFF008884F5FFB3B0F9FFFEFEFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00BBB8F9FF241CEDFF241CEDFF241CEDFF3932EFFFFFFFFF00F1F0
+      FEFFBCBAF9FFE2E1FDFFDDDCFCFF271FEDFF534CF1FFC7C5FAFFFFFFFF00FFFF
+      FF00FFFFFF00BBB8F9FF241CEDFF241CEDFF241CEDFF3932EFFFFFFFFF00FFFF
+      FF00FAFAFFFFA8A4F8FF6E69F3FF3F38EFFF928EF6FF938FF6FF8581F5FFE9E9
+      FDFFFFFFFF00BBB8F9FF241CEDFF746FF3FF746FF3FF3932EFFFFFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FBFBFFFFACA9F8FF615BF2FFF8F7FE00FCFCFF00C9C7
+      FBFFF2F2FEFFBBB8F9FF241CEDFFADAAF8FFADAAF8FF342DEFFFC9C7FBFFC9C7
+      FBFFC9C7FBFFC9C7FBFFC9C7FBFFC9C7FBFFC8C6FBFFC5C2FAFFC9C7FBFFC9C7
+      FBFFC9C7FBFF9692F6FF241CEDFF00000000C2BFFA00251DEDFF241CEDFF241C
+      EDFF241CEDFF241CEDFF241CEDFF241CEDFF241CEDFF241CEDFF241CEDFF241C
+      EDFF241CEDFF241CEDFF3B34EFFF00000000FFFFFF00F5F4FEFFF1F0FEFFF1F0
+      FEFFF1F0FEFFF1F0FEFFF1F0FEFFF1F0FEFFF1F0FEFFF1F0FEFFF1F0FEFFF1F0
+      FEFFF1F0FEFFF1F0FEFFFAFAFFFFFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00FFFFFF00FFFFFF00FFFFFF00
     }
   end
   object tmrAlpha: TTimer
@@ -14154,6 +14697,7 @@ object FormMain: TFormMain
     top = 224
   end
   object ilOption: TImageList
+    Tag = 1000
     Height = 48
     Width = 48
     left = 64
@@ -21078,6 +21622,7 @@ object FormMain: TFormMain
     Enabled = False
     CompilerMode = pcmDelphi
     NestedComments = False
+    ExtendedKeywordsMode = True
     left = 224
     top = 320
   end
@@ -21767,6 +22312,7 @@ object FormMain: TFormMain
     top = 368
   end
   object dlgOpen_MPY: TOpenDialog
+    Title = 'Open existing MPY file'
     DefaultExt = '.py'
     Filter = 'python files|*.py'
     left = 64
@@ -21795,7 +22341,7 @@ object FormMain: TFormMain
     top = 176
   end
   object dlgOpen_Calc: TOpenDialog
-    Title = 'Open existing pascal file'
+    Title = 'Open existing calc file'
     DefaultExt = '.calc'
     Filter = 'Calculate script|*.calc'
     left = 64
@@ -21854,6 +22400,7 @@ object FormMain: TFormMain
     top = 416
   end
   object dlgOpen_Lua: TOpenDialog
+    Title = 'Open existing Lua file'
     DefaultExt = '.lua'
     Filter = 'Lua files|*.lua'
     left = 64
@@ -21890,6 +22437,7 @@ object FormMain: TFormMain
     top = 464
   end
   object dlgOpen_C: TOpenDialog
+    Title = 'Open existing C file'
     DefaultExt = '.c'
     Filter = 'C files|*.c'
     left = 64
@@ -21939,5 +22487,36 @@ object FormMain: TFormMain
       00000080003600800036008000FF008000360000000000000000000000000000
       0000000000000000000000800036
     }
+  end
+  object Script_Graph: TPSScript
+    CompilerOptions = []
+    OnCompile = Script_PascalCompile
+    Plugins = <>
+    UsePreProcessor = False
+    left = 24
+    top = 128
+  end
+  object dlgOpen_Graph: TOpenDialog
+    Title = 'Open existing graph file'
+    DefaultExt = '.lgs'
+    Filter = 'Graph script|*.lgs'
+    left = 64
+    top = 128
+  end
+  object dlgSave_Graph: TSaveDialog
+    Title = 'Save pascal file as'
+    DefaultExt = '.lgs'
+    Filter = 'Graph script|*.lgs'
+    left = 104
+    top = 128
+  end
+  object pmHis_Graph: TPopupMenu
+    left = 144
+    top = 128
+  end
+  object dlgSavePic_Graph: TSavePictureDialog
+    DefaultExt = '.png'
+    left = 184
+    top = 128
   end
 end

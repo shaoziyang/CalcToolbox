@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   LCLType, ExtCtrls, Buttons, Grids, lclintf, DateUtils, Math,
-  Clipbrd, Menus, Spin, process,
+  Clipbrd, Menus, Spin, ExtDlgs, process,
   IniFiles, Types,
   uPSComponent,
   UBigFloatV3,
@@ -20,7 +20,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '1.2.8';
+  VERSION = '1.4.2';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -72,6 +72,7 @@ type
     btnNew_Calc: TToolButton;
     btnNew_Lua: TToolButton;
     btnNew_C: TToolButton;
+    btnNoteConvertSpeed: TSpeedButton;
     btnNoteConvertMass: TSpeedButton;
     btnNoteConvertTemperature: TSpeedButton;
     btnNoteConvertPower: TSpeedButton;
@@ -88,6 +89,7 @@ type
     btnOpen_C: TToolButton;
     btnOpen_MPY: TToolButton;
     btnOpen_Lua: TToolButton;
+    btnPanelMode_Graph: TToolButton;
     btnPanelMode_MPY: TToolButton;
     btnPanelMode_Lua: TToolButton;
     btnPanelMode_C: TToolButton;
@@ -99,6 +101,7 @@ type
     btnSaveAs_Calc: TToolButton;
     btnSaveAs_Lua: TToolButton;
     btnSaveAs_C: TToolButton;
+    btnSavePic_Graph: TToolButton;
     btnSave_Graph: TToolButton;
     btnSave_Calc: TToolButton;
     btnSave_C: TToolButton;
@@ -114,9 +117,11 @@ type
     chkCrcInvOut: TCheckBox;
     chkCrcInvIn: TCheckBox;
     dlgOpen_Calc: TOpenDialog;
+    dlgOpen_Graph: TOpenDialog;
     dlgOpen_Lua: TOpenDialog;
     dlgOpen_C: TOpenDialog;
     dlgSave_Calc: TSaveDialog;
+    dlgSave_Graph: TSaveDialog;
     dlgSave_Lua: TSaveDialog;
     dlgSave_C: TSaveDialog;
     edtConvertTimeDay: TLabeledEdit;
@@ -131,6 +136,7 @@ type
     edtCrcResult: TEdit;
     edtCrcPolygon: TEdit;
     edtCrcInitV: TEdit;
+    edtDecimalDigitsConvertSpeed: TSpinEdit;
     edtDecimalDigitsConvertMass: TSpinEdit;
     edtDecimalDigitsConvertPower: TSpinEdit;
     edtDecimalDigitsConvertDistance: TSpinEdit;
@@ -144,11 +150,15 @@ type
     imgLogo: TImage;
     imgLogo1: TImage;
     Label1: TLabel;
+    Label3: TLabel;
+    lbRunTime: TLabel;
+    lbRunCnt: TLabel;
     lbName: TLabel;
     Label2: TLabel;
     lbFont: TLabel;
     lbVer: TLabel;
-    Memo1: TMemo;
+    mmoLicense: TMemo;
+    mmoNoteConvertSpeed: TMemo;
     mmoNoteConvertMass: TMemo;
     mmoNoteConvertTemperature: TMemo;
     mmoNoteConvertDistance: TMemo;
@@ -163,6 +173,7 @@ type
     miPascalScriptHelpDemo8: TMenuItem;
     miPascalScriptHelpDemo9: TMenuItem;
     mmoNoteConvertPower: TMemo;
+    mmoOutGraph: TMemo;
     mmoOutCalc: TMemo;
     mmoOutC: TMemo;
     mmoOutPascalScript: TMemo;
@@ -176,6 +187,7 @@ type
     pmHelp_Lua: TPopupMenu;
     pmHelp_C: TPopupMenu;
     pmHis_Calc: TPopupMenu;
+    pmHis_Graph: TPopupMenu;
     pmHis_Lua: TPopupMenu;
     pmHis_C: TPopupMenu;
     pnlCalc: TPanel;
@@ -215,6 +227,8 @@ type
     ProcessMPY: TProcess;
     dlgSave_MPY: TSaveDialog;
     ProcessLua: TProcess;
+    dlgSavePic_Graph: TSavePictureDialog;
+    Script_Graph: TPSScript;
     rmoAboutReadme: TRichMemo;
     rmoAboutChangeLog: TRichMemo;
     Script_Pascal: TPSScript;
@@ -231,6 +245,7 @@ type
     dlgSave_PascalScript: TSaveDialog;
     Script_Calc: TPSScript;
     sgConstantDecimalMultiple: TStringGrid;
+    sgConvertSpeed: TStringGrid;
     sgConvertMass: TStringGrid;
     sgConvertPower: TStringGrid;
     sgConvertDistance: TStringGrid;
@@ -246,6 +261,7 @@ type
     Shape2: TShape;
     edtDecimalDigitsConvertTemperature: TSpinEdit;
     btnNoteConvertDistance: TSpeedButton;
+    splGraph: TSplitter;
     Splitter1: TSplitter;
     splMPY: TSplitter;
     Splitter11: TSplitter;
@@ -275,14 +291,18 @@ type
     btnCaret_PascalScript: TToolButton;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    ToolBar17: TToolBar;
+    ToolButton45: TToolButton;
+    tsConvertSpeed: TTabSheet;
     ToolBar16: TToolBar;
     ToolButton42: TToolButton;
     ToolButton43: TToolButton;
     ToolButton44: TToolButton;
+    btnShowGraphForm: TToolButton;
     tsGraph: TTabSheet;
     ToolBar15: TToolBar;
     ToolButton41: TToolButton;
-    tsMass: TTabSheet;
+    tsConvertMass: TTabSheet;
     ToolBar13: TToolBar;
     ToolBar14: TToolBar;
     ToolBar7: TToolBar;
@@ -295,7 +315,7 @@ type
     ToolButton39: TToolButton;
     ToolButton40: TToolButton;
     tsConstantDecimalMultiple: TTabSheet;
-    tsDistance: TTabSheet;
+    tsConvertDistance: TTabSheet;
     tsConvertPower: TTabSheet;
     tsConvertTemperature: TTabSheet;
     tsConvertTime: TTabSheet;
@@ -423,9 +443,6 @@ type
     procedure btnBigFloatAddClick(Sender: TObject);
     procedure btnBigIntAddClick(Sender: TObject);
     procedure btnClear_CalcClick(Sender: TObject);
-    procedure btnClear_CClick(Sender: TObject);
-    procedure btnClear_LuaClick(Sender: TObject);
-    procedure btnClear_MPYClick(Sender: TObject);
     procedure btnClear_PascalScriptClick(Sender: TObject);
     procedure btnCmd_LuaClick(Sender: TObject);
     procedure btnCmd_MPYClick(Sender: TObject);
@@ -450,6 +467,7 @@ type
     procedure btnCrc_CRC8_ROHCClick(Sender: TObject);
     procedure btnNew_CalcClick(Sender: TObject);
     procedure btnNew_CClick(Sender: TObject);
+    procedure btnNew_GraphClick(Sender: TObject);
     procedure btnNew_LuaClick(Sender: TObject);
     procedure btnNew_MPYClick(Sender: TObject);
     procedure btnNew_PascalScriptClick(Sender: TObject);
@@ -458,25 +476,32 @@ type
     procedure btnOpenGITHUBClick(Sender: TObject);
     procedure btnOpen_CalcClick(Sender: TObject);
     procedure btnOpen_CClick(Sender: TObject);
+    procedure btnOpen_GraphClick(Sender: TObject);
     procedure btnOpen_LuaClick(Sender: TObject);
     procedure btnOpen_MPYClick(Sender: TObject);
     procedure btnOpen_PascalScriptClick(Sender: TObject);
     procedure btnPanelMode_PascalScriptClick(Sender: TObject);
     procedure btnRun_CClick(Sender: TObject);
+    procedure btnRun_GraphClick(Sender: TObject);
     procedure btnRun_LuaClick(Sender: TObject);
     procedure btnRun_MPYClick(Sender: TObject);
     procedure btnRun_PascalScriptClick(Sender: TObject);
     procedure btnSaveAs_CalcClick(Sender: TObject);
     procedure btnSaveAs_CClick(Sender: TObject);
+    procedure btnSaveAs_GraphClick(Sender: TObject);
     procedure btnSaveAs_LuaClick(Sender: TObject);
     procedure btnSaveAs_MPYClick(Sender: TObject);
     procedure btnSaveAs_PascalScriptClick(Sender: TObject);
+    procedure btnSavePic_GraphClick(Sender: TObject);
     procedure btnSave_CalcClick(Sender: TObject);
     procedure btnSave_CClick(Sender: TObject);
+    procedure btnSave_GraphClick(Sender: TObject);
     procedure btnSave_LuaClick(Sender: TObject);
     procedure btnSave_MPYClick(Sender: TObject);
     procedure btnSave_PascalScriptClick(Sender: TObject);
+    procedure btnShowGraphFormClick(Sender: TObject);
     procedure btnStop_CClick(Sender: TObject);
+    procedure btnStop_GraphClick(Sender: TObject);
     procedure btnStop_LuaClick(Sender: TObject);
     procedure btnStop_MPYClick(Sender: TObject);
     procedure btnStop_PascalScriptClick(Sender: TObject);
@@ -489,6 +514,11 @@ type
     procedure edtBytesNumChange(Sender: TObject);
     procedure edtConvertTimeYearEditingDone(Sender: TObject);
     procedure edtCrcResultClick(Sender: TObject);
+    procedure edtDecimalDigitsConvertDistanceChange(Sender: TObject);
+    procedure edtDecimalDigitsConvertMassChange(Sender: TObject);
+    procedure edtDecimalDigitsConvertPowerChange(Sender: TObject);
+    procedure edtDecimalDigitsConvertSpeedChange(Sender: TObject);
+    procedure edtDecimalDigitsConvertTemperatureChange(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -513,14 +543,15 @@ type
     procedure sgConvertDistanceEditingDone(Sender: TObject);
     procedure sgConvertMassEditingDone(Sender: TObject);
     procedure sgConvertPowerEditingDone(Sender: TObject);
+    procedure sgConvertSpeedEditingDone(Sender: TObject);
     procedure sgConvertTemperatureEditingDone(Sender: TObject);
     procedure sgConvertTimeEditingDone(Sender: TObject);
     procedure sgExpr_CalcEditingDone(Sender: TObject);
     procedure sgExpr_CalcKeyPress(Sender: TObject; var Key: char);
     procedure sgVar_CalcEditingDone(Sender: TObject);
     procedure splPascalScriptMoved(Sender: TObject);
-    procedure SynEditGraphStatusChange(Sender: TObject;
-      Changes: TSynStatusChanges);
+    procedure SynEditGraphChange(Sender: TObject);
+    procedure SynEditGraphStatusChange(Sender: TObject; Changes: TSynStatusChanges);
     procedure SynEditCChange(Sender: TObject);
     procedure SynEditCStatusChange(Sender: TObject; Changes: TSynStatusChanges);
     procedure SynEditLuaChange(Sender: TObject);
@@ -538,6 +569,7 @@ type
     procedure tmrLogoTimer(Sender: TObject);
     procedure TrayIconClick(Sender: TObject);
   private
+    RunTime, RunTimeM: integer;
 
     winstat: TWindowState;
     DateTimefmt: TFormatSettings;
@@ -555,11 +587,13 @@ type
 
   private
     Compiled_PascalScript: boolean;
+    Compiled_Graph: boolean;
     EditorAutoSaveFileName_PascalScript: string;
     EditorAutoSaveFileName_micropython: string;
     EditorAutoSaveFileName_Lua: string;
     EditorAutoSaveFileName_C: string;
     EditorAutoSaveFileName_calc: string;
+    EditorAutoSaveFileName_Graph: string;
 
     Script_Calc_CodeVar, Script_Calc_CodeFunc, Script_Calc_CodeMain: string;
 
@@ -572,6 +606,7 @@ type
     procedure mmoOutAdd_Lua(msg: string);
     procedure mmoOutAdd_C(msg: string);
     procedure mmoOutAdd_Calc(msg: string);
+    procedure mmoOutAdd_Graph(msg: string);
 
     procedure pmAddHis(var pm: TPopupMenu; FileName: string);
     procedure pmHisClick_PascalScript(Sender: TObject);
@@ -579,6 +614,7 @@ type
     procedure pmHisClick_Lua(Sender: TObject);
     procedure pmHisClick_C(Sender: TObject);
     procedure pmHisClick_Calc(Sender: TObject);
+    procedure pmHisClick_Graph(Sender: TObject);
 
     procedure LoadFile_PascalScript(FileName: string);
     procedure SaveFile_PascalScript(FileName: string);
@@ -590,6 +626,8 @@ type
     procedure SaveFile_C(FileName: string);
     procedure LoadFile_Calc(FileName: string);
     procedure SaveFile_Calc(FileName: string);
+    procedure LoadFile_Graph(FileName: string);
+    procedure SaveFile_Graph(FileName: string);
 
   public
     use_external_micropython: boolean;
@@ -625,6 +663,7 @@ type
     procedure updateTemperature(C: Float);
     procedure updatePower(P: Float);
     procedure updateDistance(V: Float);
+    procedure updateSpeed(SP:Float);
     procedure updateMass(M: Float);
 
     procedure updateTabVisible;
@@ -653,19 +692,217 @@ uses
 {$I NewFileTemplate.pas}
 
 { pascal script grapg addon functions }
+var
+  PSG_sx1: integer = 0;     // map coordinate
+  PSG_sy1: integer = 0;
+  PSG_sx2: integer = 1000;
+  PSG_sy2: integer = 1000;  // windows widtg/height
+  PSG_W: integer = 500;
+  PSG_H: integer = 500;
+  PSG_PenDown: boolean = True;
+  PSG_lgx: Float = 0;       // Logo position and angle
+  PSG_lgy: Float = 0;
+  PSG_Angle: Float = 0;
 
-procedure PSG_Widows(Left, Top, Width, Height:integer);
+function PSG_cx(x: Float): Float;
 begin
-  FormGraph.Left:=Left;
-  FormGraph.Top:=Top;
-  FormGraph.ClientWidth:=Width;
-  FormGraph.ClientHeight:=Height;
+  Result := PSG_W * (x - PSG_sx1) / (PSG_sx2 - PSG_sx1);
 end;
 
-procedure PSG_Widows(Caption:string);
+function PSG_cy(y: Float): Float;
 begin
-  FormGraph.Caption:=Caption;
+  Result := PSG_H - PSG_H * (y - PSG_sy1) / (PSG_sy2 - PSG_sy1);
 end;
+
+function PSG_cxi(x: Float): integer;
+begin
+  Result := Round(PSG_W * (x - PSG_sx1) / (PSG_sx2 - PSG_sx1));
+end;
+
+function PSG_cyi(y: Float): integer;
+begin
+  Result := Round(PSG_H - PSG_H * (y - PSG_sy1) / (PSG_sy2 - PSG_sy1));
+end;
+
+procedure PSG_print(v: array of variant);
+var
+  i: integer;
+  s, ss: string;
+begin
+  s := '';
+  for i := low(v) to high(v) do
+  begin
+    ss := v[i];
+    s  := s + ss;
+  end;
+  FormMain.mmoOutAdd_Graph(s);
+  Application.ProcessMessages;
+end;
+
+procedure PSG_Map(x1, y1, x2, y2: integer);
+begin
+  PSG_sx1 := x1;
+  PSG_sy1 := y1;
+  PSG_sx2 := x2;
+  PSG_sy2 := y2;
+end;
+
+procedure PSG_Widows(Left, Top, Width, Height: integer);
+begin
+  FormGraph.Left := Left;
+  FormGraph.Top := Top;
+  FormGraph.ClientWidth := Width;
+  FormGraph.ClientHeight := Height;
+  FormGraph.image.Picture.Bitmap.Width := Width;
+  FormGraph.image.Picture.Bitmap.Height := Height;
+  PSG_W := Width;
+  PSG_H := Height;
+end;
+
+function PSG_Width: integer;
+begin
+  Result := PSG_sx2 - PSG_sx1;
+end;
+
+function PSG_Height: integer;
+begin
+  Result := PSG_sy2 - PSG_sy1;
+end;
+
+procedure PSG_Title(Caption: variant);
+begin
+  FormGraph.Caption := Caption;
+end;
+
+procedure PSG_Clean(color: TColor);
+begin
+  FormGraph.image.Picture.Bitmap.Canvas.Brush.Color := color;
+  FormGraph.image.Picture.Bitmap.Canvas.FillRect(FormGraph.image.ClientRect);
+end;
+
+procedure PSG_Color(color: TColor);
+begin
+  FormGraph.image.Picture.Bitmap.Canvas.Pen.Color := color;
+end;
+
+procedure PSG_BackColor(color: TColor);
+begin
+  FormGraph.image.Picture.Bitmap.Canvas.Brush.Color := color;
+end;
+
+procedure PSG_Dot(x, y: Float; color: TColor = 0);
+var
+  cx, cy: integer;
+begin
+  cx := PSG_cxi(x);
+  cy := PSG_cxi(y);
+  if (cx < 0) or (cx >= PSG_W) or (cy < 0) or (cy >= PSG_H) then
+    Exit;
+  FormGraph.image.Picture.Bitmap.Canvas.Pixels[cx, cy] := Color;
+end;
+
+procedure PSG_Pixel(x, y: Float);
+begin
+  PSG_Dot(x, y, FormGraph.image.Picture.Bitmap.Canvas.Pen.Color);
+end;
+
+procedure PSG_LineTo(x, y: Float);
+begin
+  FormGraph.image.Picture.Bitmap.Canvas.LineTo(PSG_cxi(x), PSG_cxi(y));
+end;
+
+procedure PSG_MoveTo(x, y: Float);
+begin
+  FormGraph.image.Picture.Bitmap.Canvas.MoveTo(PSG_cxi(x), PSG_cxi(y));
+end;
+
+procedure PSG_Line(x1, y1, x2, y2: Float);
+begin
+  FormGraph.image.Picture.Bitmap.Canvas.Line(PSG_cxi(x1), PSG_cyi(y1),
+    PSG_cxi(x2), PSG_cyi(y2));
+end;
+
+procedure PSG_Arc(ALeft, ATop, ARight, ABottom, SX, SY, EX, EY: Float);
+begin
+  FormGraph.image.Picture.Bitmap.Canvas.arc(PSG_cxi(ALeft),
+    PSG_cyi(ATop), PSG_cxi(ARight), PSG_cyi(ABottom), PSG_cxi(SX),
+    PSG_cyi(SY), PSG_cxi(EX), PSG_cyi(EY));
+end;
+
+procedure PSG_Circle(x, y, rx, ry: Float);
+begin
+  FormGraph.image.Picture.Bitmap.Canvas.arc(PSG_cxi(x - rx),
+    PSG_cyi(y - ry), PSG_cxi(x + rx), PSG_cyi(y + ry), PSG_cxi(x + rx),
+    PSG_cyi(y), PSG_cxi(x + rx), PSG_cyi(y));
+end;
+
+procedure PSG_Ellipse(x1, y1, x2, y2: Float);
+begin
+  FormGraph.image.Picture.Bitmap.Canvas.Ellipse(PSG_cxi(x1), PSG_cyi(y1),
+    PSG_cxi(x2), PSG_cyi(y2));
+end;
+
+procedure PSG_Fill(X, Y: Float; Color: TColor);
+var
+  c: TColor;
+begin
+  c := FormGraph.image.Picture.Bitmap.Canvas.Pixels[PSG_cxi(x), PSG_cyi(y)];
+  FormGraph.image.Picture.Bitmap.Canvas.Brush.Color := color;
+  FormGraph.image.Picture.Bitmap.Canvas.FloodFill(PSG_cxi(x), PSG_cyi(y), c, fsSurface);
+end;
+
+procedure PSG_LOGOPU;
+begin
+  PSG_PenDown := False;
+end;
+
+procedure PSG_LOGOPD;
+begin
+  PSG_PenDown := True;
+end;
+
+procedure PSG_LOGOHome;
+begin
+  PSG_lgx     := 0;
+  PSG_lgy     := 0;
+  PSG_Angle   := 0;
+  PSG_PenDown := True;
+end;
+
+procedure PSG_LOGOFD(len: Float);
+var
+  x, y: float;
+begin
+  x := PSG_lgx;
+  y := PSG_lgy;
+  PSG_lgx := PSG_lgx + len * cos(PSG_Angle * PI / 180);
+  PSG_lgy := PSG_lgy + len * sin(PSG_Angle * PI / 180);
+  if PSG_PenDown then
+    PSG_Line(x, y, PSG_lgx, PSG_lgy);
+end;
+
+procedure PSG_LOGOBK(len: Float);
+var
+  x, y: float;
+begin
+  x := PSG_lgx;
+  y := PSG_lgy;
+  PSG_lgx := PSG_lgx - len * cos(PSG_Angle * PI / 180);
+  PSG_lgy := PSG_lgy - len * sin(PSG_Angle * PI / 180);
+  if PSG_PenDown then
+    PSG_Line(x, y, PSG_lgx, PSG_lgy);
+end;
+
+procedure PSG_LOGOLT(angle: Float);
+begin
+  PSG_Angle := PSG_Angle + angle;
+end;
+
+procedure PSG_LOGORT(angle: Float);
+begin
+  PSG_Angle := PSG_Angle - angle;
+end;
+
 
 { graph addon end }
 
@@ -795,6 +1032,12 @@ begin
   random;
 end;
 
+function PSsqrt(x: extended): extended;
+begin
+  Result := sqrt(x);
+  random;
+end;
+
 function PSExp(x: extended): extended;
 begin
   Result := exp(x);
@@ -846,7 +1089,8 @@ begin
   ini  := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
   errlogfile := ChangeFileExt(Application.ExeName, '.err');
 
-  lbVer.Caption := 'ver ' + VERSION;
+  lbVer.Caption     := 'ver ' + VERSION;
+  lbRunTime.Caption := ' ';
 
   DateTimefmt.ShortDateFormat := 'yyyy-mm-dd';
   DateTimefmt.DateSeparator   := '-';
@@ -861,11 +1105,18 @@ begin
   try
     ini.WriteDateTime('Last', 'run', now());
     ini.UpdateFile;
+    lbRunCnt.Tag := ini.ReadInteger('Run', 'Cnt', 1);
+    ini.WriteInteger('Run', 'Cnt', lbRunCnt.Tag + 1);
+    lbRunCnt.Caption := 'Run:  ' + IntToStr(lbRunCnt.Tag);
     writeable := True;
+    RunTime   := ini.ReadInteger('run', 'Time', 0);
+    RunTimeM  := MinuteOf(now);
   except
     writeable := False;
     // set unwriteable flag
     Caption   := '#' + Caption;
+    lbRunCnt.Visible := False;
+    lbRunTime.Visible := False;
   end;
 
   // load values from ini file
@@ -876,7 +1127,11 @@ begin
     Height := ini.ReadInteger('Last', 'Height', Height);
 
     pcMain.PageIndex := ini.ReadInteger('Last', 'Page', 0);
+  except
 
+  end;
+
+  try
     // option
     lbFont.Font.Name := ini.ReadString('Option', 'FontName', Font.Name);
     lbFont.Font.Size := ini.ReadInteger('Option', 'FontSize', Font.Size);
@@ -891,11 +1146,21 @@ begin
     TrayIcon.Visible := ini.ReadBool('Option', 'TrayIcon', True);
     MinimizeToTray   := ini.ReadBool('Option', 'MinimizeToTray', True);
     CloseToTray      := ini.ReadBool('Option', 'CloseToTray', True);
+  except
+    on E: Exception do
+      errlog(E.Message);
+  end;
 
+  try
     // Digit
     rbBigBytes.Checked      := ini.ReadBool('Digit', 'BigBytes', True);
     pcDigit.ActivePageIndex := ini.ReadInteger('last', 'page_digit', 0);
+  except
+    on E: Exception do
+      errlog(E.Message);
+  end;
 
+  try
     // crc
     edtCrcPolygon.Text   := ini.ReadString('CRC', 'poly', '1021');
     edtCrcInitV.Text     := ini.ReadString('CRC', 'v0', '0');
@@ -903,22 +1168,39 @@ begin
     chkCrcInvIn.Checked  := ini.ReadBool('CRC', 'InvIn', False);
     chkCrcInvOut.Checked := ini.ReadBool('CRC', 'InvOut', False);
     setCrcBit(ini.ReadInteger('CRC', 'bit', 16));
+  except
+    on E: Exception do
+      errlog(E.Message);
+  end;
 
+  try
     // BigFloat
     edtBigFloatPrec.Text := ini.ReadString('BigFloat', 'prec', '100');
     pnlBigFloatA.Height  := ini.ReadInteger('BigFloat', 'PanelA', 80);
     pnlBigFloatB.Height  := ini.ReadInteger('BigFloat', 'PanelB', 80);
     mmoBigFloatA.Text    := '';
     mmoBigFloatB.Text    := '';
+  except
+    on E: Exception do
+      errlog(E.Message);
+  end;
 
+  try
     // BigInt
     chkBigIntComma.Checked := ini.ReadBool('BigInt', 'comma', False);
     pnlBigIntA.Height := ini.ReadInteger('BigInt', 'PanelA', 80);
     pnlBigIntB.Height := ini.ReadInteger('BigInt', 'PanelB', 80);
     mmoBigIntA.Text := '';
     mmoBigIntB.Text := '';
+  except
+    on E: Exception do
+      errlog(E.Message);
+  end;
 
+  try
     // Calc
+    SynEditFunc_Calc.Modified := True;
+    sgVar_Calc.Modified := True;
     EditorAutoSaveFileName_calc :=
       ExtractFilePath(Application.ExeName) + 'autosave.calc';
 
@@ -939,7 +1221,12 @@ begin
 
     sgExpr_Calc.ColWidths[1]   := ini.ReadInteger('calc', 'tab_col1', 200);
     pcCalcMode.ActivePageIndex := ini.ReadInteger('calc', 'mode', 0);
+  except
+    on E: Exception do
+      errlog(E.Message);
+  end;
 
+  try
     // Convert Time
     btnConvertTimeNowClick(nil);
     pcConvert.ActivePageIndex := ini.ReadInteger('last', 'page_convert', 0);
@@ -951,8 +1238,12 @@ begin
       ini.ReadInteger('convert', 'DigitDistance', 4);
     edtDecimalDigitsConvertMass.Value     :=
       ini.ReadInteger('convert', 'DigitMass', 3);
+  except
+    on E: Exception do
+      errlog(E.Message);
+  end;
 
-
+  try
     // Script
     pcScript.PageIndex := ini.ReadInteger('last', 'page_script', 0);
 
@@ -975,7 +1266,12 @@ begin
         IntToStr(i), ''));
 
     Compiled_PascalScript := False;
+  except
+    on E: Exception do
+      errlog(E.Message);
+  end;
 
+  try
     // micropython
     if ini.ReadBool('MPY', 'Vert', False) then
       splMPY.Align := alTop
@@ -997,7 +1293,12 @@ begin
       ini.ReadBool('MPY', 'use_external_micropython', False);
     external_micropython_bin_name :=
       ini.ReadString('MPY', 'external_micropythn_bin', '');
+  except
+    on E: Exception do
+      errlog(E.Message);
+  end;
 
+  try
     // Lua
     if ini.ReadBool('Lua', 'Vert', False) then
       splLua.Align := alTop
@@ -1017,7 +1318,12 @@ begin
 
     use_external_lua      := ini.ReadBool('lua', 'use_external_lua', False);
     external_lua_bin_name := ini.ReadString('lua', 'external_lua_bin', '');
+  except
+    on E: Exception do
+      errlog(E.Message);
+  end;
 
+  try
     // C
     if ini.ReadBool('C', 'Vert', False) then
       splC.Align := alTop
@@ -1036,8 +1342,36 @@ begin
       pmAddHis(pmHis_C, ini.ReadString('HisFile_C', IntToStr(i), ''));
 
     external_c_bin_name := ini.ReadString('C', 'TinyC_bin', '');
+  except
+    on E: Exception do
+      errlog(E.Message);
+  end;
 
+  try
+    // graph
+    if ini.ReadBool('graph', 'Vert', False) then
+      splGraph.Align := alTop
+    else
+      splGraph.Align := alLeft;
+    btnPanelMode_PascalScriptClick(btnPanelMode_Graph);
 
+    EditorAutoSaveFileName_Graph :=
+      ExtractFilePath(Application.ExeName) + 'autosave.lgs';
+    if FileExists(EditorAutoSaveFileName_Graph) then
+      SynEditGraph.Lines.LoadFromFile(EditorAutoSaveFileName_Graph)
+    else
+      btnNew_GraphClick(Sender);
+
+    for i := 1 to ini.ReadInteger('HisFile_Graph', 'Count', 0) do
+      pmAddHis(pmHis_Graph, ini.ReadString('HisFile_Graph', IntToStr(i), ''));
+
+    Compiled_Graph := False;
+  except
+    on E: Exception do
+      errlog(E.Message);
+  end;
+
+  try
     // Constant
     pcConstant.PageIndex := ini.ReadInteger('last', 'page_constant', 0);
 
@@ -1055,7 +1389,8 @@ begin
     end;
 
   except
-
+    on E: Exception do
+      errlog(E.Message);
   end;
 
   // visible
@@ -1076,10 +1411,25 @@ begin
     tsBigInt.TabVisible := False;
   end;
 
-  SynEditFunc_Calc.Modified := True;
-  sgVar_Calc.Modified := True;
-
+  // set His flag
   lbName.Tag := 1;
+
+  if writeable then
+  begin
+    try
+      s := ChangeFileExt(Application.ExeName, '.ini');
+      if FileExists(s + '.3') then
+        DeleteFile(s + '.3');
+      if FileExists(s + '.2') then
+        RenameFile(s + '.2', s + '.3');
+      if FileExists(s + '.1') then
+        RenameFile(s + '.1', s + '.2');
+      RenameFile(s, s + '.1');
+      ini.UpdateFile;
+    except
+
+    end;
+  end;
 end;
 
 procedure TFormMain.FormDestroy(Sender: TObject);
@@ -1186,6 +1536,15 @@ begin
         ini.WriteString('HisFile_C', IntToStr(i + 1),
           pmHis_C.Items[i].Caption);
 
+      // Graph
+      SynEditGraph.Lines.SaveToFile(EditorAutoSaveFileName_Graph);
+
+      ini.EraseSection('HisFile_Graph');
+      ini.WriteInteger('HisFile_Graph', 'Count', pmHis_Graph.Items.Count);
+      for i := 0 to pmHis_Graph.Items.Count - 1 do
+        ini.WriteString('HisFile_Graph', IntToStr(i + 1),
+          pmHis_Graph.Items[i].Caption);
+
       // COnstant
       ini.WriteInteger('last', 'page_constant', pcConstant.ActivePageIndex);
 
@@ -1221,7 +1580,11 @@ begin
         else if pcScript.ActivePage = tsMicropython then
           btnRun_MPYClick(Sender)
         else if pcScript.ActivePage = tsLua then
-          btnRun_LuaClick(Sender);
+          btnRun_LuaClick(Sender)
+        else if pcScript.ActivePage = tsC then
+          btnRun_CClick(Sender)
+        else if pcScript.ActivePage = tsGraph then
+          btnRun_GraphClick(Sender);
       end;
     end;
     VK_S:
@@ -1256,6 +1619,7 @@ begin
   mmoOutPosCheck(SynEditMPY, mmoOutMPY);
   mmoOutPosCheck(SynEditLua, mmoOutLua);
   mmoOutPosCheck(SynEditC, mmoOutC);
+  mmoOutPosCheck(SynEditGraph, mmoOutGraph);
   if pcCalcMode.Width = 0 then
     pnlCalc.Width := Width - 40;
 end;
@@ -1271,7 +1635,11 @@ begin
   if WindowState = wsMinimized then
   begin
     if TrayIcon.Visible and MinimizeToTray then
+    begin
       Hide;
+      if FormGraph.Visible then
+        FormGraph.Hide;
+    end;
   end
   else
     winstat := WindowState;
@@ -1342,15 +1710,48 @@ begin
     Sender.AddFunction(@PSsprint, 'procedure sprint(sep:string; v:array of Variant);');
     Sender.AddFunction(@PSwriteln, 'procedure Writeln(s: Variant);');
     Sender.AddFunction(@PSwrite, 'procedure Write(s: Variant);');
+    Sender.AddFunction(@PSclear, 'procedure clear;');
   end
-  else
+  else if Sender = Script_Calc then
   begin
     Sender.AddFunction(@PSprint_Calc, 'procedure print(v:array of Variant);');
     Sender.AddFunction(@PSsprint_Calc,
       'procedure sprint(sep:string; v:array of Variant);');
     Sender.AddFunction(@PSwriteln_Calc, 'procedure Writeln(s: Variant);');
     Sender.AddFunction(@PSwrite_Calc, 'procedure Write(s: Variant);');
+  end
+  else if Sender = Script_Graph then
+  begin
+    Sender.AddFunction(@PSG_print, 'procedure print(v:array of Variant);');
+    Sender.AddFunction(@PSG_Map, 'procedure map(x1,y1,x2,y2:integer);');
+    Sender.AddFunction(@PSG_Widows,
+      'procedure windows(Left, Top, Width, Height:integer);');
+    Sender.AddFunction(@PSG_Width, 'function Width:integer;');
+    Sender.AddFunction(@PSG_Height, 'function Height:integer;');
+    Sender.AddFunction(@PSG_Title, 'procedure Title(caption:Variant);');
+    Sender.AddFunction(@PSG_Clean, 'procedure clean(color:integer);');
+    Sender.AddFunction(@PSG_Color, 'procedure color(color:integer);');
+    Sender.AddFunction(@PSG_BackColor, 'procedure backcolor(color:integer);');
+    Sender.AddFunction(@PSG_Dot, 'procedure dot(x,y:extended;color:integer);');
+    Sender.AddFunction(@PSG_Pixel, 'procedure pixel(x,y:extended);');
+    Sender.AddFunction(@PSG_Line, 'procedure line(x1,y1,x2,y2:extended);');
+    Sender.AddFunction(@PSG_LineTo, 'procedure lineto(x,y:extended);');
+    Sender.AddFunction(@PSG_MoveTo, 'procedure moveto(x,y:extended);');
+    Sender.AddFunction(@PSG_Arc,
+      'procedure arc(ALeft, ATop, ARight, ABottom, SX, SY, EX, EY:extended);');
+    Sender.AddFunction(@PSG_Circle, 'procedure Circle(x,y,rx,ry:extended);');
+    Sender.AddFunction(@PSG_Ellipse, 'procedure Ellipse(x1,y1,x2,y2:extended);');
+    Sender.AddFunction(@PSG_Fill, 'procedure Fill(X, Y: extended; Color: integer);');
+    Sender.AddFunction(@PSG_LOGOHome, 'procedure HOME;');
+    Sender.AddFunction(@PSG_LOGOPU, 'procedure PU;');
+    Sender.AddFunction(@PSG_LOGOPD, 'procedure PD;');
+    Sender.AddFunction(@PSG_LOGOFD, 'procedure FD(len:extended);');
+    Sender.AddFunction(@PSG_LOGOBK, 'procedure BK(len:extended);');
+    Sender.AddFunction(@PSG_LOGOLT, 'procedure LT(angle:extended);');
+    Sender.AddFunction(@PSG_LOGORT, 'procedure RT(angle:extended);');
+
   end;
+
   Sender.AddFunction(@PSreservedprint,
     'procedure _reserved_print(sep:string; v:array of Variant);');
   Sender.AddFunction(@PSreadln, 'function Readln(question: string): string;');
@@ -1359,9 +1760,9 @@ begin
   Sender.AddFunction(@PSlog10, 'function log10(x: extended): extended;');
   Sender.AddFunction(@PSexp, 'function exp(x: extended): extended;');
   Sender.AddFunction(@PSpower, 'function power(x,y: extended): extended;');
+  Sender.AddFunction(@PSsqrt, 'function sqrt(x: extended): extended;');
   Sender.AddFunction(@PSRandom, 'function random: extended;');
   Sender.AddFunction(@PSRandomRange, 'function RandomRange(x,y: integer): integer;');
-  Sender.AddFunction(@PSclear, 'procedure clear;');
   Sender.AddFunction(@PSbeep, 'procedure beep;');
   Sender.AddFunction(@PSsleep, 'procedure sleep(x:integer);');
 end;
@@ -1441,6 +1842,36 @@ begin
     Clipboard.AsText := edtCrcResult.Text;
 end;
 
+procedure TFormMain.edtDecimalDigitsConvertDistanceChange(Sender: TObject);
+begin
+  sgConvertDistance.Modified := True;
+  sgConvertDistanceEditingDone(Sender);
+end;
+
+procedure TFormMain.edtDecimalDigitsConvertMassChange(Sender: TObject);
+begin
+  sgConvertMass.Modified := True;
+  sgConvertMassEditingDone(Sender);
+end;
+
+procedure TFormMain.edtDecimalDigitsConvertPowerChange(Sender: TObject);
+begin
+  sgConvertPower.Modified := True;
+  sgConvertPowerEditingDone(Sender);
+end;
+
+procedure TFormMain.edtDecimalDigitsConvertSpeedChange(Sender: TObject);
+begin
+  sgConvertSpeed.Modified := True;
+  sgConvertSpeedEditingDone(Sender);
+end;
+
+procedure TFormMain.edtDecimalDigitsConvertTemperatureChange(Sender: TObject);
+begin
+  sgConvertTemperature.Modified := True;
+  sgConvertTemperatureEditingDone(Sender);
+end;
+
 procedure TFormMain.btnBigFloatAddClick(Sender: TObject);
 begin
   bfCalc(Sender);
@@ -1464,24 +1895,13 @@ begin
   end;
 end;
 
-procedure TFormMain.btnClear_CClick(Sender: TObject);
-begin
-  mmoOutC.Clear;
-end;
-
-procedure TFormMain.btnClear_LuaClick(Sender: TObject);
-begin
-  mmoOutLua.Clear;
-end;
-
-procedure TFormMain.btnClear_MPYClick(Sender: TObject);
-begin
-  mmoOutMPY.Clear;
-end;
-
 procedure TFormMain.btnClear_PascalScriptClick(Sender: TObject);
+var
+  s: string;
 begin
-  mmoOutPascalScript.Clear;
+  s := TToolButton(Sender).Name;
+  Delete(s, 1, Length('btnClear_'));
+  TMemo(FindComponent('mmoOut' + s)).Clear;
 end;
 
 procedure TFormMain.btnCmd_LuaClick(Sender: TObject);
@@ -1573,6 +1993,8 @@ begin
   begin
     CanClose := False;
     Hide;
+    if FormGraph.Visible then
+      FormGraph.Hide;
   end
   else
   begin
@@ -1827,6 +2249,9 @@ var
   V: Float;
   sy: integer;
 begin
+  if not sgConvertDistance.Modified then
+    Exit;
+
   sy := sgConvertDistance.Row;
   if not TryStrToFloat(sgConvertDistance.Cells[1, sy], V) then
     Exit;
@@ -1859,6 +2284,7 @@ begin
       updateDistance(V * 10 / 3);
     else
   end;
+  sgConvertDistance.Modified := False;
 end;
 
 procedure TFormMain.sgConvertMassEditingDone(Sender: TObject);
@@ -1866,6 +2292,9 @@ var
   M: Float;
   sy: integer;
 begin
+  if not sgConvertMass.Modified then
+    Exit;
+
   sy := sgConvertMass.Row;
   if not TryStrToFloat(sgConvertMass.Cells[1, sy], M) then
     Exit;
@@ -1907,6 +2336,7 @@ begin
       updateMass(M / 2);
     else
   end;
+  sgConvertMass.Modified := False;
 end;
 
 procedure TFormMain.sgConvertPowerEditingDone(Sender: TObject);
@@ -1914,6 +2344,8 @@ var
   P: Float;
   sy: integer;
 begin
+  if not sgConvertPower.Modified then
+    Exit;
   sy := sgConvertPower.Row;
   if not TryStrToFloat(sgConvertPower.Cells[1, sy], P) then
     Exit;
@@ -1926,6 +2358,72 @@ begin
       updatePower(power(10, P / 10) / 1000);
     else
   end;
+  sgConvertPower.Modified := False;
+end;
+
+procedure TFormMain.sgConvertSpeedEditingDone(Sender: TObject);
+var
+  SP: Float;
+  sy: integer;
+begin
+  if not sgConvertSpeed.Modified then
+    Exit;
+
+  sy := sgConvertSpeed.Row;
+  if not TryStrToFloat(sgConvertSpeed.Cells[1, sy], SP) then
+    Exit;
+  case sy of
+    1: // cm/sec
+    updateSpeed(SP/100);
+    2: // cm/min
+    updateSpeed(SP/6000);
+    3: // cm/hr
+    updateSpeed(SP/360000);
+    4: // m/sec
+    updateSpeed(SP);
+    5: // m/min
+    updateSpeed(SP/60);
+    6: // m/hr
+    updateSpeed(SP/3600);
+    7: // km/sec
+    updateSpeed(SP*1000);
+    8: // km/min
+    updateSpeed(SP*1000/60);
+    9: // km/hr
+    updateSpeed(SP*1000/3600);
+    11: // inch/second (ips
+    updateSpeed(SP/39.3700787401575);
+    12: // inch/minute (ipm)
+    updateSpeed(SP/2362.20472440945);
+    13: // foot/second (fps)
+    updateSpeed(SP/3.28083989501312);
+    14: // foot/minute (fpm)
+    updateSpeed(SP/196.850393700787);
+    15: // foot/hour (ft/hr)
+    updateSpeed(SP/11811.0236220472);
+    16: // yard/second
+    updateSpeed(SP/1.09361329833771);
+    17: // yard/minute
+    updateSpeed(SP/65.6167979002625);
+    18: // yard/hour
+    updateSpeed(SP/3937.00787401575);
+    19: // mile/second
+    updateSpeed(SP/0.000621371192237);
+    20: // mile/minute
+    updateSpeed(SP/0.03728227153424);
+    21: // mile/hour
+    updateSpeed(SP/2.2369362920544);
+    23: // knot (kn or kt) (UK)
+    updateSpeed(SP/1.94260256941567);
+    24: // knot (kn or kt)
+    updateSpeed(SP/1.94384449244061);
+    25: // mach (M or Ma)
+    updateSpeed(SP/0.003016106101135);
+    27: // speed of light (c)
+    updateSpeed(SP*299792458);
+    else
+  end;
+  sgConvertSpeed.Modified := False;
 end;
 
 procedure TFormMain.sgConvertTemperatureEditingDone(Sender: TObject);
@@ -1933,6 +2431,9 @@ var
   T: Float;
   sy: integer;
 begin
+  if not sgConvertTemperature.Modified then
+    Exit;
+
   sy := sgConvertTemperature.Row;
   if not TryStrToFloat(sgConvertTemperature.Cells[1, sy], T) then
     Exit;
@@ -1948,9 +2449,10 @@ begin
     5: // Reaumur
       updateTemperature(T * 1.25);
     6: // rankine
-      updateTemperature((T - 273.15) / 1.8);
+      updateTemperature(T / 1.8 - 273.15);
     else
   end;
+  sgConvertTemperature.Modified := False;
 end;
 
 procedure TFormMain.sgConvertTimeEditingDone(Sender: TObject);
@@ -1961,6 +2463,9 @@ var
   ss: TStringList;
   year, mon, day, hour, min, sec: dword;
 begin
+  if not sgConvertTime.Modified then
+    Exit;
+
   sy := sgConvertTime.Row;
 
   case sy of
@@ -2013,6 +2518,7 @@ begin
     else
 
   end;
+  sgConvertTime.Modified := False;
 end;
 
 procedure TFormMain.sgExpr_CalcEditingDone(Sender: TObject);
@@ -2115,6 +2621,13 @@ begin
     ini.WriteInteger(s, 'Width', syn.Width)
   else
     ini.WriteInteger(s, 'Height', syn.Height);
+end;
+
+procedure TFormMain.SynEditGraphChange(Sender: TObject);
+begin
+  Compiled_Graph := False;
+  btnSave_Graph.Enabled := SynEditGraph.Modified;
+  btnSaveAs_Graph.Enabled := SynEditGraph.Modified;
 end;
 
 procedure TFormMain.SynEditGraphStatusChange(Sender: TObject;
@@ -2304,6 +2817,20 @@ begin
     pmHis_C.Items[0].Checked := False;
 end;
 
+procedure TFormMain.btnNew_GraphClick(Sender: TObject);
+begin
+  if Sender <> nil then
+    SynEditGraph.Text := NewFileTemplate_Graph;
+  SynEditGraph.Modified := False;
+  btnSave_Graph.Enabled := False;
+  btnSaveAs_Graph.Enabled := False;
+  tsGraph.Caption := 'Graph';
+  dlgSave_Graph.FileName := '';
+  if pmHis_Graph.Items.Count > 0 then
+    pmHis_Graph.Items[0].Checked := False;
+  Compiled_Graph := False;
+end;
+
 procedure TFormMain.btnNew_LuaClick(Sender: TObject);
 begin
   if Sender <> nil then
@@ -2391,6 +2918,15 @@ begin
   end;
 end;
 
+procedure TFormMain.btnOpen_GraphClick(Sender: TObject);
+begin
+  if dlgOpen_Graph.Execute then
+  begin
+    LoadFile_Graph(dlgOpen_Graph.FileName);
+    pmAddHis(pmHis_Graph, dlgOpen_Graph.FileName);
+  end;
+end;
+
 procedure TFormMain.btnOpen_LuaClick(Sender: TObject);
 begin
   if dlgOpen_Lua.Execute then
@@ -2423,6 +2959,7 @@ var
   spl: TSplitter;
   syn: TSynEdit;
   btn: TToolButton;
+  mmo: TMemo;
   s: string;
 begin
   btn := TToolButton(Sender);
@@ -2430,6 +2967,7 @@ begin
   Delete(s, 1, Length('btnPanelMode_'));
   spl := TSplitter(FindComponent('spl' + s));
   syn := TSynEdit(FindComponent('SynEdit' + s));
+  mmo := TMemo(FindComponent('mmoOut' + s));
   if spl.Align = alTop then
   begin
     syn.Align := alLeft;
@@ -2442,11 +2980,11 @@ begin
   begin
     syn.Align  := alTop;
     syn.Height := ini.ReadInteger(s, 'Height', 300);
-    ;
-    spl.Align := alTop;
-    spl.Top   := syn.Top + 10;
+    spl.Align  := alTop;
+    spl.Top    := syn.Top + 10;
     btn.ImageIndex := 43;
   end;
+  mmoOutPosCheck(syn, mmo);
   ini.WriteBool(s, 'Vert', spl.Align = alLeft);
 end;
 
@@ -2506,6 +3044,49 @@ begin
   finally
     btnStop_C.Enabled := False;
     btnRun_C.Enabled  := True;
+  end;
+end;
+
+procedure TFormMain.btnRun_GraphClick(Sender: TObject);
+var
+  res: boolean;
+  i: integer;
+begin
+  btnStop_Graph.Enabled := True;
+  btnRun_Graph.Enabled  := False;
+  try
+    try
+      if not Compiled_Graph then
+      begin
+        // compile
+        Script_Graph.Script.Text := SynEditGraph.Text;
+        Compiled_Graph := Script_Graph.Compile;
+
+        if not Compiled_Graph then
+        begin
+          if Script_Graph.CompilerMessageCount > 0 then
+            for i := 0 to Script_Graph.CompilerMessageCount - 1 do
+              mmoOutGraph.Lines.add(Script_Graph.CompilerErrorToStr(i));
+          Exit;
+        end;
+      end;
+
+      Application.ProcessMessages;
+      // run
+      FormGraph.Show;
+      res := Script_Graph.Execute;
+      if not res then
+        mmoOutGraph.Lines.add('Run-time error:' + Script_Graph.ExecErrorToString);
+
+    except
+      on E: Exception do
+      begin
+        mmoOutGraph.Lines.add(E.Message);
+      end;
+    end;
+  finally
+    btnStop_Graph.Enabled := False;
+    btnRun_Graph.Enabled  := True;
   end;
 end;
 
@@ -2727,6 +3308,15 @@ begin
   end;
 end;
 
+procedure TFormMain.btnSaveAs_GraphClick(Sender: TObject);
+begin
+  if dlgSave_Graph.Execute then
+  begin
+    SaveFile_Graph(dlgSave_Graph.FileName);
+    pmAddHis(pmHis_Graph, dlgSave_Graph.FileName);
+  end;
+end;
+
 procedure TFormMain.btnSaveAs_LuaClick(Sender: TObject);
 begin
   if dlgSave_Lua.Execute then
@@ -2754,6 +3344,14 @@ begin
   end;
 end;
 
+procedure TFormMain.btnSavePic_GraphClick(Sender: TObject);
+begin
+  if dlgSavePic_Graph.Execute then
+  begin
+    FormGraph.image.Picture.SaveToFile(dlgSavePic_Graph.FileName);
+  end;
+end;
+
 procedure TFormMain.btnSave_CalcClick(Sender: TObject);
 begin
   if dlgSave_Calc.FileName = '' then
@@ -2774,6 +3372,17 @@ begin
     pmAddHis(pmHis_C, dlgSave_C.FileName);
   end;
   SaveFile_C(dlgSave_C.FileName);
+end;
+
+procedure TFormMain.btnSave_GraphClick(Sender: TObject);
+begin
+  if dlgSave_Graph.FileName = '' then
+  begin
+    if not dlgSave_Graph.Execute then
+      Exit;
+    pmAddHis(pmHis_Graph, dlgSave_Graph.FileName);
+  end;
+  SaveFile_Graph(dlgSave_Graph.FileName);
 end;
 
 procedure TFormMain.btnSave_LuaClick(Sender: TObject);
@@ -2809,6 +3418,11 @@ begin
   SaveFile_PascalScript(dlgSave_PascalScript.FileName);
 end;
 
+procedure TFormMain.btnShowGraphFormClick(Sender: TObject);
+begin
+  FormGraph.Show;
+end;
+
 procedure TFormMain.btnStop_CClick(Sender: TObject);
 begin
   btnStop_C.Enabled := False;
@@ -2817,6 +3431,13 @@ begin
   begin
     ProcessC.Terminate(0);
   end;
+end;
+
+procedure TFormMain.btnStop_GraphClick(Sender: TObject);
+begin
+  btnStop_Graph.Enabled := False;
+  btnRun_Graph.Enabled  := True;
+  Script_Graph.Stop;
 end;
 
 procedure TFormMain.btnStop_LuaClick(Sender: TObject);
@@ -3015,6 +3636,9 @@ begin
 end;
 
 procedure TFormMain.tmrLogoTimer(Sender: TObject);
+var
+  s: string;
+  D, H, M, r: integer;
 begin
   // change Tray Icon
   ilTray.Tag := ilTray.Tag + 1;
@@ -3023,15 +3647,43 @@ begin
 
   // change time interval
   ilOption.Tag := ilOption.Tag + 1;
-  if ilOption.Tag > 600 then
+  if ilOption.Tag > 300 then
   begin
     ilOption.Tag     := 0;
     tmrLogo.Interval := Random(15) * 10 + 50;
+    if MinuteOf(now) <> RunTimeM then
+    begin
+      RunTimeM := MinuteOf(now);
+      RunTime  := RunTime + 1;
+      if writeable then
+        ini.WriteInteger('run', 'time', RunTime);
+      r := RunTime;
+      D := r div (60 * 24);
+      r := r mod (60 * 24);
+      H := r div 60;
+      M := r mod 60;
+      if (D = 0) and (H = 0) then
+      begin
+        if M = 0 then
+          s := ''
+        else
+          s := IntToStr(M) + 'm';
+      end
+      else
+      begin
+        if D = 0 then
+          s := IntToStr(H) + 'h ' + IntToStr(M) + 'm'
+        else
+          s := IntToStr(D) + 'd ' + IntToStr(H) + 'h ' + IntToStr(M) + 'm';
+      end;
+      if s <> '' then
+        lbRunTime.Caption := 'Time: ' + s;
+    end;
   end;
 
   if (pcMain.ActivePage = tsAbout) and Visible then
   begin
-    // option animation
+    // option image animation
     tmrLogo.Tag := (tmrLogo.Tag + btnShowOption.Tag) mod ilOption.Count;
     btnShowOption.ImageIndex := tmrLogo.Tag;
     if tmrLogo.Tag mod 5 = 0 then
@@ -3039,7 +3691,7 @@ begin
       // change logo
       imgLogo.Visible := not imgLogo.Visible;
 
-      // option animation dir
+      // option iamge animation dir
       if (SecondOf(Now) mod 10) = 0 then
         if Random(2) = 0 then
           btnShowOption.Tag := 1
@@ -3830,6 +4482,37 @@ begin
     FloatToStrF(V * 3 / 10, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
 end;
 
+procedure TFormMain.updateSpeed(SP: Float);
+begin
+  sgConvertSpeed.Cells[1,1]:=FloatToStrF(SP * 100, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,2]:=FloatToStrF(SP * 6000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,3]:=FloatToStrF(SP * 360000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,4]:=FloatToStrF(SP, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,5]:=FloatToStrF(SP*60, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,6]:=FloatToStrF(SP*3600, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,7]:=FloatToStrF(SP/1000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,8]:=FloatToStrF(SP*60/1000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,9]:=FloatToStrF(SP*3600/1000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+
+  sgConvertSpeed.Cells[1,11]:=FloatToStrF(SP*39.3700787401575, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,12]:=FloatToStrF(SP*2362.20472440945, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,13]:=FloatToStrF(SP*3.28083989501312, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,14]:=FloatToStrF(SP*196.850393700787, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,15]:=FloatToStrF(SP*11811.0236220472, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,16]:=FloatToStrF(SP*1.09361329833771, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,17]:=FloatToStrF(SP*65.6167979002625, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,18]:=FloatToStrF(SP*3937.00787401575, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,19]:=FloatToStrF(SP*0.000621371192237, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,20]:=FloatToStrF(SP*0.03728227153424, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,21]:=FloatToStrF(SP*2.2369362920544, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+
+  sgConvertSpeed.Cells[1,23]:=FloatToStrF(SP*1.94260256941567, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,24]:=FloatToStrF(SP*1.94384449244061, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1,25]:=FloatToStrF(SP*0.003016106101135, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+
+  sgConvertSpeed.Cells[1,27]:=FloatToStrF(SP/299792458, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+end;
+
 procedure TFormMain.updateMass(M: Float);
 begin
   sgConvertMass.Cells[1, 1]  :=
@@ -3883,19 +4566,24 @@ begin
   tsDigit.TabVisible    := ini.ReadBool('Enabled', 'Dital', True);
   updateTSPC(tsDigit, pcDigit);
 
-  tsConvertTime.TabVisible  := ini.ReadBool('Enabled', 'Convert_Time', True);
+  tsConvertTime.TabVisible := ini.ReadBool('Enabled', 'Convert_Time', True);
   tsConvertTemperature.TabVisible :=
     ini.ReadBool('Enabled', 'Convert_Temperature', True);
   tsConvertPower.TabVisible := ini.ReadBool('Enabled', 'Convert_Power', True);
-  tsConvert.TabVisible      := ini.ReadBool('Enabled', 'Convert', True);
+  tsConvertDistance.TabVisible := ini.ReadBool('Enabled', 'Convert_Distance', True);
+  tsConvertSpeed.TabVisible:=ini.ReadBool('Enabled', 'Convert_Speed', True); ;
+  tsConvertMass.TabVisible := ini.ReadBool('Enabled', 'Convert_Mass', True);
+  tsConvert.TabVisible := ini.ReadBool('Enabled', 'Convert', True);
   updateTSPC(tsConvert, pcConvert);
 
   tsCalc.TabVisible := ini.ReadBool('Enabled', 'Calc', True);
 
   tsPascalScript.TabVisible := ini.ReadBool('Enabled', 'Script_Pascal', True);
   tsMicropython.TabVisible := ini.ReadBool('Enabled', 'Script_micropython', True);
-  tsLua.TabVisible    := ini.ReadBool('Enabled', 'Script_Lua', True);
-  tsC.TabVisible      := ini.ReadBool('Enabled', 'Script_C', True);
+  tsLua.TabVisible   := ini.ReadBool('Enabled', 'Script_Lua', True);
+  tsC.TabVisible     := ini.ReadBool('Enabled', 'Script_C', True);
+  tsGraph.TabVisible := ini.ReadBool('Enabled', 'Script_Graph', True);
+  ;
   tsScript.TabVisible := ini.ReadBool('Enabled', 'Script', True);
   updateTSPC(tsScript, pcScript);
 
@@ -3960,6 +4648,11 @@ begin
   mmoOutAdd(mmoOutCalc, msg);
 end;
 
+procedure TFormMain.mmoOutAdd_Graph(msg: string);
+begin
+  mmoOutAdd(mmoOutGraph, msg);
+end;
+
 procedure TFormMain.pmAddHis(var pm: TPopupMenu; FileName: string);
 var
   mi: TMenuItem;
@@ -3991,6 +4684,10 @@ begin
       else if pm = pmHis_C then
       begin
         mi.OnClick := @pmHisClick_C;
+      end
+      else if pm = pmHis_Graph then
+      begin
+        mi.OnClick := @pmHisClick_Graph;
       end
       else if pm = pmHis_Calc then
       begin
@@ -4054,6 +4751,14 @@ begin
   LoadFile_Calc(TMenuItem(Sender).Caption);
   // move to first
   pmAddHis(pmHis_Calc, TMenuItem(Sender).Caption);
+end;
+
+procedure TFormMain.pmHisClick_Graph(Sender: TObject);
+begin
+  // load history file
+  LoadFile_Graph(TMenuItem(Sender).Caption);
+  // move to first
+  pmAddHis(pmHis_Graph, TMenuItem(Sender).Caption);
 end;
 
 procedure TFormMain.LoadFile_PascalScript(FileName: string);
@@ -4180,6 +4885,28 @@ begin
   mmoOut_Temp.Lines.SaveToFile(FileName);
   SynEditFunc_Calc.Hint := FileName;
   sgVar_Calc.Hint := FileName;
+end;
+
+procedure TFormMain.LoadFile_Graph(FileName: string);
+begin
+  btnNew_GraphClick(nil);
+  SynEditGraph.Lines.LoadFromFile(FileName);
+  dlgSave_Graph.FileName := FileName;
+  SynEditGraph.Hint := FileName;
+  tsGraph.Caption := 'Graph - ' + shortFileName(FileName);
+end;
+
+procedure TFormMain.SaveFile_Graph(FileName: string);
+begin
+  try
+    SynEditGraph.Lines.SaveToFile(FileName);
+    SynEditGraph.Modified := False;
+    btnSave_Graph.Enabled := False;
+    btnSaveAs_Graph.Enabled := False;
+    tsGraph.Caption := 'Graph - ' + shortFileName(FileName);
+  except
+
+  end;
 end;
 
 procedure TFormMain.errlog(msg: string);
