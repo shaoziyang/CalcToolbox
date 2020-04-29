@@ -700,26 +700,26 @@ var
   PSG_W: integer = 500;
   PSG_H: integer = 500;
   PSG_PenDown: boolean = True;
-  PSG_lgx: Float = 0;       // Logo position and angle
-  PSG_lgy: Float = 0;
+  PSG_lgx: double = 0;       // Logo position and angle
+  PSG_lgy: double = 0;
   PSG_Angle: Float = 0;
 
-function PSG_cx(x: Float): Float;
+function PSG_cx(x: double): double;
 begin
   Result := PSG_W * (x - PSG_sx1) / (PSG_sx2 - PSG_sx1);
 end;
 
-function PSG_cy(y: Float): Float;
+function PSG_cy(y: double): double;
 begin
   Result := PSG_H - PSG_H * (y - PSG_sy1) / (PSG_sy2 - PSG_sy1);
 end;
 
-function PSG_cxi(x: Float): integer;
+function PSG_cxi(x: double): integer;
 begin
   Result := Round(PSG_W * (x - PSG_sx1) / (PSG_sx2 - PSG_sx1));
 end;
 
-function PSG_cyi(y: Float): integer;
+function PSG_cyi(y: double): integer;
 begin
   Result := Round(PSG_H - PSG_H * (y - PSG_sy1) / (PSG_sy2 - PSG_sy1));
 end;
@@ -757,6 +757,7 @@ begin
   FormGraph.image.Picture.Bitmap.Height := Height;
   PSG_W := Width;
   PSG_H := Height;
+  PSG_Map(0, 0, Width, Height);
 end;
 
 function PSG_Width: integer;
@@ -769,8 +770,12 @@ begin
   Result := PSG_sy2 - PSG_sy1;
 end;
 
-procedure PSG_Title(Caption: variant);
+procedure PSG_Title(Caption: variant; show:Boolean=True);
 begin
+  if show then
+    FormGraph.BorderStyle:=bsSizeable
+  else
+    FormGraph.BorderStyle:=bsNone;
   FormGraph.Caption := Caption;
 end;
 
@@ -801,42 +806,42 @@ begin
   FormGraph.image.Picture.Bitmap.Canvas.Pixels[cx, cy] := Color;
 end;
 
-procedure PSG_Pixel(x, y: Float);
+procedure PSG_Pixel(x, y: double);
 begin
   PSG_Dot(x, y, FormGraph.image.Picture.Bitmap.Canvas.Pen.Color);
 end;
 
-procedure PSG_LineTo(x, y: Float);
+procedure PSG_LineTo(x, y: double);
 begin
   FormGraph.image.Picture.Bitmap.Canvas.LineTo(PSG_cxi(x), PSG_cxi(y));
 end;
 
-procedure PSG_MoveTo(x, y: Float);
+procedure PSG_MoveTo(x, y: double);
 begin
   FormGraph.image.Picture.Bitmap.Canvas.MoveTo(PSG_cxi(x), PSG_cxi(y));
 end;
 
-procedure PSG_Line(x1, y1, x2, y2: Float);
+procedure PSG_Line(x1, y1, x2, y2: double);
 begin
   FormGraph.image.Picture.Bitmap.Canvas.Line(PSG_cxi(x1), PSG_cyi(y1),
     PSG_cxi(x2), PSG_cyi(y2));
 end;
 
-procedure PSG_Arc(ALeft, ATop, ARight, ABottom, SX, SY, EX, EY: Float);
+procedure PSG_Arc(ALeft, ATop, ARight, ABottom, SX, SY, EX, EY: double);
 begin
   FormGraph.image.Picture.Bitmap.Canvas.arc(PSG_cxi(ALeft),
     PSG_cyi(ATop), PSG_cxi(ARight), PSG_cyi(ABottom), PSG_cxi(SX),
     PSG_cyi(SY), PSG_cxi(EX), PSG_cyi(EY));
 end;
 
-procedure PSG_Circle(x, y, rx, ry: Float);
+procedure PSG_Circle(x, y, rx, ry: double);
 begin
   FormGraph.image.Picture.Bitmap.Canvas.arc(PSG_cxi(x - rx),
     PSG_cyi(y - ry), PSG_cxi(x + rx), PSG_cyi(y + ry), PSG_cxi(x + rx),
     PSG_cyi(y), PSG_cxi(x + rx), PSG_cyi(y));
 end;
 
-procedure PSG_Ellipse(x1, y1, x2, y2: Float);
+procedure PSG_Ellipse(x1, y1, x2, y2: double);
 begin
   FormGraph.image.Picture.Bitmap.Canvas.Ellipse(PSG_cxi(x1), PSG_cyi(y1),
     PSG_cxi(x2), PSG_cyi(y2));
@@ -869,7 +874,7 @@ begin
   PSG_PenDown := True;
 end;
 
-procedure PSG_LOGOFD(len: Float);
+procedure PSG_LOGOFD(len: double);
 var
   x, y: float;
 begin
@@ -881,7 +886,7 @@ begin
     PSG_Line(x, y, PSG_lgx, PSG_lgy);
 end;
 
-procedure PSG_LOGOBK(len: Float);
+procedure PSG_LOGOBK(len: double);
 var
   x, y: float;
 begin
@@ -893,12 +898,12 @@ begin
     PSG_Line(x, y, PSG_lgx, PSG_lgy);
 end;
 
-procedure PSG_LOGOLT(angle: Float);
+procedure PSG_LOGOLT(angle: double);
 begin
   PSG_Angle := PSG_Angle + angle;
 end;
 
-procedure PSG_LOGORT(angle: Float);
+procedure PSG_LOGORT(angle: double);
 begin
   PSG_Angle := PSG_Angle - angle;
 end;
@@ -1016,34 +1021,62 @@ begin
   FormMain.mmoOutPascalScript.Lines.Add('');
 end;
 
-function PSlog(x: extended): extended;
+function PSlog(x: double): double;
 begin
   Result := ln(x);
 end;
 
-function PSlog10(x: extended): extended;
+function PSlog10(x: double): double;
 begin
   Result := log10(x);
 end;
 
-function PSPower(x, y: extended): extended;
+function PSPower(x, y: double): double;
 begin
   Result := power(x, y);
-  random;
 end;
 
-function PSsqrt(x: extended): extended;
-begin
-  Result := sqrt(x);
-  random;
-end;
-
-function PSExp(x: extended): extended;
+function PSExp(x: double): double;
 begin
   Result := exp(x);
 end;
 
-function PSRandom: extended;
+function PStan(x: double): double;
+begin
+  Result := tan(x);
+end;
+
+function PSarcsin(x: double): double;
+begin
+  Result := arcsin(x);
+end;
+
+function PSarccos(x: double): double;
+begin
+  Result := arccos(x);
+end;
+
+function PSarctan(x: double): double;
+begin
+  Result := arctan2(x,1);
+end;
+
+function PSsinh(x: double): double;
+begin
+  Result := sinh(x);
+end;
+
+function PScosh(x: double): double;
+begin
+  Result := cosh(x);
+end;
+
+function PStanh(x: double): double;
+begin
+  Result := tanh(x);
+end;
+
+function PSRandom: double;
 begin
   Result := Random;
 end;
@@ -1728,27 +1761,27 @@ begin
       'procedure windows(Left, Top, Width, Height:integer);');
     Sender.AddFunction(@PSG_Width, 'function Width:integer;');
     Sender.AddFunction(@PSG_Height, 'function Height:integer;');
-    Sender.AddFunction(@PSG_Title, 'procedure Title(caption:Variant);');
+    Sender.AddFunction(@PSG_Title, 'procedure Title(caption:Variant;show:Boolean);');
     Sender.AddFunction(@PSG_Clean, 'procedure clean(color:integer);');
     Sender.AddFunction(@PSG_Color, 'procedure color(color:integer);');
     Sender.AddFunction(@PSG_BackColor, 'procedure backcolor(color:integer);');
-    Sender.AddFunction(@PSG_Dot, 'procedure dot(x,y:extended;color:integer);');
-    Sender.AddFunction(@PSG_Pixel, 'procedure pixel(x,y:extended);');
-    Sender.AddFunction(@PSG_Line, 'procedure line(x1,y1,x2,y2:extended);');
-    Sender.AddFunction(@PSG_LineTo, 'procedure lineto(x,y:extended);');
-    Sender.AddFunction(@PSG_MoveTo, 'procedure moveto(x,y:extended);');
+    Sender.AddFunction(@PSG_Dot, 'procedure dot(x,y:double;color:integer);');
+    Sender.AddFunction(@PSG_Pixel, 'procedure pixel(x,y:double);');
+    Sender.AddFunction(@PSG_Line, 'procedure line(x1,y1,x2,y2:double);');
+    Sender.AddFunction(@PSG_LineTo, 'procedure lineto(x,y:double);');
+    Sender.AddFunction(@PSG_MoveTo, 'procedure moveto(x,y:double);');
     Sender.AddFunction(@PSG_Arc,
-      'procedure arc(ALeft, ATop, ARight, ABottom, SX, SY, EX, EY:extended);');
-    Sender.AddFunction(@PSG_Circle, 'procedure Circle(x,y,rx,ry:extended);');
-    Sender.AddFunction(@PSG_Ellipse, 'procedure Ellipse(x1,y1,x2,y2:extended);');
+      'procedure arc(ALeft, ATop, ARight, ABottom, SX, SY, EX, EY:double);');
+    Sender.AddFunction(@PSG_Circle, 'procedure Circle(x,y,rx,ry:double);');
+    Sender.AddFunction(@PSG_Ellipse, 'procedure Ellipse(x1,y1,x2,y2:double);');
     Sender.AddFunction(@PSG_Fill, 'procedure Fill(X, Y: extended; Color: integer);');
     Sender.AddFunction(@PSG_LOGOHome, 'procedure HOME;');
     Sender.AddFunction(@PSG_LOGOPU, 'procedure PU;');
     Sender.AddFunction(@PSG_LOGOPD, 'procedure PD;');
-    Sender.AddFunction(@PSG_LOGOFD, 'procedure FD(len:extended);');
-    Sender.AddFunction(@PSG_LOGOBK, 'procedure BK(len:extended);');
-    Sender.AddFunction(@PSG_LOGOLT, 'procedure LT(angle:extended);');
-    Sender.AddFunction(@PSG_LOGORT, 'procedure RT(angle:extended);');
+    Sender.AddFunction(@PSG_LOGOFD, 'procedure FD(len:double);');
+    Sender.AddFunction(@PSG_LOGOBK, 'procedure BK(len:double);');
+    Sender.AddFunction(@PSG_LOGOLT, 'procedure LT(angle:double);');
+    Sender.AddFunction(@PSG_LOGORT, 'procedure RT(angle:double);');
 
   end;
 
@@ -1756,12 +1789,18 @@ begin
     'procedure _reserved_print(sep:string; v:array of Variant);');
   Sender.AddFunction(@PSreadln, 'function Readln(question: string): string;');
   Sender.AddFunction(@PSreadln, 'function Read(question: string): string;');
-  Sender.AddFunction(@PSlog, 'function ln(x: extended): extended;');
-  Sender.AddFunction(@PSlog10, 'function log10(x: extended): extended;');
-  Sender.AddFunction(@PSexp, 'function exp(x: extended): extended;');
-  Sender.AddFunction(@PSpower, 'function power(x,y: extended): extended;');
-  Sender.AddFunction(@PSsqrt, 'function sqrt(x: extended): extended;');
-  Sender.AddFunction(@PSRandom, 'function random: extended;');
+  Sender.AddFunction(@PSlog, 'function ln(x: double): double;');
+  Sender.AddFunction(@PSlog10, 'function log10(x: double): double;');
+  Sender.AddFunction(@PSexp, 'function exp(x: double): double;');
+  Sender.AddFunction(@PStan, 'function tan(x: double): double;');
+  Sender.AddFunction(@PSarcsin, 'function arcsin(x: double): double;');
+  Sender.AddFunction(@PSarccos, 'function arccos(x: double): double;');
+  Sender.AddFunction(@PSarctan, 'function arctan(x: double): double;');
+  Sender.AddFunction(@PSsinh, 'function sinh(x: double): double;');
+  Sender.AddFunction(@PScosh, 'function cosh(x: double): double;');
+  Sender.AddFunction(@PStanh, 'function tanh(x: double): double;');
+  Sender.AddFunction(@PSpower, 'function power(x,y: double): double;');
+  Sender.AddFunction(@PSRandom, 'function random: double;');
   Sender.AddFunction(@PSRandomRange, 'function RandomRange(x,y: integer): integer;');
   Sender.AddFunction(@PSbeep, 'procedure beep;');
   Sender.AddFunction(@PSsleep, 'procedure sleep(x:integer);');
@@ -1913,6 +1952,7 @@ begin
     AProcess.Executable := external_lua_bin_name
   else
     AProcess.Executable := ExtractFilePath(Application.ExeName) + LUA_BIN_NAME;
+  AProcess.Options:=AProcess.Options+[poNewConsole];
   AProcess.Execute;
   AProcess.Free;
 end;
@@ -1926,6 +1966,7 @@ begin
     AProcess.Executable := external_micropython_bin_name
   else
     AProcess.Executable := ExtractFilePath(Application.ExeName) + MICROPYTHON_BIN_NAME;
+  AProcess.Options:=AProcess.Options+[poNewConsole];
   AProcess.Execute;
   AProcess.Free;
 end;
