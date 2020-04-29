@@ -16,8 +16,11 @@ type
     image: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure imageMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: integer);
+    procedure imageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
   private
-
+    fx, fy: integer;
   public
 
   end;
@@ -51,6 +54,24 @@ begin
   end;
 end;
 
+procedure TFormGraph.imageMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: integer);
+begin
+  fx := X;
+  fy := Y;
+end;
+
+procedure TFormGraph.imageMouseMove(Sender: TObject; Shift: TShiftState; X, Y: integer);
+begin
+  if Shift = [ssLeft] then
+  begin
+    Left := Left + X - fx;
+    Top  := Top + Y - fy;
+  end;
+end;
+
 end.
+
+
 
 

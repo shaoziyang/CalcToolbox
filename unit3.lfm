@@ -17,6 +17,8 @@ object FormGraph: TFormGraph
     Top = 0
     Width = 320
     Align = alClient
+    OnMouseDown = imageMouseDown
+    OnMouseMove = imageMouseMove
     Transparent = True
   end
 end
