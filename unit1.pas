@@ -20,7 +20,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '1.4.2';
+  VERSION = '1.5.0';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -1635,7 +1635,23 @@ begin
           begin
             if btnSave_MPY.Enabled then
               btnSave_MPYClick(Sender);
-          end;
+          end
+          else if pcScript.ActivePage = tsLua then
+          begin
+            if btnSave_Lua.Enabled then
+              btnSave_LuaClick(Sender);
+          end
+          else if pcScript.ActivePage = tsC then
+          begin
+            if btnSave_C.Enabled then
+              btnSave_CClick(Sender);
+          end
+          else if pcScript.ActivePage = tsGraph then
+          begin
+            if btnSave_Graph.Enabled then
+              btnSave_GraphClick(Sender);
+          end
+
         end
         else if pcMain.ActivePage = tsCalc then
         begin
