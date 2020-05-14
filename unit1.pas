@@ -20,7 +20,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '1.5.0';
+  VERSION = '1.5.2.2';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -245,6 +245,7 @@ type
     dlgSave_PascalScript: TSaveDialog;
     Script_Calc: TPSScript;
     sgConstantDecimalMultiple: TStringGrid;
+    sgConstantPeriodicTable: TStringGrid;
     sgConvertSpeed: TStringGrid;
     sgConvertMass: TStringGrid;
     sgConvertPower: TStringGrid;
@@ -291,6 +292,7 @@ type
     btnCaret_PascalScript: TToolButton;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    tsPeriodicTable: TTabSheet;
     ToolBar17: TToolBar;
     ToolButton45: TToolButton;
     tsConvertSpeed: TTabSheet;
@@ -641,6 +643,7 @@ type
     errlog_en: boolean;
     errlogfile: string;
     procedure errlog(msg: string);
+
   public
     MinimizeToTray, CloseToTray: boolean;
     function BufferToStr(buf: TByteArray; N: integer): string;
@@ -663,11 +666,13 @@ type
     procedure updateTemperature(C: Float);
     procedure updatePower(P: Float);
     procedure updateDistance(V: Float);
-    procedure updateSpeed(SP:Float);
+    procedure updateSpeed(SP: Float);
     procedure updateMass(M: Float);
 
     procedure updateTabVisible;
     procedure updateTSPC(ts: TTabSheet; pc: TPageControl);
+
+    function RunTimeToDHMStr(T: integer): string;
   end;
 
 
@@ -770,12 +775,12 @@ begin
   Result := PSG_sy2 - PSG_sy1;
 end;
 
-procedure PSG_Title(Caption: variant; show:Boolean=True);
+procedure PSG_Title(Caption: variant; Show: boolean = True);
 begin
-  if show then
-    FormGraph.BorderStyle:=bsSizeable
+  if Show then
+    FormGraph.BorderStyle := bsSizeable
   else
-    FormGraph.BorderStyle:=bsNone;
+    FormGraph.BorderStyle := bsNone;
   FormGraph.Caption := Caption;
 end;
 
@@ -1058,7 +1063,7 @@ end;
 
 function PSarctan(x: double): double;
 begin
-  Result := arctan2(x,1);
+  Result := arctan2(x, 1);
 end;
 
 function PSsinh(x: double): double;
@@ -1141,9 +1146,11 @@ begin
     lbRunCnt.Tag := ini.ReadInteger('Run', 'Cnt', 1);
     ini.WriteInteger('Run', 'Cnt', lbRunCnt.Tag + 1);
     lbRunCnt.Caption := 'Run:  ' + IntToStr(lbRunCnt.Tag);
+    lbRunCnt.Hint:='Start: '+FormatDateTime('yyyy-m-d hh:nn',now);
     writeable := True;
     RunTime   := ini.ReadInteger('run', 'Time', 0);
     RunTimeM  := MinuteOf(now);
+    lbRunTime.Tag:=0;
   except
     writeable := False;
     // set unwriteable flag
@@ -1251,9 +1258,15 @@ begin
     sgVar_Calc.ColWidths[0] := ini.ReadInteger('calc', 'var_col0', 40);
     sgVar_Calc.ColWidths[2] := ini.ReadInteger('calc', 'var_col2', 80);
     cbbCalc.Items.CommaText := ini.ReadString('calc', 'exphis', '');
+    mmoOutCalc.Lines.CommaText:=ini.ReadString('calc','cmdout','');
 
     sgExpr_Calc.ColWidths[1]   := ini.ReadInteger('calc', 'tab_col1', 200);
     pcCalcMode.ActivePageIndex := ini.ReadInteger('calc', 'mode', 0);
+
+    sgExpr_Calc.RowCount:=ini.ReadInteger('calcTable','count',1)+1;
+    for i:=1 to sgExpr_Calc.RowCount-1 do
+      sgExpr_Calc.Rows[i].CommaText:=ini.ReadString('calcTable',IntToStr(i),'');
+
   except
     on E: Exception do
       errlog(E.Message);
@@ -1516,9 +1529,15 @@ begin
       ini.WriteInteger('calc', 'var_col0', sgVar_Calc.ColWidths[0]);
       ini.WriteInteger('calc', 'var_col2', sgVar_Calc.ColWidths[2]);
       ini.WriteString('calc', 'exphis', cbbCalc.Items.CommaText);
+      ini.WriteString('calc','cmdout',mmoOutCalc.Lines.CommaText);
 
       ini.WriteInteger('calc', 'tab_col1', sgExpr_Calc.ColWidths[1]);
       ini.WriteInteger('calc', 'mode', pcCalcMode.ActivePageIndex);
+
+      ini.EraseSection('calcTable');
+      ini.WriteInteger('calcTable','count',sgExpr_Calc.RowCount-1);
+      for i:=1 to sgExpr_Calc.RowCount-1 do
+        ini.WriteString('calcTable',IntToStr(i),sgExpr_Calc.Rows[i].CommaText);
 
       // convert
       ini.WriteInteger('last', 'page_convert', pcConvert.ActivePageIndex);
@@ -1650,7 +1669,7 @@ begin
           begin
             if btnSave_Graph.Enabled then
               btnSave_GraphClick(Sender);
-          end
+          end;
 
         end
         else if pcMain.ActivePage = tsCalc then
@@ -1701,7 +1720,6 @@ end;
 
 procedure TFormMain.lbVerClick(Sender: TObject);
 begin
-  Caption := IntToStr(TLabel(Sender).Tag);
   pcAbout.PageIndex := TLabel(Sender).Tag;
 end;
 
@@ -1968,7 +1986,7 @@ begin
     AProcess.Executable := external_lua_bin_name
   else
     AProcess.Executable := ExtractFilePath(Application.ExeName) + LUA_BIN_NAME;
-  AProcess.Options:=AProcess.Options+[poNewConsole];
+  AProcess.Options := AProcess.Options + [poNewConsole];
   AProcess.Execute;
   AProcess.Free;
 end;
@@ -1982,7 +2000,7 @@ begin
     AProcess.Executable := external_micropython_bin_name
   else
     AProcess.Executable := ExtractFilePath(Application.ExeName) + MICROPYTHON_BIN_NAME;
-  AProcess.Options:=AProcess.Options+[poNewConsole];
+  AProcess.Options := AProcess.Options + [poNewConsole];
   AProcess.Execute;
   AProcess.Free;
 end;
@@ -2431,53 +2449,53 @@ begin
     Exit;
   case sy of
     1: // cm/sec
-    updateSpeed(SP/100);
+      updateSpeed(SP / 100);
     2: // cm/min
-    updateSpeed(SP/6000);
+      updateSpeed(SP / 6000);
     3: // cm/hr
-    updateSpeed(SP/360000);
+      updateSpeed(SP / 360000);
     4: // m/sec
-    updateSpeed(SP);
+      updateSpeed(SP);
     5: // m/min
-    updateSpeed(SP/60);
+      updateSpeed(SP / 60);
     6: // m/hr
-    updateSpeed(SP/3600);
+      updateSpeed(SP / 3600);
     7: // km/sec
-    updateSpeed(SP*1000);
+      updateSpeed(SP * 1000);
     8: // km/min
-    updateSpeed(SP*1000/60);
+      updateSpeed(SP * 1000 / 60);
     9: // km/hr
-    updateSpeed(SP*1000/3600);
+      updateSpeed(SP * 1000 / 3600);
     11: // inch/second (ips
-    updateSpeed(SP/39.3700787401575);
+      updateSpeed(SP / 39.3700787401575);
     12: // inch/minute (ipm)
-    updateSpeed(SP/2362.20472440945);
+      updateSpeed(SP / 2362.20472440945);
     13: // foot/second (fps)
-    updateSpeed(SP/3.28083989501312);
+      updateSpeed(SP / 3.28083989501312);
     14: // foot/minute (fpm)
-    updateSpeed(SP/196.850393700787);
+      updateSpeed(SP / 196.850393700787);
     15: // foot/hour (ft/hr)
-    updateSpeed(SP/11811.0236220472);
+      updateSpeed(SP / 11811.0236220472);
     16: // yard/second
-    updateSpeed(SP/1.09361329833771);
+      updateSpeed(SP / 1.09361329833771);
     17: // yard/minute
-    updateSpeed(SP/65.6167979002625);
+      updateSpeed(SP / 65.6167979002625);
     18: // yard/hour
-    updateSpeed(SP/3937.00787401575);
+      updateSpeed(SP / 3937.00787401575);
     19: // mile/second
-    updateSpeed(SP/0.000621371192237);
+      updateSpeed(SP / 0.000621371192237);
     20: // mile/minute
-    updateSpeed(SP/0.03728227153424);
+      updateSpeed(SP / 0.03728227153424);
     21: // mile/hour
-    updateSpeed(SP/2.2369362920544);
+      updateSpeed(SP / 2.2369362920544);
     23: // knot (kn or kt) (UK)
-    updateSpeed(SP/1.94260256941567);
+      updateSpeed(SP / 1.94260256941567);
     24: // knot (kn or kt)
-    updateSpeed(SP/1.94384449244061);
+      updateSpeed(SP / 1.94384449244061);
     25: // mach (M or Ma)
-    updateSpeed(SP/0.003016106101135);
+      updateSpeed(SP / 0.003016106101135);
     27: // speed of light (c)
-    updateSpeed(SP*299792458);
+      updateSpeed(SP * 299792458);
     else
   end;
   sgConvertSpeed.Modified := False;
@@ -3031,7 +3049,7 @@ begin
     syn.Width := ini.ReadInteger(s, 'Width', 320);
     spl.Align := alLeft;
     spl.Left  := syn.Left + 10;
-    btn.ImageIndex := 44;
+    btn.ImageIndex := 43;
   end
   else
   begin
@@ -3039,7 +3057,7 @@ begin
     syn.Height := ini.ReadInteger(s, 'Height', 300);
     spl.Align  := alTop;
     spl.Top    := syn.Top + 10;
-    btn.ImageIndex := 43;
+    btn.ImageIndex := 44;
   end;
   mmoOutPosCheck(syn, mmo);
   ini.WriteBool(s, 'Vert', spl.Align = alLeft);
@@ -3694,8 +3712,7 @@ end;
 
 procedure TFormMain.tmrLogoTimer(Sender: TObject);
 var
-  s: string;
-  D, H, M, r: integer;
+  s:string;
 begin
   // change Tray Icon
   ilTray.Tag := ilTray.Tag + 1;
@@ -3712,29 +3729,15 @@ begin
     begin
       RunTimeM := MinuteOf(now);
       RunTime  := RunTime + 1;
+      lbRunTime.Tag:=lbRunTime.Tag+1;
       if writeable then
         ini.WriteInteger('run', 'time', RunTime);
-      r := RunTime;
-      D := r div (60 * 24);
-      r := r mod (60 * 24);
-      H := r div 60;
-      M := r mod 60;
-      if (D = 0) and (H = 0) then
-      begin
-        if M = 0 then
-          s := ''
-        else
-          s := IntToStr(M) + 'm';
-      end
-      else
-      begin
-        if D = 0 then
-          s := IntToStr(H) + 'h ' + IntToStr(M) + 'm'
-        else
-          s := IntToStr(D) + 'd ' + IntToStr(H) + 'h ' + IntToStr(M) + 'm';
-      end;
+      s:=RunTimeToDHMStr(RunTime);
       if s <> '' then
+      begin
         lbRunTime.Caption := 'Time: ' + s;
+        lbRunTime.Hint:='Uptime: '+ RunTimeToDHMStr(lbRunTime.Tag);
+      end;
     end;
   end;
 
@@ -4541,33 +4544,57 @@ end;
 
 procedure TFormMain.updateSpeed(SP: Float);
 begin
-  sgConvertSpeed.Cells[1,1]:=FloatToStrF(SP * 100, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,2]:=FloatToStrF(SP * 6000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,3]:=FloatToStrF(SP * 360000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,4]:=FloatToStrF(SP, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,5]:=FloatToStrF(SP*60, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,6]:=FloatToStrF(SP*3600, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,7]:=FloatToStrF(SP/1000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,8]:=FloatToStrF(SP*60/1000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,9]:=FloatToStrF(SP*3600/1000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 1] := FloatToStrF(SP * 100, ffFixed, 0,
+    edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 2] := FloatToStrF(SP * 6000, ffFixed, 0,
+    edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 3] := FloatToStrF(SP * 360000, ffFixed, 0,
+    edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 4] := FloatToStrF(SP, ffFixed, 0,
+    edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 5] := FloatToStrF(SP * 60, ffFixed, 0,
+    edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 6] := FloatToStrF(SP * 3600, ffFixed, 0,
+    edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 7] := FloatToStrF(SP / 1000, ffFixed, 0,
+    edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 8] := FloatToStrF(SP * 60 / 1000, ffFixed, 0,
+    edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 9] := FloatToStrF(SP * 3600 / 1000, ffFixed, 0,
+    edtDecimalDigitsConvertSpeed.Value);
 
-  sgConvertSpeed.Cells[1,11]:=FloatToStrF(SP*39.3700787401575, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,12]:=FloatToStrF(SP*2362.20472440945, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,13]:=FloatToStrF(SP*3.28083989501312, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,14]:=FloatToStrF(SP*196.850393700787, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,15]:=FloatToStrF(SP*11811.0236220472, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,16]:=FloatToStrF(SP*1.09361329833771, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,17]:=FloatToStrF(SP*65.6167979002625, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,18]:=FloatToStrF(SP*3937.00787401575, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,19]:=FloatToStrF(SP*0.000621371192237, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,20]:=FloatToStrF(SP*0.03728227153424, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,21]:=FloatToStrF(SP*2.2369362920544, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 11] :=
+    FloatToStrF(SP * 39.3700787401575, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 12] :=
+    FloatToStrF(SP * 2362.20472440945, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 13] :=
+    FloatToStrF(SP * 3.28083989501312, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 14] :=
+    FloatToStrF(SP * 196.850393700787, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 15] :=
+    FloatToStrF(SP * 11811.0236220472, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 16] :=
+    FloatToStrF(SP * 1.09361329833771, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 17] :=
+    FloatToStrF(SP * 65.6167979002625, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 18] :=
+    FloatToStrF(SP * 3937.00787401575, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 19] :=
+    FloatToStrF(SP * 0.000621371192237, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 20] :=
+    FloatToStrF(SP * 0.03728227153424, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 21] :=
+    FloatToStrF(SP * 2.2369362920544, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
 
-  sgConvertSpeed.Cells[1,23]:=FloatToStrF(SP*1.94260256941567, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,24]:=FloatToStrF(SP*1.94384449244061, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1,25]:=FloatToStrF(SP*0.003016106101135, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 23] :=
+    FloatToStrF(SP * 1.94260256941567, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 24] :=
+    FloatToStrF(SP * 1.94384449244061, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 25] :=
+    FloatToStrF(SP * 0.003016106101135, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
 
-  sgConvertSpeed.Cells[1,27]:=FloatToStrF(SP/299792458, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 27] :=
+    FloatToStrF(SP / 299792458, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
 end;
 
 procedure TFormMain.updateMass(M: Float);
@@ -4623,14 +4650,15 @@ begin
   tsDigit.TabVisible    := ini.ReadBool('Enabled', 'Dital', True);
   updateTSPC(tsDigit, pcDigit);
 
-  tsConvertTime.TabVisible := ini.ReadBool('Enabled', 'Convert_Time', True);
+  tsConvertTime.TabVisible     := ini.ReadBool('Enabled', 'Convert_Time', True);
   tsConvertTemperature.TabVisible :=
     ini.ReadBool('Enabled', 'Convert_Temperature', True);
-  tsConvertPower.TabVisible := ini.ReadBool('Enabled', 'Convert_Power', True);
+  tsConvertPower.TabVisible    := ini.ReadBool('Enabled', 'Convert_Power', True);
   tsConvertDistance.TabVisible := ini.ReadBool('Enabled', 'Convert_Distance', True);
-  tsConvertSpeed.TabVisible:=ini.ReadBool('Enabled', 'Convert_Speed', True); ;
+  tsConvertSpeed.TabVisible    := ini.ReadBool('Enabled', 'Convert_Speed', True);
+  ;
   tsConvertMass.TabVisible := ini.ReadBool('Enabled', 'Convert_Mass', True);
-  tsConvert.TabVisible := ini.ReadBool('Enabled', 'Convert', True);
+  tsConvert.TabVisible     := ini.ReadBool('Enabled', 'Convert', True);
   updateTSPC(tsConvert, pcConvert);
 
   tsCalc.TabVisible := ini.ReadBool('Enabled', 'Calc', True);
@@ -4671,6 +4699,30 @@ begin
     if pc.ActivePageIndex = -1 then
       pc.ActivePageIndex := p;
   ts.TabVisible := n > 0;
+end;
+
+function TFormMain.RunTimeToDHMStr(T: integer): string;
+var
+  D, H, M: integer;
+begin
+  D := T div (60 * 24);
+  T := T mod (60 * 24);
+  H := T div 60;
+  M := T mod 60;
+  if (D = 0) and (H = 0) then
+  begin
+    if M = 0 then
+      Result := ''
+    else
+      Result := IntToStr(M) + 'm';
+  end
+  else
+  begin
+    if D = 0 then
+      Result := IntToStr(H) + 'h ' + IntToStr(M) + 'm'
+    else
+      Result := IntToStr(D) + 'd ' + IntToStr(H) + 'h ' + IntToStr(M) + 'm';
+  end;
 end;
 
 function TFormMain.shortFileName(FileName: string): string;

@@ -1,7 +1,7 @@
 object FormMain: TFormMain
-  Left = 319
+  Left = 354
   Height = 497
-  Top = 135
+  Top = 148
   Width = 640
   AlphaBlend = True
   AlphaBlendValue = 0
@@ -448,10 +448,10 @@ object FormMain: TFormMain
     Height = 497
     Top = 0
     Width = 640
-    ActivePage = tsAbout
+    ActivePage = tsConstant
     Align = alClient
     MultiLine = True
-    TabIndex = 6
+    TabIndex = 5
     TabOrder = 0
     Options = [nboMultiLine]
     object tsCRC: TTabSheet
@@ -3163,13 +3163,13 @@ object FormMain: TFormMain
         OnChange = pcCalcModeChange
         object TabSheet1: TTabSheet
           Caption = 'Command'
-          ClientHeight = 460
-          ClientWidth = 376
+          ClientHeight = 437
+          ClientWidth = 319
           object Shape2: TShape
             Left = 0
             Height = 5
-            Top = 430
-            Width = 376
+            Top = 407
+            Width = 319
             Align = alBottom
             Brush.Style = bsClear
             Enabled = False
@@ -3178,8 +3178,8 @@ object FormMain: TFormMain
           object cbbCalc: TComboBox
             Left = 0
             Height = 25
-            Top = 435
-            Width = 376
+            Top = 412
+            Width = 319
             Align = alBottom
             AutoSelect = False
             DropDownCount = 12
@@ -3191,9 +3191,9 @@ object FormMain: TFormMain
           end
           object mmoOutCalc: TMemo
             Left = 0
-            Height = 430
+            Height = 407
             Top = 0
-            Width = 376
+            Width = 319
             Align = alClient
             ReadOnly = True
             ScrollBars = ssAutoVertical
@@ -5847,7 +5847,7 @@ object FormMain: TFormMain
             end
             object ToolButton42: TToolButton
               Left = 151
-              Height = 8
+              Height = 22
               Top = 0
               Caption = 'ToolButton34'
               Style = tbsSeparator
@@ -5875,7 +5875,7 @@ object FormMain: TFormMain
             end
             object ToolButton43: TToolButton
               Left = 228
-              Height = 8
+              Height = 22
               Top = 0
               Caption = 'ToolButton17'
               Style = tbsSeparator
@@ -5887,7 +5887,7 @@ object FormMain: TFormMain
             end
             object ToolButton44: TToolButton
               Left = 294
-              Height = 8
+              Height = 22
               Top = 0
               Caption = 'ToolButton40'
               Style = tbsSeparator
@@ -6447,19 +6447,19 @@ object FormMain: TFormMain
         Height = 467
         Top = 0
         Width = 632
-        ActivePage = tsConstantDecimalMultiple
+        ActivePage = tsPeriodicTable
         Align = alClient
-        TabIndex = 2
+        TabIndex = 3
         TabOrder = 0
         object tsConstantMath: TTabSheet
           Caption = 'Math'
-          ClientHeight = 449
-          ClientWidth = 648
+          ClientHeight = 437
+          ClientWidth = 624
           object sgConstantMath: TStringGrid
             Left = 0
-            Height = 449
+            Height = 437
             Top = 0
-            Width = 648
+            Width = 624
             Align = alClient
             AlternateColor = 16316664
             AutoEdit = False
@@ -6483,7 +6483,7 @@ object FormMain: TFormMain
               end            
               item
                 Title.Caption = 'Description'
-                Width = 367
+                Width = 360
               end>
             DefaultColWidth = 64
             FixedCols = 0
@@ -6499,7 +6499,7 @@ object FormMain: TFormMain
             ColWidths = (
               80
               180
-              367
+              360
             )
             Cells = (
               34
@@ -6610,13 +6610,13 @@ object FormMain: TFormMain
         end
         object tsConstantPhysics: TTabSheet
           Caption = 'Physics'
-          ClientHeight = 449
-          ClientWidth = 648
+          ClientHeight = 437
+          ClientWidth = 624
           object sgConstantPhysics: TStringGrid
             Left = 0
-            Height = 449
+            Height = 437
             Top = 0
-            Width = 648
+            Width = 624
             Align = alClient
             AlternateColor = 16316664
             AutoEdit = False
@@ -6647,7 +6647,7 @@ object FormMain: TFormMain
               end            
               item
                 Title.Caption = 'Description'
-                Width = 315
+                Width = 291
               end>
             DefaultColWidth = 64
             FixedCols = 0
@@ -6664,7 +6664,7 @@ object FormMain: TFormMain
               58
               169
               85
-              315
+              291
             )
             Cells = (
               73
@@ -7135,6 +7135,1133 @@ object FormMain: TFormMain
               2
               20
               '10^-24'
+            )
+          end
+        end
+        object tsPeriodicTable: TTabSheet
+          Caption = 'Periodic Table'
+          ClientHeight = 437
+          ClientWidth = 624
+          object sgConstantPeriodicTable: TStringGrid
+            Left = 0
+            Height = 437
+            Top = 0
+            Width = 624
+            Align = alClient
+            AlternateColor = 16316664
+            AutoEdit = False
+            AutoFillColumns = True
+            Columns = <            
+              item
+                Alignment = taCenter
+                MaxSize = 180
+                SizePriority = 0
+                Title.Caption = 'Symbol'
+                Width = 48
+              end            
+              item
+                Alignment = taCenter
+                MaxSize = 80
+                SizePriority = 0
+                Title.Alignment = taCenter
+                Title.Caption = 'Name'
+                Width = 120
+              end            
+              item
+                Alignment = taCenter
+                SizePriority = 0
+                Title.Caption = 'relative atomic mass'
+                Width = 180
+              end            
+              item
+                Title.Caption = 'Description'
+                Width = 220
+              end>
+            DefaultColWidth = 40
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goSmoothScroll, goFixedRowNumbering]
+            RowCount = 119
+            TabOrder = 0
+            TitleFont.CharSet = ANSI_CHARSET
+            TitleFont.Color = clBlack
+            TitleFont.Height = -14
+            TitleFont.Name = 'Courier New'
+            TitleFont.Pitch = fpFixed
+            TitleFont.Quality = fqDraft
+            OnClick = sgConstantMathClick
+            ColWidths = (
+              35
+              48
+              120
+              180
+              220
+            )
+            Cells = (
+              355
+              0
+              0
+              'No'
+              1
+              1
+              'H'
+              1
+              2
+              'He'
+              1
+              3
+              'Li'
+              1
+              4
+              'Be'
+              1
+              5
+              'B'
+              1
+              6
+              'C'
+              1
+              7
+              'N'
+              1
+              8
+              'O'
+              1
+              9
+              'F'
+              1
+              10
+              'Ne'
+              1
+              11
+              'Na'
+              1
+              12
+              'Mg'
+              1
+              13
+              'Al'
+              1
+              14
+              'Si'
+              1
+              15
+              'P'
+              1
+              16
+              'S'
+              1
+              17
+              'Cl'
+              1
+              18
+              'Ar'
+              1
+              19
+              'K'
+              1
+              20
+              'Ca'
+              1
+              21
+              'Sc'
+              1
+              22
+              'Ti'
+              1
+              23
+              'V'
+              1
+              24
+              'Cr'
+              1
+              25
+              'Mn'
+              1
+              26
+              'Fe'
+              1
+              27
+              'Co'
+              1
+              28
+              'Ni'
+              1
+              29
+              'Cu'
+              1
+              30
+              'Zn'
+              1
+              31
+              'Ga'
+              1
+              32
+              'Ge'
+              1
+              33
+              'As'
+              1
+              34
+              'Se'
+              1
+              35
+              'Br'
+              1
+              36
+              'Kr'
+              1
+              37
+              'Rb'
+              1
+              38
+              'Sr'
+              1
+              39
+              'Y'
+              1
+              40
+              'Zr'
+              1
+              41
+              'Nb'
+              1
+              42
+              'Mo'
+              1
+              43
+              'Tc'
+              1
+              44
+              'Ru'
+              1
+              45
+              'Rh'
+              1
+              46
+              'Pd'
+              1
+              47
+              'Ag'
+              1
+              48
+              'Cd'
+              1
+              49
+              'In'
+              1
+              50
+              'Sn'
+              1
+              51
+              'Sb'
+              1
+              52
+              'Te'
+              1
+              53
+              'I'
+              1
+              54
+              'Xe'
+              1
+              55
+              'Cs'
+              1
+              56
+              'Ba'
+              1
+              57
+              'La'
+              1
+              58
+              'Ce'
+              1
+              59
+              'Pr'
+              1
+              60
+              'Nd'
+              1
+              61
+              'Pm'
+              1
+              62
+              'Sm'
+              1
+              63
+              'Eu'
+              1
+              64
+              'Gd'
+              1
+              65
+              'Tb'
+              1
+              66
+              'Dy'
+              1
+              67
+              'Ho'
+              1
+              68
+              'Er'
+              1
+              69
+              'Tm'
+              1
+              70
+              'Yb'
+              1
+              71
+              'Lu'
+              1
+              72
+              'Hf'
+              1
+              73
+              'Ta'
+              1
+              74
+              'W'
+              1
+              75
+              'Re'
+              1
+              76
+              'Os'
+              1
+              77
+              'Ir'
+              1
+              78
+              'Pt'
+              1
+              79
+              'Au'
+              1
+              80
+              'Hg'
+              1
+              81
+              'Tl'
+              1
+              82
+              'Pb'
+              1
+              83
+              'Bi'
+              1
+              84
+              'Po'
+              1
+              85
+              'At'
+              1
+              86
+              'Rn'
+              1
+              87
+              'Fr'
+              1
+              88
+              'Ra'
+              1
+              89
+              'Ac'
+              1
+              90
+              'Th'
+              1
+              91
+              'Pa'
+              1
+              92
+              'U'
+              1
+              93
+              'Np'
+              1
+              94
+              'Pu'
+              1
+              95
+              'Am'
+              1
+              96
+              'Cm'
+              1
+              97
+              'Bk'
+              1
+              98
+              'Cf'
+              1
+              99
+              'Es'
+              1
+              100
+              'Fm'
+              1
+              101
+              'Md'
+              1
+              102
+              'No'
+              1
+              103
+              'Lr'
+              1
+              104
+              'Rf'
+              1
+              105
+              'Db'
+              1
+              106
+              'Sg'
+              1
+              107
+              'Bh'
+              1
+              108
+              'Hs'
+              1
+              109
+              'Mt'
+              1
+              110
+              'Ds'
+              1
+              111
+              'Rg'
+              1
+              112
+              'Cn'
+              1
+              113
+              'Nh'
+              1
+              114
+              'Fl'
+              1
+              115
+              'Mc'
+              1
+              116
+              'Lv'
+              1
+              117
+              'Ts'
+              1
+              118
+              'Og'
+              2
+              1
+              'Hydrogen'
+              2
+              2
+              'Helium'
+              2
+              3
+              'Lithium'
+              2
+              4
+              'Beryllium'
+              2
+              5
+              'Boron'
+              2
+              6
+              'Carbon'
+              2
+              7
+              'Nitrogen'
+              2
+              8
+              'Oxygen'
+              2
+              9
+              'Fluorine'
+              2
+              10
+              'Neon'
+              2
+              11
+              'Sodium'
+              2
+              12
+              'Magnesium'
+              2
+              13
+              'Aluminium'
+              2
+              14
+              'Silicon'
+              2
+              15
+              'Phosphorus'
+              2
+              16
+              'Sulphur'
+              2
+              17
+              'Chlorine'
+              2
+              18
+              'Argon'
+              2
+              19
+              'Potassium'
+              2
+              20
+              'Calcium'
+              2
+              21
+              'Scandium'
+              2
+              22
+              'Titanium'
+              2
+              23
+              'Vanadium'
+              2
+              24
+              'Chromium'
+              2
+              25
+              'Manganese'
+              2
+              26
+              'Iron'
+              2
+              27
+              'Cobalt'
+              2
+              28
+              'Nickel'
+              2
+              29
+              'Copper'
+              2
+              30
+              'Zinc'
+              2
+              31
+              'Gallium'
+              2
+              32
+              'Germanium'
+              2
+              33
+              'Arsenic'
+              2
+              34
+              'Selenium'
+              2
+              35
+              'Bromine'
+              2
+              36
+              'Krypton'
+              2
+              37
+              'Rubidium'
+              2
+              38
+              'Strontium'
+              2
+              39
+              'Yttrium'
+              2
+              40
+              'Zirconium'
+              2
+              41
+              'Niobium'
+              2
+              42
+              'Molybdenum'
+              2
+              43
+              'Technetium'
+              2
+              44
+              'Ruthenium'
+              2
+              45
+              'Rhodium'
+              2
+              46
+              'Palladium'
+              2
+              47
+              'Silver'
+              2
+              48
+              'Cadmium'
+              2
+              49
+              'Indium'
+              2
+              50
+              'Tin'
+              2
+              51
+              'Antimony'
+              2
+              52
+              'Tellurium'
+              2
+              53
+              'Iodine'
+              2
+              54
+              'Xenon'
+              2
+              55
+              'Cesium'
+              2
+              56
+              'Barium'
+              2
+              57
+              'Lanthanum'
+              2
+              58
+              'Cerium'
+              2
+              59
+              'Praseodymium'
+              2
+              60
+              'Neodymium'
+              2
+              61
+              'Promethium'
+              2
+              62
+              'Samarium'
+              2
+              63
+              'Europium'
+              2
+              64
+              'Gadolinium'
+              2
+              65
+              'Terbium'
+              2
+              66
+              'Dysprosium'
+              2
+              67
+              'Holmium'
+              2
+              68
+              'Erbium'
+              2
+              69
+              'Thulium'
+              2
+              70
+              'Ytterbium'
+              2
+              71
+              'Lutetium'
+              2
+              72
+              'Hafnium'
+              2
+              73
+              'Tantalum'
+              2
+              74
+              'Tungsten'
+              2
+              75
+              'Rhenium'
+              2
+              76
+              'Osmium'
+              2
+              77
+              'Iridium'
+              2
+              78
+              'Platinum'
+              2
+              79
+              'Gold'
+              2
+              80
+              'Mercury'
+              2
+              81
+              'Thallium'
+              2
+              82
+              'Lead'
+              2
+              83
+              'Bismuth'
+              2
+              84
+              'Polonium'
+              2
+              85
+              'Astatine'
+              2
+              86
+              'Radon'
+              2
+              87
+              'Francium'
+              2
+              88
+              'Radium'
+              2
+              89
+              'Actinium'
+              2
+              90
+              'Thorium'
+              2
+              91
+              'Protactinium'
+              2
+              92
+              'Uranium'
+              2
+              93
+              'Neptunium'
+              2
+              94
+              'Plutonium'
+              2
+              95
+              'Americium'
+              2
+              96
+              'Curium'
+              2
+              97
+              'Berkelium'
+              2
+              98
+              'Californium'
+              2
+              99
+              'Einsteinium'
+              2
+              100
+              'Fermium'
+              2
+              101
+              'Mendelevium'
+              2
+              102
+              'Nobelium'
+              2
+              103
+              'Lawrencium'
+              2
+              104
+              'Rutherfordium'
+              2
+              105
+              'Dubnium'
+              2
+              106
+              'Seaborgium'
+              2
+              107
+              'Bohrium'
+              2
+              108
+              'Hassium'
+              2
+              109
+              'Meitnerium'
+              2
+              110
+              'Darmstadtium'
+              2
+              111
+              'Roentgenium'
+              2
+              112
+              'Copernicium'
+              2
+              113
+              'Nihonium '
+              2
+              114
+              'Flerovium '
+              2
+              115
+              'Moscovium '
+              2
+              116
+              'Livermorium'
+              2
+              117
+              'Tennessine'
+              2
+              118
+              'Oganesson'
+              3
+              1
+              '1.008'
+              3
+              2
+              '4.003'
+              3
+              3
+              '6.941'
+              3
+              4
+              '9.012'
+              3
+              5
+              '10.81'
+              3
+              6
+              '12.01'
+              3
+              7
+              '14.01'
+              3
+              8
+              '16'
+              3
+              9
+              '19'
+              3
+              10
+              '20.18'
+              3
+              11
+              '22.99'
+              3
+              12
+              '24.31'
+              3
+              13
+              '26.98'
+              3
+              14
+              '28.09'
+              3
+              15
+              '30.97'
+              3
+              16
+              '32.06'
+              3
+              17
+              '35.45'
+              3
+              18
+              '39.95'
+              3
+              19
+              '39.1'
+              3
+              20
+              '40.08'
+              3
+              21
+              '44.96'
+              3
+              22
+              '47.87'
+              3
+              23
+              '50.94'
+              3
+              24
+              '52'
+              3
+              25
+              '54.94'
+              3
+              26
+              '55.85'
+              3
+              27
+              '58.93'
+              3
+              28
+              '58.69'
+              3
+              29
+              '63.55'
+              3
+              30
+              '65.39'
+              3
+              31
+              '69.72'
+              3
+              32
+              '72.64'
+              3
+              33
+              '74.92'
+              3
+              34
+              '78.96'
+              3
+              35
+              '79.9'
+              3
+              36
+              '83.8'
+              3
+              37
+              '85.47'
+              3
+              38
+              '87.62'
+              3
+              39
+              '88.91'
+              3
+              40
+              '91.22'
+              3
+              41
+              '92.91'
+              3
+              42
+              '95.96'
+              3
+              43
+              '98'
+              3
+              44
+              '101.1'
+              3
+              45
+              '102.9'
+              3
+              46
+              '106.4'
+              3
+              47
+              '107.9'
+              3
+              48
+              '112.4'
+              3
+              49
+              '114.8'
+              3
+              50
+              '118.7'
+              3
+              51
+              '121.8'
+              3
+              52
+              '127.6'
+              3
+              53
+              '126.9'
+              3
+              54
+              '131.3'
+              3
+              55
+              '133'
+              3
+              56
+              '137.3'
+              3
+              57
+              '139'
+              3
+              58
+              '140'
+              3
+              59
+              '141'
+              3
+              60
+              '144'
+              3
+              61
+              '145'
+              3
+              62
+              '150.5'
+              3
+              63
+              '152'
+              3
+              64
+              '157'
+              3
+              65
+              '159'
+              3
+              66
+              '162.5'
+              3
+              67
+              '165'
+              3
+              68
+              '167'
+              3
+              69
+              '169'
+              3
+              70
+              '173'
+              3
+              71
+              '175'
+              3
+              72
+              '178.5'
+              3
+              73
+              '181'
+              3
+              74
+              '184'
+              3
+              75
+              '186'
+              3
+              76
+              '190'
+              3
+              77
+              '192'
+              3
+              78
+              '195'
+              3
+              79
+              '197'
+              3
+              80
+              '200.6'
+              3
+              81
+              '204.5'
+              3
+              82
+              '207'
+              3
+              83
+              '209'
+              3
+              84
+              '209'
+              3
+              85
+              '210'
+              3
+              86
+              '222'
+              3
+              87
+              '223'
+              3
+              88
+              '226'
+              3
+              89
+              '227'
+              3
+              90
+              '232'
+              3
+              91
+              '231'
+              3
+              92
+              '238'
+              3
+              93
+              '237'
+              3
+              94
+              '244'
+              3
+              95
+              '243'
+              3
+              96
+              '247'
+              3
+              97
+              '247'
+              3
+              98
+              '251'
+              3
+              99
+              '252'
+              3
+              100
+              '257'
+              3
+              101
+              '258'
+              3
+              102
+              '259'
+              3
+              103
+              '260'
+              3
+              104
+              '261'
+              3
+              105
+              '262'
+              3
+              106
+              '263'
+              3
+              107
+              '264'
+              3
+              108
+              '265'
+              3
+              109
+              '266'
+              3
+              110
+              '269'
+              3
+              111
+              '272'
+              3
+              112
+              '277'
+              3
+              113
+              '286 '
+              3
+              114
+              '289 '
+              3
+              115
+              '289 '
+              3
+              116
+              '293'
+              3
+              117
+              '294'
+              3
+              118
+              '294'
             )
           end
         end
