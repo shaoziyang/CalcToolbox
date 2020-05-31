@@ -139,6 +139,7 @@ begin
 
   for i := 0 to tvFunctions.Items.Count - 1 do
   begin
+    tvFunctions.Items[i].SelectedIndex:=tvFunctions.Items[i].ImageIndex;
     if tvFunctions.Items[i].Parent = nil then
       s := ''
     else
