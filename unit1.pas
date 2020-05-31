@@ -20,7 +20,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '1.5.2.2';
+  VERSION = '1.5.2.4';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -136,6 +136,8 @@ type
     edtCrcResult: TEdit;
     edtCrcPolygon: TEdit;
     edtCrcInitV: TEdit;
+    edtDecimalDigitsConvertArea: TSpinEdit;
+    edtDecimalDigitsConvertVolume: TSpinEdit;
     edtDecimalDigitsConvertSpeed: TSpinEdit;
     edtDecimalDigitsConvertMass: TSpinEdit;
     edtDecimalDigitsConvertPower: TSpinEdit;
@@ -246,6 +248,8 @@ type
     Script_Calc: TPSScript;
     sgConstantDecimalMultiple: TStringGrid;
     sgConstantPeriodicTable: TStringGrid;
+    sgConvertArea: TStringGrid;
+    sgConvertVolume: TStringGrid;
     sgConvertSpeed: TStringGrid;
     sgConvertMass: TStringGrid;
     sgConvertPower: TStringGrid;
@@ -292,7 +296,11 @@ type
     btnCaret_PascalScript: TToolButton;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
-    tsPeriodicTable: TTabSheet;
+    ToolBar18: TToolBar;
+    ToolBar19: TToolBar;
+    ToolButton46: TToolButton;
+    ToolButton47: TToolButton;
+    tsConstantPeriodicTable: TTabSheet;
     ToolBar17: TToolBar;
     ToolButton45: TToolButton;
     tsConvertSpeed: TTabSheet;
@@ -301,6 +309,8 @@ type
     ToolButton43: TToolButton;
     ToolButton44: TToolButton;
     btnShowGraphForm: TToolButton;
+    tsConvertArea: TTabSheet;
+    tsConvertVolume: TTabSheet;
     tsGraph: TTabSheet;
     ToolBar15: TToolBar;
     ToolButton41: TToolButton;
@@ -516,11 +526,13 @@ type
     procedure edtBytesNumChange(Sender: TObject);
     procedure edtConvertTimeYearEditingDone(Sender: TObject);
     procedure edtCrcResultClick(Sender: TObject);
+    procedure edtDecimalDigitsConvertAreaChange(Sender: TObject);
     procedure edtDecimalDigitsConvertDistanceChange(Sender: TObject);
     procedure edtDecimalDigitsConvertMassChange(Sender: TObject);
     procedure edtDecimalDigitsConvertPowerChange(Sender: TObject);
     procedure edtDecimalDigitsConvertSpeedChange(Sender: TObject);
     procedure edtDecimalDigitsConvertTemperatureChange(Sender: TObject);
+    procedure edtDecimalDigitsConvertVolumeChange(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -542,12 +554,14 @@ type
     procedure sgConstantMathClick(Sender: TObject);
     procedure sgBaseEditingDone(Sender: TObject);
     procedure edtBaseCustomChange(Sender: TObject);
+    procedure sgConvertAreaEditingDone(Sender: TObject);
     procedure sgConvertDistanceEditingDone(Sender: TObject);
     procedure sgConvertMassEditingDone(Sender: TObject);
     procedure sgConvertPowerEditingDone(Sender: TObject);
     procedure sgConvertSpeedEditingDone(Sender: TObject);
     procedure sgConvertTemperatureEditingDone(Sender: TObject);
     procedure sgConvertTimeEditingDone(Sender: TObject);
+    procedure sgConvertVolumeEditingDone(Sender: TObject);
     procedure sgExpr_CalcEditingDone(Sender: TObject);
     procedure sgExpr_CalcKeyPress(Sender: TObject; var Key: char);
     procedure sgVar_CalcEditingDone(Sender: TObject);
@@ -666,6 +680,8 @@ type
     procedure updateTemperature(C: Float);
     procedure updatePower(P: Float);
     procedure updateDistance(V: Float);
+    procedure updateArea(A: Float);
+    procedure updateVolume(V: Float);
     procedure updateSpeed(SP: Float);
     procedure updateMass(M: Float);
 
@@ -1146,11 +1162,11 @@ begin
     lbRunCnt.Tag := ini.ReadInteger('Run', 'Cnt', 1);
     ini.WriteInteger('Run', 'Cnt', lbRunCnt.Tag + 1);
     lbRunCnt.Caption := 'Run:  ' + IntToStr(lbRunCnt.Tag);
-    lbRunCnt.Hint:='Start: '+FormatDateTime('yyyy-m-d hh:nn',now);
+    lbRunCnt.Hint := 'Start: ' + FormatDateTime('yyyy-m-d hh:nn', now);
     writeable := True;
     RunTime   := ini.ReadInteger('run', 'Time', 0);
     RunTimeM  := MinuteOf(now);
-    lbRunTime.Tag:=0;
+    lbRunTime.Tag := 0;
   except
     writeable := False;
     // set unwriteable flag
@@ -1258,14 +1274,14 @@ begin
     sgVar_Calc.ColWidths[0] := ini.ReadInteger('calc', 'var_col0', 40);
     sgVar_Calc.ColWidths[2] := ini.ReadInteger('calc', 'var_col2', 80);
     cbbCalc.Items.CommaText := ini.ReadString('calc', 'exphis', '');
-    mmoOutCalc.Lines.CommaText:=ini.ReadString('calc','cmdout','');
+    mmoOutCalc.Lines.CommaText := ini.ReadString('calc', 'cmdout', '');
 
     sgExpr_Calc.ColWidths[1]   := ini.ReadInteger('calc', 'tab_col1', 200);
     pcCalcMode.ActivePageIndex := ini.ReadInteger('calc', 'mode', 0);
 
-    sgExpr_Calc.RowCount:=ini.ReadInteger('calcTable','count',1)+1;
-    for i:=1 to sgExpr_Calc.RowCount-1 do
-      sgExpr_Calc.Rows[i].CommaText:=ini.ReadString('calcTable',IntToStr(i),'');
+    sgExpr_Calc.RowCount := ini.ReadInteger('calcTable', 'count', 1) + 1;
+    for i := 1 to sgExpr_Calc.RowCount - 1 do
+      sgExpr_Calc.Rows[i].CommaText := ini.ReadString('calcTable', IntToStr(i), '');
 
   except
     on E: Exception do
@@ -1282,6 +1298,10 @@ begin
     edtDecimalDigitsConvertPower.Value    := ini.ReadInteger('convert', 'DigitPower', 3);
     edtDecimalDigitsConvertDistance.Value :=
       ini.ReadInteger('convert', 'DigitDistance', 4);
+    edtDecimalDigitsConvertArea.Value     := ini.ReadInteger('convert', 'DigitArea', 6);
+    edtDecimalDigitsConvertVolume.Value   :=
+      ini.ReadInteger('convert', 'DigitVolume', 6);
+    edtDecimalDigitsConvertSpeed.Value    := ini.ReadInteger('convert', 'DigitSpeed', 4);
     edtDecimalDigitsConvertMass.Value     :=
       ini.ReadInteger('convert', 'DigitMass', 3);
   except
@@ -1529,15 +1549,15 @@ begin
       ini.WriteInteger('calc', 'var_col0', sgVar_Calc.ColWidths[0]);
       ini.WriteInteger('calc', 'var_col2', sgVar_Calc.ColWidths[2]);
       ini.WriteString('calc', 'exphis', cbbCalc.Items.CommaText);
-      ini.WriteString('calc','cmdout',mmoOutCalc.Lines.CommaText);
+      ini.WriteString('calc', 'cmdout', mmoOutCalc.Lines.CommaText);
 
       ini.WriteInteger('calc', 'tab_col1', sgExpr_Calc.ColWidths[1]);
       ini.WriteInteger('calc', 'mode', pcCalcMode.ActivePageIndex);
 
       ini.EraseSection('calcTable');
-      ini.WriteInteger('calcTable','count',sgExpr_Calc.RowCount-1);
-      for i:=1 to sgExpr_Calc.RowCount-1 do
-        ini.WriteString('calcTable',IntToStr(i),sgExpr_Calc.Rows[i].CommaText);
+      ini.WriteInteger('calcTable', 'count', sgExpr_Calc.RowCount - 1);
+      for i := 1 to sgExpr_Calc.RowCount - 1 do
+        ini.WriteString('calcTable', IntToStr(i), sgExpr_Calc.Rows[i].CommaText);
 
       // convert
       ini.WriteInteger('last', 'page_convert', pcConvert.ActivePageIndex);
@@ -1547,6 +1567,9 @@ begin
       ini.WriteInteger('convert', 'DigitPower', edtDecimalDigitsConvertPower.Value);
       ini.WriteInteger('convert', 'DigitDistance',
         edtDecimalDigitsConvertDistance.Value);
+      ini.WriteInteger('convert', 'DigitArea', edtDecimalDigitsConvertArea.Value);
+      ini.WriteInteger('convert', 'DigitVolume', edtDecimalDigitsConvertVolume.Value);
+      ini.WriteInteger('convert', 'DigitSpeed', edtDecimalDigitsConvertSpeed.Value);
       ini.WriteInteger('convert', 'DigitMass', edtDecimalDigitsConvertMass.Value);
 
       // Script
@@ -1915,6 +1938,12 @@ begin
     Clipboard.AsText := edtCrcResult.Text;
 end;
 
+procedure TFormMain.edtDecimalDigitsConvertAreaChange(Sender: TObject);
+begin
+  sgConvertArea.Modified := True;
+  sgConvertAreaEditingDone(Sender);
+end;
+
 procedure TFormMain.edtDecimalDigitsConvertDistanceChange(Sender: TObject);
 begin
   sgConvertDistance.Modified := True;
@@ -1943,6 +1972,12 @@ procedure TFormMain.edtDecimalDigitsConvertTemperatureChange(Sender: TObject);
 begin
   sgConvertTemperature.Modified := True;
   sgConvertTemperatureEditingDone(Sender);
+end;
+
+procedure TFormMain.edtDecimalDigitsConvertVolumeChange(Sender: TObject);
+begin
+  sgConvertVolume.Modified := True;
+  sgConvertVolumeEditingDone(Sender);
 end;
 
 procedure TFormMain.btnBigFloatAddClick(Sender: TObject);
@@ -2319,6 +2354,51 @@ begin
   sgBaseEditingDone(Sender);
 end;
 
+procedure TFormMain.sgConvertAreaEditingDone(Sender: TObject);
+var
+  A: Float;
+  sy: integer;
+begin
+  if not sgConvertArea.Modified then
+    Exit;
+
+  sy := sgConvertArea.Row;
+  if not TryStrToFloat(sgConvertArea.Cells[1, sy], A) then
+    Exit;
+  case sy of
+    1: // square centimeter
+      updateArea(A / 10000);
+    2: // square meter
+      updateArea(A);
+    3: // square kilometer
+      updateArea(A * 1000000);
+    5: // square inch
+      updateArea(A / 1550.0031000062);
+    6: // square foot (UK)
+      updateArea(A / 10.7639104167097);
+    7: // square foot (US survey)
+      updateArea(A / 10.7638673611111);
+    8: // square yard
+      updateArea(A / 1.19599004630108);
+    9: // square mile
+      updateArea(A / 3.86102158542446e-007);
+    11: // acer
+      updateArea(A / 0.000247105381467);
+    12: // hectare
+      updateArea(A / 0.0001);
+    13: // rood
+      updateArea(A / 0.000988421525869);
+    14: // mu
+      updateArea(A / 0.0015);
+    15: // circular inch
+      updateArea(A / 1973.52524138998);
+    16: // township
+      updateArea(A / 1.07250599595124e-008);
+    else
+  end;
+  sgConvertArea.Modified := False;
+end;
+
 procedure TFormMain.sgConvertDistanceEditingDone(Sender: TObject);
 var
   V: Float;
@@ -2594,6 +2674,89 @@ begin
 
   end;
   sgConvertTime.Modified := False;
+end;
+
+procedure TFormMain.sgConvertVolumeEditingDone(Sender: TObject);
+var
+  V: Float;
+  sy: integer;
+begin
+  if not sgConvertVolume.Modified then
+    Exit;
+
+  sy := sgConvertVolume.Row;
+  if not TryStrToFloat(sgConvertVolume.Cells[1, sy], V) then
+    Exit;
+  case sy of
+    1: // cm^3
+      updateVolume(V / 1e6);
+    2: // dm^3
+      updateVolume(V / 1e3);
+    3: // m^3
+      updateVolume(V);
+    4: // cubic inch
+      updateVolume(V / 61023.7440947323);
+    5: // cubic foot
+      updateVolume(V / 35.3146667214886);
+    6: // cubic yard
+      updateVolume(V / 1.30795061931439);
+    7: // liter
+      updateVolume(V / 1000);
+    9: // gallon (UK)
+      updateVolume(V / 219.969248299088);
+    10: // gallon (US)
+      updateVolume(V / 264.172052358148);
+    11: // gallon (dry)
+      updateVolume(V / 227.020746067214);
+    13: // barrel (UK)
+      updateVolume(V / 6.11025689719688);
+    14: // barrel (US)
+      updateVolume(V / 8.38641436057614);
+    15: // barrel (dry)
+      updateVolume(V / 8.6484093739891);
+    16: // barrel (petroleum)
+      updateVolume(V / 6.2898107704321);
+    18: // ounce (UK)
+      updateVolume(V / 35195.079727854);
+    19: // ounce (US)
+      updateVolume(V / 33814.022701843);
+    21: // pint (UK)
+      updateVolume(V / 1759.7539863927);
+    22: // pint (US)
+      updateVolume(V / 2113.37641886519);
+    23: // pint (dry)
+      updateVolume(V / 1816.16596853771);
+    25: // quart (UK)
+      updateVolume(V / 879.876993196351);
+    26: // quart (US)
+      updateVolume(V / 1056.68820943259);
+    27: // quart (dry)
+      updateVolume(V / 908.082984268856);
+    29: // cup (metric)
+      updateVolume(V / 4000);
+    30: // cup (US)
+      updateVolume(V / 4226.75283773037);
+    31: // cup (Canadian)
+      updateVolume(V / 4399.38496598176);
+    33: // table spoon (UK)
+      updateVolume(V / 56312.1275645665);
+    34: // table spoon (US)
+      updateVolume(V / 67628.045403686);
+    35: // table spoon (Canadian)
+      updateVolume(V / 70390.1594557081);
+    36: // table spoon (metric)
+      updateVolume(V * 3 / 200000);
+    38: // tea spoon (UK)
+      updateVolume(V / 168936.382693699);
+    39: // tea spoon (US)
+      updateVolume(V / 202884.136211058);
+    40: // tea spoon (Canadian)
+      updateVolume(V / 211170.478367124);
+    41: // tea spoon (metric)
+      updateVolume(V / 202884.136211058);
+    else
+  end;
+  sgConvertVolume.Modified := False;
 end;
 
 procedure TFormMain.sgExpr_CalcEditingDone(Sender: TObject);
@@ -3712,7 +3875,7 @@ end;
 
 procedure TFormMain.tmrLogoTimer(Sender: TObject);
 var
-  s:string;
+  s: string;
 begin
   // change Tray Icon
   ilTray.Tag := ilTray.Tag + 1;
@@ -3729,14 +3892,14 @@ begin
     begin
       RunTimeM := MinuteOf(now);
       RunTime  := RunTime + 1;
-      lbRunTime.Tag:=lbRunTime.Tag+1;
+      lbRunTime.Tag := lbRunTime.Tag + 1;
       if writeable then
         ini.WriteInteger('run', 'time', RunTime);
-      s:=RunTimeToDHMStr(RunTime);
+      s := RunTimeToDHMStr(RunTime);
       if s <> '' then
       begin
         lbRunTime.Caption := 'Time: ' + s;
-        lbRunTime.Hint:='Uptime: '+ RunTimeToDHMStr(lbRunTime.Tag);
+        lbRunTime.Hint    := 'Uptime: ' + RunTimeToDHMStr(lbRunTime.Tag);
       end;
     end;
   end;
@@ -3769,7 +3932,6 @@ begin
   Show;
   Application.BringToFront;
 end;
-
 
 function TFormMain.getCrcBit: integer;
 begin
@@ -4542,26 +4704,130 @@ begin
     FloatToStrF(V * 3 / 10, ffFixed, 0, edtDecimalDigitsConvertDistance.Value);
 end;
 
+procedure TFormMain.updateArea(A: Float);
+begin
+  sgConvertArea.Cells[1, 1]  :=
+    FloatToStrF(A * 10000, ffFixed, 0, edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 2]  :=
+    FloatToStrF(A, ffFixed, 0, edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 3]  :=
+    FloatToStrF(A / 1000000, ffFixed, 0, edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 5]  :=
+    FloatToStrF(A * 1550.0031000062, ffFixed, 0, edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 6]  :=
+    FloatToStrF(A * 10.7639104167097, ffFixed, 0, edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 7]  :=
+    FloatToStrF(A * 10.7638673611111, ffFixed, 0, edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 8]  :=
+    FloatToStrF(A * 1.19599004630108, ffFixed, 0, edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 9]  :=
+    FloatToStrF(A * 3.86102158542446e-007, ffFixed, 0,
+    edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 11] :=
+    FloatToStrF(A * 0.000247105381467, ffFixed, 0, edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 12] :=
+    FloatToStrF(A * 0.0001, ffFixed, 0, edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 13] :=
+    FloatToStrF(A * 0.000988421525869, ffFixed, 0, edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 14] :=
+    FloatToStrF(A * 0.0015, ffFixed, 0, edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 15] :=
+    FloatToStrF(A * 1973.52524138998, ffFixed, 0, edtDecimalDigitsConvertArea.Value);
+  sgConvertArea.Cells[1, 16] :=
+    FloatToStrF(A * 1.07250599595124e-008, ffFixed, 0,
+    edtDecimalDigitsConvertArea.Value);
+end;
+
+procedure TFormMain.updateVolume(V: Float);
+begin
+  sgConvertVolume.Cells[1, 1]  :=
+    FloatToStrF(V * 1e6, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 2]  :=
+    FloatToStrF(V * 1e3, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 3]  :=
+    FloatToStrF(V, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 4]  :=
+    FloatToStrF(V * 61023.7440947323, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 5]  :=
+    FloatToStrF(V * 35.3146667214886, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 6]  :=
+    FloatToStrF(V * 1.30795061931439, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 7]  :=
+    FloatToStrF(V * 1000, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 9]  :=
+    FloatToStrF(V * 219.969248299088, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 10] :=
+    FloatToStrF(V * 264.172052358148, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 11] :=
+    FloatToStrF(V * 227.020746067214, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 13] :=
+    FloatToStrF(V * 6.11025689719688, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 14] :=
+    FloatToStrF(V * 8.38641436057614, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 15] :=
+    FloatToStrF(V * 8.6484093739891, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 16] :=
+    FloatToStrF(V * 6.2898107704321, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 18] :=
+    FloatToStrF(V * 35195.079727854, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 19] :=
+    FloatToStrF(V * 33814.022701843, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 21] :=
+    FloatToStrF(V * 1759.7539863927, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 22] :=
+    FloatToStrF(V * 2113.37641886519, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 23] :=
+    FloatToStrF(V * 1816.16596853771, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 25] :=
+    FloatToStrF(V * 879.876993196351, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 26] :=
+    FloatToStrF(V * 1056.68820943259, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 27] :=
+    FloatToStrF(V * 908.082984268856, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 29] :=
+    FloatToStrF(V * 4000, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 30] :=
+    FloatToStrF(V * 4226.75283773037, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 31] :=
+    FloatToStrF(V * 4399.38496598176, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 33] :=
+    FloatToStrF(V * 56312.1275645665, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 34] :=
+    FloatToStrF(V * 67628.045403686, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 35] :=
+    FloatToStrF(V * 70390.1594557081, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 36] :=
+    FloatToStrF(V * 200000 / 3, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 38] :=
+    FloatToStrF(V * 168936.382693699, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 39] :=
+    FloatToStrF(V * 202884.136211058, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 40] :=
+    FloatToStrF(V * 211170.478367124, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+  sgConvertVolume.Cells[1, 41] :=
+    FloatToStrF(V * 202884.136211058, ffFixed, 0, edtDecimalDigitsConvertVolume.Value);
+end;
+
 procedure TFormMain.updateSpeed(SP: Float);
 begin
-  sgConvertSpeed.Cells[1, 1] := FloatToStrF(SP * 100, ffFixed, 0,
-    edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1, 2] := FloatToStrF(SP * 6000, ffFixed, 0,
-    edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1, 3] := FloatToStrF(SP * 360000, ffFixed, 0,
-    edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1, 4] := FloatToStrF(SP, ffFixed, 0,
-    edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1, 5] := FloatToStrF(SP * 60, ffFixed, 0,
-    edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1, 6] := FloatToStrF(SP * 3600, ffFixed, 0,
-    edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1, 7] := FloatToStrF(SP / 1000, ffFixed, 0,
-    edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1, 8] := FloatToStrF(SP * 60 / 1000, ffFixed, 0,
-    edtDecimalDigitsConvertSpeed.Value);
-  sgConvertSpeed.Cells[1, 9] := FloatToStrF(SP * 3600 / 1000, ffFixed, 0,
-    edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 1] :=
+    FloatToStrF(SP * 100, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 2] :=
+    FloatToStrF(SP * 6000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 3] :=
+    FloatToStrF(SP * 360000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 4] :=
+    FloatToStrF(SP, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 5] :=
+    FloatToStrF(SP * 60, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 6] :=
+    FloatToStrF(SP * 3600, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 7] :=
+    FloatToStrF(SP / 1000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 8] :=
+    FloatToStrF(SP * 60 / 1000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
+  sgConvertSpeed.Cells[1, 9] :=
+    FloatToStrF(SP * 3600 / 1000, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
 
   sgConvertSpeed.Cells[1, 11] :=
     FloatToStrF(SP * 39.3700787401575, ffFixed, 0, edtDecimalDigitsConvertSpeed.Value);
@@ -4650,25 +4916,25 @@ begin
   tsDigit.TabVisible    := ini.ReadBool('Enabled', 'Dital', True);
   updateTSPC(tsDigit, pcDigit);
 
-  tsConvertTime.TabVisible     := ini.ReadBool('Enabled', 'Convert_Time', True);
+  tsConvertTime.TabVisible := ini.ReadBool('Enabled', 'Convert_Time', True);
   tsConvertTemperature.TabVisible :=
     ini.ReadBool('Enabled', 'Convert_Temperature', True);
-  tsConvertPower.TabVisible    := ini.ReadBool('Enabled', 'Convert_Power', True);
+  tsConvertPower.TabVisible := ini.ReadBool('Enabled', 'Convert_Power', True);
   tsConvertDistance.TabVisible := ini.ReadBool('Enabled', 'Convert_Distance', True);
-  tsConvertSpeed.TabVisible    := ini.ReadBool('Enabled', 'Convert_Speed', True);
-  ;
+  tsConvertArea.TabVisible := ini.ReadBool('Enabled', 'Convert_Area', True);
+  tsConvertVolume.TabVisible := ini.ReadBool('Enabled', 'Convert_Volume', True);
+  tsConvertSpeed.TabVisible := ini.ReadBool('Enabled', 'Convert_Speed', True);
   tsConvertMass.TabVisible := ini.ReadBool('Enabled', 'Convert_Mass', True);
-  tsConvert.TabVisible     := ini.ReadBool('Enabled', 'Convert', True);
+  tsConvert.TabVisible := ini.ReadBool('Enabled', 'Convert', True);
   updateTSPC(tsConvert, pcConvert);
 
   tsCalc.TabVisible := ini.ReadBool('Enabled', 'Calc', True);
 
   tsPascalScript.TabVisible := ini.ReadBool('Enabled', 'Script_Pascal', True);
   tsMicropython.TabVisible := ini.ReadBool('Enabled', 'Script_micropython', True);
-  tsLua.TabVisible   := ini.ReadBool('Enabled', 'Script_Lua', True);
-  tsC.TabVisible     := ini.ReadBool('Enabled', 'Script_C', True);
-  tsGraph.TabVisible := ini.ReadBool('Enabled', 'Script_Graph', True);
-  ;
+  tsLua.TabVisible    := ini.ReadBool('Enabled', 'Script_Lua', True);
+  tsC.TabVisible      := ini.ReadBool('Enabled', 'Script_C', True);
+  tsGraph.TabVisible  := ini.ReadBool('Enabled', 'Script_Graph', True);
   tsScript.TabVisible := ini.ReadBool('Enabled', 'Script', True);
   updateTSPC(tsScript, pcScript);
 
@@ -4676,6 +4942,8 @@ begin
   tsConstantPhysics.TabVisible := ini.ReadBool('Enabled', 'Constant_Physics', True);
   tsConstantDecimalMultiple.TabVisible :=
     ini.ReadBool('Enabled', 'Constant_DecimalMultiple', True);
+  tsConstantPeriodicTable.TabVisible :=
+    ini.ReadBool('Enabled', 'Constant_PeriodicTable', True);
   tsConstant.TabVisible := ini.ReadBool('Enabled', 'Constant', True);
   updateTSPC(tsConstant, pcConstant);
 end;

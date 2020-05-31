@@ -1,12 +1,12 @@
 object FormMain: TFormMain
   Left = 354
-  Height = 497
+  Height = 480
   Top = 148
   Width = 640
   AlphaBlend = True
   AlphaBlendValue = 0
   Caption = 'Calc Toolbox'
-  ClientHeight = 497
+  ClientHeight = 480
   ClientWidth = 640
   Constraints.MinHeight = 480
   Constraints.MinWidth = 640
@@ -445,13 +445,13 @@ object FormMain: TFormMain
   LCLVersion = '2.0.6.0'
   object pcMain: TPageControl
     Left = 0
-    Height = 497
+    Height = 480
     Top = 0
     Width = 640
-    ActivePage = tsConstant
+    ActivePage = tsConvert
     Align = alClient
     MultiLine = True
-    TabIndex = 5
+    TabIndex = 2
     TabOrder = 0
     Options = [nboMultiLine]
     object tsCRC: TTabSheet
@@ -1681,21 +1681,23 @@ object FormMain: TFormMain
     end
     object tsConvert: TTabSheet
       Caption = 'Convert'
-      ClientHeight = 467
+      ClientHeight = 450
       ClientWidth = 632
       object pcConvert: TPageControl
         Left = 0
-        Height = 467
+        Height = 450
         Top = 0
         Width = 632
-        ActivePage = tsConvertTime
+        ActivePage = tsConvertVolume
         Align = alClient
         Images = ilMain
-        TabIndex = 0
+        MultiLine = True
+        TabIndex = 5
         TabOrder = 0
+        Options = [nboMultiLine]
         object tsConvertTime: TTabSheet
           Caption = 'Time'
-          ClientHeight = 437
+          ClientHeight = 569
           ClientWidth = 624
           ImageIndex = 49
           object sgConvertTime: TStringGrid
@@ -1719,7 +1721,7 @@ object FormMain: TFormMain
             OnEditingDone = sgConvertTimeEditingDone
             ColWidths = (
               267
-              336
+              353
             )
             Cells = (
               10
@@ -1852,12 +1854,12 @@ object FormMain: TFormMain
         end
         object tsConvertTemperature: TTabSheet
           Caption = 'Temperature'
-          ClientHeight = 437
+          ClientHeight = 569
           ClientWidth = 624
           ImageIndex = 51
           object sgConvertTemperature: TStringGrid
             Left = 0
-            Height = 303
+            Height = 435
             Top = 26
             Width = 624
             Align = alClient
@@ -1876,7 +1878,7 @@ object FormMain: TFormMain
             OnEditingDone = sgConvertTemperatureEditingDone
             ColWidths = (
               209
-              394
+              411
             )
             Cells = (
               8
@@ -1934,7 +1936,7 @@ object FormMain: TFormMain
           object mmoNoteConvertTemperature: TMemo
             Left = 0
             Height = 100
-            Top = 337
+            Top = 469
             Width = 624
             Align = alBottom
             BorderStyle = bsNone
@@ -1952,7 +1954,7 @@ object FormMain: TFormMain
           object btnNoteConvertTemperature: TSpeedButton
             Left = 0
             Height = 8
-            Top = 329
+            Top = 461
             Width = 624
             Align = alBottom
             Flat = True
@@ -1963,12 +1965,12 @@ object FormMain: TFormMain
         end
         object tsConvertPower: TTabSheet
           Caption = 'Power'
-          ClientHeight = 437
+          ClientHeight = 569
           ClientWidth = 624
           ImageIndex = 53
           object sgConvertPower: TStringGrid
             Left = 0
-            Height = 303
+            Height = 435
             Top = 26
             Width = 624
             Align = alClient
@@ -1987,7 +1989,7 @@ object FormMain: TFormMain
             OnEditingDone = sgConvertPowerEditingDone
             ColWidths = (
               128
-              475
+              492
             )
             Cells = (
               4
@@ -2033,7 +2035,7 @@ object FormMain: TFormMain
           object mmoNoteConvertPower: TMemo
             Left = 0
             Height = 100
-            Top = 337
+            Top = 469
             Width = 624
             Align = alBottom
             BorderStyle = bsNone
@@ -2051,7 +2053,7 @@ object FormMain: TFormMain
           object btnNoteConvertPower: TSpeedButton
             Left = 0
             Height = 8
-            Top = 329
+            Top = 461
             Width = 624
             Align = alBottom
             Flat = True
@@ -2062,12 +2064,12 @@ object FormMain: TFormMain
         end
         object tsConvertDistance: TTabSheet
           Caption = 'Distance'
-          ClientHeight = 437
+          ClientHeight = 569
           ClientWidth = 624
           ImageIndex = 48
           object sgConvertDistance: TStringGrid
             Left = 0
-            Height = 303
+            Height = 435
             Top = 26
             Width = 624
             Align = alClient
@@ -2086,7 +2088,7 @@ object FormMain: TFormMain
             OnEditingDone = sgConvertDistanceEditingDone
             ColWidths = (
               195
-              408
+              425
             )
             Cells = (
               14
@@ -2162,7 +2164,7 @@ object FormMain: TFormMain
           object mmoNoteConvertDistance: TMemo
             Left = 0
             Height = 100
-            Top = 337
+            Top = 469
             Width = 624
             Align = alBottom
             BorderStyle = bsNone
@@ -2179,7 +2181,7 @@ object FormMain: TFormMain
           object btnNoteConvertDistance: TSpeedButton
             Left = 0
             Height = 8
-            Top = 329
+            Top = 461
             Width = 624
             Align = alBottom
             Flat = True
@@ -2188,9 +2190,272 @@ object FormMain: TFormMain
             OnClick = btnNoteConvertDistanceClick
           end
         end
+        object tsConvertArea: TTabSheet
+          Caption = 'Area'
+          ClientHeight = 398
+          ClientWidth = 624
+          ImageIndex = 55
+          object ToolBar18: TToolBar
+            Left = 0
+            Height = 26
+            Top = 0
+            Width = 624
+            Caption = 'ToolBar18'
+            ShowCaptions = True
+            TabOrder = 0
+            Transparent = True
+            object edtDecimalDigitsConvertArea: TSpinEdit
+              Left = 129
+              Height = 25
+              Top = 2
+              Width = 50
+              MaxValue = 15
+              OnChange = edtDecimalDigitsConvertAreaChange
+              TabOrder = 0
+              Value = 6
+            end
+            object ToolButton46: TToolButton
+              Left = 1
+              Top = 2
+              Caption = 'Decimal Digits '
+            end
+          end
+          object sgConvertArea: TStringGrid
+            Left = 0
+            Height = 372
+            Top = 26
+            Width = 624
+            Align = alClient
+            AutoFillColumns = True
+            ColCount = 2
+            DefaultColWidth = 80
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goAlwaysShowEditor, goSmoothScroll]
+            RowCount = 18
+            TabOrder = 1
+            TitleFont.CharSet = ANSI_CHARSET
+            TitleFont.Color = clBlack
+            TitleFont.Height = -14
+            TitleFont.Name = 'Courier New'
+            TitleFont.Pitch = fpFixed
+            TitleFont.Quality = fqDraft
+            OnEditingDone = sgConvertAreaEditingDone
+            ColWidths = (
+              242
+              361
+            )
+            Cells = (
+              15
+              0
+              1
+              'square centimeter'
+              0
+              2
+              'square meter'
+              0
+              3
+              'square kilometer'
+              0
+              5
+              'square inch'
+              0
+              6
+              'square foot (UK)'
+              0
+              7
+              'square foot (US survey)'
+              0
+              8
+              'square yard'
+              0
+              9
+              'square mile'
+              0
+              11
+              'acer (ac)'
+              0
+              12
+              'hectare (ha)'
+              0
+              13
+              'rood (ro)'
+              0
+              14
+              'mu'
+              0
+              15
+              'circular inch'
+              0
+              16
+              'township (twp)'
+              1
+              0
+              'Value'
+            )
+          end
+        end
+        object tsConvertVolume: TTabSheet
+          Caption = 'Volume'
+          ClientHeight = 398
+          ClientWidth = 624
+          ImageIndex = 54
+          object ToolBar19: TToolBar
+            Left = 0
+            Height = 26
+            Top = 0
+            Width = 624
+            Caption = 'ToolBar19'
+            ShowCaptions = True
+            TabOrder = 0
+            Transparent = True
+            object edtDecimalDigitsConvertVolume: TSpinEdit
+              Left = 129
+              Height = 25
+              Top = 2
+              Width = 50
+              MaxValue = 15
+              OnChange = edtDecimalDigitsConvertVolumeChange
+              TabOrder = 0
+              Value = 6
+            end
+            object ToolButton47: TToolButton
+              Left = 1
+              Top = 2
+              Caption = 'Decimal Digits '
+            end
+          end
+          object sgConvertVolume: TStringGrid
+            Left = 0
+            Height = 372
+            Top = 26
+            Width = 624
+            Align = alClient
+            AutoFillColumns = True
+            ColCount = 2
+            DefaultColWidth = 80
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goEditing, goAlwaysShowEditor, goSmoothScroll]
+            RowCount = 50
+            TabOrder = 1
+            TitleFont.CharSet = ANSI_CHARSET
+            TitleFont.Color = clBlack
+            TitleFont.Height = -14
+            TitleFont.Name = 'Courier New'
+            TitleFont.Pitch = fpFixed
+            TitleFont.Quality = fqDraft
+            OnEditingDone = sgConvertVolumeEditingDone
+            ColWidths = (
+              242
+              361
+            )
+            Cells = (
+              34
+              0
+              1
+              'cubic centimeter (cm^3)'
+              0
+              2
+              'cubic decimeter (dm^3)'
+              0
+              3
+              'cubic meter (m^3)'
+              0
+              4
+              'cubic inch'
+              0
+              5
+              'cubic foot'
+              0
+              6
+              'cubic yard'
+              0
+              7
+              'liter (L)'
+              0
+              9
+              'gallon (UK)'
+              0
+              10
+              'gallon (US)'
+              0
+              11
+              'gallon (US dry)'
+              0
+              13
+              'barrel (UK)'
+              0
+              14
+              'barrel (US)'
+              0
+              15
+              'barrel (dry)'
+              0
+              16
+              'barrel (petroleum)'
+              0
+              18
+              'ounce (UK)'
+              0
+              19
+              'ounce (US)'
+              0
+              21
+              'pint (UK)'
+              0
+              22
+              'pint (US)'
+              0
+              23
+              'pint (dry)'
+              0
+              25
+              'quart (UK)'
+              0
+              26
+              'quart (US)'
+              0
+              27
+              'quart (dry)'
+              0
+              29
+              'cup (metric)'
+              0
+              30
+              'cup (US)'
+              0
+              31
+              'cup (Canadian)'
+              0
+              33
+              'table spoon (UK)'
+              0
+              34
+              'table spoon (US)'
+              0
+              35
+              'table spoon (Canadian)'
+              0
+              36
+              'table spoon (metric)'
+              0
+              38
+              'tea spoon (UK)'
+              0
+              39
+              'tea spoon (US)'
+              0
+              40
+              'tea spoon (Canadian)'
+              0
+              41
+              'tea spoon (metric)'
+              1
+              0
+              'Value'
+            )
+          end
+        end
         object tsConvertSpeed: TTabSheet
           Caption = 'Speed'
-          ClientHeight = 437
+          ClientHeight = 569
           ClientWidth = 624
           ImageIndex = 50
           object ToolBar17: TToolBar
@@ -2220,7 +2485,7 @@ object FormMain: TFormMain
           end
           object sgConvertSpeed: TStringGrid
             Left = 0
-            Height = 303
+            Height = 435
             Top = 26
             Width = 624
             Align = alClient
@@ -2323,7 +2588,7 @@ object FormMain: TFormMain
           object btnNoteConvertSpeed: TSpeedButton
             Left = 0
             Height = 8
-            Top = 329
+            Top = 461
             Width = 624
             Align = alBottom
             Flat = True
@@ -2334,7 +2599,7 @@ object FormMain: TFormMain
           object mmoNoteConvertSpeed: TMemo
             Left = 0
             Height = 100
-            Top = 337
+            Top = 469
             Width = 624
             Align = alBottom
             BorderStyle = bsNone
@@ -2353,7 +2618,7 @@ object FormMain: TFormMain
         end
         object tsConvertMass: TTabSheet
           Caption = 'Mass'
-          ClientHeight = 437
+          ClientHeight = 415
           ClientWidth = 624
           ImageIndex = 52
           object ToolBar15: TToolBar
@@ -2383,7 +2648,7 @@ object FormMain: TFormMain
           end
           object sgConvertMass: TStringGrid
             Left = 0
-            Height = 303
+            Height = 281
             Top = 26
             Width = 624
             Align = alClient
@@ -2465,7 +2730,7 @@ object FormMain: TFormMain
           object btnNoteConvertMass: TSpeedButton
             Left = 0
             Height = 8
-            Top = 329
+            Top = 307
             Width = 624
             Align = alBottom
             Flat = True
@@ -2476,7 +2741,7 @@ object FormMain: TFormMain
           object mmoNoteConvertMass: TMemo
             Left = 0
             Height = 100
-            Top = 337
+            Top = 315
             Width = 624
             Align = alBottom
             BorderStyle = bsNone
@@ -5847,7 +6112,7 @@ object FormMain: TFormMain
             end
             object ToolButton42: TToolButton
               Left = 151
-              Height = 22
+              Height = 8
               Top = 0
               Caption = 'ToolButton34'
               Style = tbsSeparator
@@ -5875,7 +6140,7 @@ object FormMain: TFormMain
             end
             object ToolButton43: TToolButton
               Left = 228
-              Height = 22
+              Height = 8
               Top = 0
               Caption = 'ToolButton17'
               Style = tbsSeparator
@@ -5887,7 +6152,7 @@ object FormMain: TFormMain
             end
             object ToolButton44: TToolButton
               Left = 294
-              Height = 22
+              Height = 8
               Top = 0
               Caption = 'ToolButton40'
               Style = tbsSeparator
@@ -6447,7 +6712,7 @@ object FormMain: TFormMain
         Height = 467
         Top = 0
         Width = 632
-        ActivePage = tsPeriodicTable
+        ActivePage = tsConstantPeriodicTable
         Align = alClient
         TabIndex = 3
         TabOrder = 0
@@ -6483,7 +6748,7 @@ object FormMain: TFormMain
               end            
               item
                 Title.Caption = 'Description'
-                Width = 360
+                Width = 343
               end>
             DefaultColWidth = 64
             FixedCols = 0
@@ -6499,7 +6764,7 @@ object FormMain: TFormMain
             ColWidths = (
               80
               180
-              360
+              343
             )
             Cells = (
               34
@@ -7138,7 +7403,7 @@ object FormMain: TFormMain
             )
           end
         end
-        object tsPeriodicTable: TTabSheet
+        object tsConstantPeriodicTable: TTabSheet
           Caption = 'Periodic Table'
           ClientHeight = 437
           ClientWidth = 624
@@ -13403,7 +13668,7 @@ object FormMain: TFormMain
     left = 24
     top = 272
     Bitmap = {
-      4C69360000001000000010000000D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
+      4C69380000001000000010000000D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
       EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9EC00D8E9
@@ -15130,6 +15395,70 @@ object FormMain: TFormMain
       ED55241CED55241CED5500000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
+      00FF000000FF0000000000000000000000000000000000000000000000000000
+      00FF000000430000000000000000000000000000000000000000000000000000
+      00FF000000FF0000000000000000000000000000000000000000000000FF0000
+      0000000000430000000000000000000000000000000000000000000000FF0000
+      0000000000FF00000000000000000000000000000000000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000000000
+      0000000000FF00000000000000000000000000000000000000FF000000000000
+      00000000004300000000000000000000000000000000000000FF000000000000
+      0000000000FF00000000000000000000000000000000000000FF000000000000
+      00000000004300000000000000000000000000000000000000FF000000000000
+      0000000000FF00000000000000000000000000000000000000FF000000000000
+      00000000004300000000000000000000000000000000000000FF000000000000
+      0000000000FF00000000000000000000000000000000000000FF000000000000
+      00000000004300000000000000000000000000000000000000FF000000000000
+      0000000000FF00000000000000000000000000000000000000FF000000000000
+      00000000004300000000000000000000000000000000000000FF000000000000
+      0000000000FF00000000000000000000000000000000000000FF000000000000
+      00000000004300000000000000000000000000000000000000FF000000000000
+      0000000000FF00000000000000000000000000000000000000FF000000000000
+      00000000004300000043000000430000004300000043000000FF000000430000
+      0043000000FF00000000000000000000000000000000000000FF000000000000
+      00430000000000000000000000000000000000000000000000FF000000000000
+      00FF0000000000000000000000000000000000000000000000FF000000430000
+      00000000000000000000000000000000000000000000000000FF000000FF0000
+      00000000000000000000000000000000000000000000000000FF000000FF0000
+      00FF000000FF000000FF000000FF000000FF000000FF000000FF000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000C0C0C0FFC0C0C0FFC0C0C0FFC0C0C0FF0000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000C0C0C0FFC0C0
+      C0FFC0C0C0FFC0C0C0FFC0C0C0FFC0C0C0FFC0C0C0FFC0C0C0FF000000000000
+      00000000000000000000000000000000000000000000C0C0C0FFC0C0C0FFC0C0
+      C0FFC0C0C0FFC0C0C0FFC0C0C0FFC0C0C0FFC0C0C0FFC0C0C0FFC0C0C0FF0000
+      00000000000000000000000000000000000000000000C0C0C0FFC0C0C0FFC0C0
+      C0FFC0C0C0FFC0C0C0FFC0C0C0FFC0C0C0FFC0C0C0FFC0C0C0FFC0C0C0FF0000
+      000000000000000000000000000000000000C0C0C0FFC0C0C0FFC0C0C0FFC0C0
+      C0FFC0C0C0FFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFC691
+      5CFFCC660086000000000000000000000000C0C0C0FFC0C0C0FFC0C0C0FFC0C0
+      C0FFC0C0C0FFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFC691
+      5CFFCC660086000000000000000000000000C0C0C0FFC0C0C0FFC0C0C0FFC0C0
+      C0FFC0C0C0FFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFC691
+      5CFFCC660086000000000000000000000000C0C0C0FFC0C0C0FFC0C0C0FFC0C0
+      C0FFC0C0C0FFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFC691
+      5CFFCC66008600000000000000000000000000000000C0C0C0FFC0C0C0FFC0C0
+      C0FFC0C0C0FFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFCC66
+      0086CC66008600000000000000000000000000000000C0C0C0FFC0C0C0FFC0C0
+      C0FFC0C0C0FFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFCC66
+      0086CC6600860000000000000000000000000000000000000000C0C0C0FFC0C0
+      C0FFC0C0C0FFC6915CFFC6915CFFC6915CFFC6915CFFC6915CFFCC660086CC66
+      0086CC6600860000000000000000000000000000000000000000000000000000
+      0000C0C0C0FFC6915CFFC6915CFFC6915CFFCC660086CC660086CC660086CC66
+      0086CC6600860000000000000000000000000000000000000000000000000000
+      000000000000CC660086CC660086CC660086CC660086CC660086CC660086CC66
+      0086CC6600860000000000000000000000000000000000000000000000000000
+      000000000000CC660086CC660086CC660086CC660086CC660086CC660086CC66
+      0086CC6600860000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000
     }
