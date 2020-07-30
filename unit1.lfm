@@ -448,448 +448,528 @@ object FormMain: TFormMain
     Height = 480
     Top = 0
     Width = 640
-    ActivePage = tsConvert
+    ActivePage = tsChecksum
     Align = alClient
     MultiLine = True
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 0
     Options = [nboMultiLine]
-    object tsCRC: TTabSheet
-      Caption = 'CRC'
-      ClientHeight = 467
+    object tsChecksum: TTabSheet
+      Caption = 'Checksum'
+      ClientHeight = 450
       ClientWidth = 632
-      object ToolBar1: TToolBar
+      object pcChecksum: TPageControl
         Left = 0
-        Height = 43
+        Height = 450
         Top = 0
         Width = 632
-        AutoSize = True
-        Caption = 'ToolBar1'
-        EdgeBorders = []
-        ShowCaptions = True
-        TabOrder = 0
-        Transparent = True
-        object ToolButton1: TToolButton
-          Left = 185
-          Height = 8
-          Top = 0
-          AutoSize = True
-          Caption = ' '
-          Style = tbsSeparator
-        end
-        object ToolButton2: TToolButton
-          Left = 1
-          Top = 0
-          AutoSize = True
-          Caption = 'Polygon (0x)'
-        end
-        object edtCrcPolygon: TEdit
-          Left = 105
-          Height = 25
-          Top = 0
-          Width = 80
-          TabOrder = 0
-          Text = '1021'
-        end
-        object ToolButton3: TToolButton
-          Left = 193
-          Top = 0
-          AutoSize = True
-          Caption = 'Init (0x)'
-        end
-        object edtCrcInitV: TEdit
-          Left = 273
-          Height = 25
-          Top = 0
-          Width = 80
-          TabOrder = 1
-          Text = 'ffff'
-        end
-        object ToolButton4: TToolButton
-          Left = 353
-          Height = 8
-          Top = 0
-          Caption = ' '
-          Style = tbsSeparator
-        end
-        object chkCrcInvOut: TCheckBox
-          Left = 1
-          Height = 21
-          Top = 22
-          Width = 102
-          Caption = 'Invert out'
-          TabOrder = 4
-        end
-        object chkCrcInvIn: TCheckBox
-          Left = 513
-          Height = 21
-          Top = 0
-          Width = 94
-          Caption = 'Invert In'
-          TabOrder = 3
-        end
-        object ToolButton7: TToolButton
-          Left = 361
-          Top = 0
-          Caption = 'XOROUT '
-        end
-        object ToolButton21: TToolButton
-          Left = 505
-          Height = 8
-          Top = 0
-          Caption = 'ToolButton21'
-          Style = tbsSeparator
-        end
-        object edtCrcXOROUT: TEdit
-          Left = 425
-          Height = 25
-          Top = 0
-          Width = 80
-          TabOrder = 2
-          Text = 'ffffffff'
-        end
-      end
-      object ToolBar2: TToolBar
-        Left = 0
-        Height = 43
-        Top = 43
-        Width = 632
-        AutoSize = True
-        Caption = 'ToolBar2'
-        EdgeBorders = []
-        TabOrder = 1
-        Transparent = True
-        object rbCrc8bits: TRadioButton
-          Left = 313
-          Height = 21
-          Top = 0
-          Width = 78
-          Caption = '8 bits '
-          TabOrder = 4
-        end
-        object rbCrc32bits: TRadioButton
-          Left = 1
-          Height = 21
-          Top = 22
-          Width = 86
-          Caption = '32 bits '
-          TabOrder = 7
-        end
-        object rbCrc12bits: TRadioButton
-          Left = 391
-          Height = 21
-          Top = 0
-          Width = 86
-          Caption = '12 bits '
-          Enabled = False
-          TabOrder = 5
-          Visible = False
-        end
-        object rbCrc16bits: TRadioButton
-          Left = 477
-          Height = 21
-          Top = 0
-          Width = 86
-          Caption = '16 bits '
-          Checked = True
-          TabOrder = 6
-          TabStop = True
-        end
-        object rbCrc5bits: TRadioButton
-          Left = 79
-          Height = 21
-          Top = 0
-          Width = 78
-          Caption = '5 bits '
-          TabOrder = 1
-        end
-        object rbCrc4bits: TRadioButton
-          Left = 1
-          Height = 21
-          Top = 0
-          Width = 78
-          Caption = '4 bits '
-          TabOrder = 0
-        end
-        object rbCrc7bits: TRadioButton
-          Left = 235
-          Height = 21
-          Top = 0
-          Width = 78
-          Caption = '7 bits '
-          TabOrder = 3
-        end
-        object rbCrc6bits: TRadioButton
-          Left = 157
-          Height = 21
-          Top = 0
-          Width = 78
-          Caption = '6 bits '
-          TabOrder = 2
-        end
-      end
-      object mmoCRC: TMemo
-        Left = 0
-        Height = 264
-        Top = 178
-        Width = 632
+        ActivePage = tsGNSS
         Align = alClient
-        ScrollBars = ssAutoVertical
-        TabOrder = 3
-      end
-      object ToolBar4: TToolBar
-        Left = 0
-        Height = 92
-        Top = 86
-        Width = 632
-        AutoSize = True
-        Color = clMenu
-        EdgeBorders = [ebLeft, ebTop, ebRight, ebBottom]
-        Images = ilMain
-        ImagesWidth = 16
-        List = True
-        ParentColor = False
-        ShowCaptions = True
-        TabOrder = 2
-        object btnCrc_CRC4_ITU: TToolButton
-          Left = 3
-          Top = 2
-          Caption = 'CRC-4/ITU'
-          OnClick = btnCrc_CRC4_ITUClick
+        TabIndex = 1
+        TabOrder = 0
+        object tsCRC: TTabSheet
+          Caption = 'CRC'
+          ClientHeight = 420
+          ClientWidth = 624
+          object ToolBar1: TToolBar
+            Left = 0
+            Height = 43
+            Top = 0
+            Width = 624
+            AutoSize = True
+            Caption = 'ToolBar1'
+            EdgeBorders = []
+            ShowCaptions = True
+            TabOrder = 0
+            Transparent = True
+            object ToolButton1: TToolButton
+              Left = 185
+              Height = 8
+              Top = 0
+              AutoSize = True
+              Caption = ' '
+              Style = tbsSeparator
+            end
+            object ToolButton2: TToolButton
+              Left = 1
+              Top = 0
+              AutoSize = True
+              Caption = 'Polygon (0x)'
+            end
+            object edtCrcPolygon: TEdit
+              Left = 105
+              Height = 25
+              Top = 0
+              Width = 80
+              TabOrder = 0
+              Text = '1021'
+            end
+            object ToolButton3: TToolButton
+              Left = 193
+              Top = 0
+              AutoSize = True
+              Caption = 'Init (0x)'
+            end
+            object edtCrcInitV: TEdit
+              Left = 273
+              Height = 25
+              Top = 0
+              Width = 80
+              TabOrder = 1
+              Text = 'ffff'
+            end
+            object ToolButton4: TToolButton
+              Left = 353
+              Height = 8
+              Top = 0
+              Caption = ' '
+              Style = tbsSeparator
+            end
+            object chkCrcInvOut: TCheckBox
+              Left = 1
+              Height = 21
+              Top = 22
+              Width = 102
+              Caption = 'Invert out'
+              TabOrder = 4
+            end
+            object chkCrcInvIn: TCheckBox
+              Left = 513
+              Height = 21
+              Top = 0
+              Width = 94
+              Caption = 'Invert In'
+              TabOrder = 3
+            end
+            object ToolButton7: TToolButton
+              Left = 361
+              Top = 0
+              Caption = 'XOROUT '
+            end
+            object ToolButton21: TToolButton
+              Left = 505
+              Height = 8
+              Top = 0
+              Caption = 'ToolButton21'
+              Style = tbsSeparator
+            end
+            object edtCrcXOROUT: TEdit
+              Left = 425
+              Height = 25
+              Top = 0
+              Width = 80
+              TabOrder = 2
+              Text = 'ffffffff'
+            end
+            object chkCrcHexMode: TCheckBox
+              Left = 103
+              Height = 21
+              Top = 22
+              Width = 86
+              Caption = 'HEX mode'
+              Checked = True
+              State = cbChecked
+              TabOrder = 5
+            end
+          end
+          object ToolBar2: TToolBar
+            Left = 0
+            Height = 43
+            Top = 43
+            Width = 624
+            AutoSize = True
+            Caption = 'ToolBar2'
+            EdgeBorders = []
+            TabOrder = 1
+            Transparent = True
+            object rbCrc8bits: TRadioButton
+              Left = 313
+              Height = 21
+              Top = 0
+              Width = 78
+              Caption = '8 bits '
+              TabOrder = 4
+            end
+            object rbCrc32bits: TRadioButton
+              Left = 1
+              Height = 21
+              Top = 22
+              Width = 86
+              Caption = '32 bits '
+              TabOrder = 7
+            end
+            object rbCrc12bits: TRadioButton
+              Left = 391
+              Height = 21
+              Top = 0
+              Width = 86
+              Caption = '12 bits '
+              Enabled = False
+              TabOrder = 5
+              Visible = False
+            end
+            object rbCrc16bits: TRadioButton
+              Left = 477
+              Height = 21
+              Top = 0
+              Width = 86
+              Caption = '16 bits '
+              Checked = True
+              TabOrder = 6
+              TabStop = True
+            end
+            object rbCrc5bits: TRadioButton
+              Left = 79
+              Height = 21
+              Top = 0
+              Width = 78
+              Caption = '5 bits '
+              TabOrder = 1
+            end
+            object rbCrc4bits: TRadioButton
+              Left = 1
+              Height = 21
+              Top = 0
+              Width = 78
+              Caption = '4 bits '
+              TabOrder = 0
+            end
+            object rbCrc7bits: TRadioButton
+              Left = 235
+              Height = 21
+              Top = 0
+              Width = 78
+              Caption = '7 bits '
+              TabOrder = 3
+            end
+            object rbCrc6bits: TRadioButton
+              Left = 157
+              Height = 21
+              Top = 0
+              Width = 78
+              Caption = '6 bits '
+              TabOrder = 2
+            end
+          end
+          object mmoCRC: TMemo
+            Left = 0
+            Height = 217
+            Top = 178
+            Width = 624
+            Align = alClient
+            ScrollBars = ssAutoVertical
+            TabOrder = 3
+          end
+          object ToolBar4: TToolBar
+            Left = 0
+            Height = 92
+            Top = 86
+            Width = 624
+            AutoSize = True
+            Color = clMenu
+            EdgeBorders = [ebLeft, ebTop, ebRight, ebBottom]
+            Images = ilMain
+            ImagesWidth = 16
+            List = True
+            ParentColor = False
+            ShowCaptions = True
+            TabOrder = 2
+            object btnCrc_CRC4_ITU: TToolButton
+              Left = 3
+              Top = 2
+              Caption = 'CRC-4/ITU'
+              OnClick = btnCrc_CRC4_ITUClick
+            end
+            object btnCrc_CRC5_EPC: TToolButton
+              Left = 83
+              Top = 2
+              Caption = 'CRC-5/EPC'
+              OnClick = btnCrc_CRC5_EPCClick
+            end
+            object btnCrc_CRC5_ITU: TToolButton
+              Left = 163
+              Top = 2
+              Caption = 'CRC-5/ITU'
+              OnClick = btnCrc_CRC5_ITUClick
+            end
+            object btnCrc_CRC5_USB: TToolButton
+              Left = 243
+              Top = 2
+              Caption = 'CRC-5/USB'
+              ImageIndex = 5
+              OnClick = btnCrc_CRC5_USBClick
+            end
+            object btnCrc_CRC6_ITU: TToolButton
+              Left = 341
+              Top = 2
+              Caption = 'CRC-6/ITU'
+              OnClick = btnCrc_CRC6_ITUClick
+            end
+            object btnCrc_CRC7_MMC: TToolButton
+              Left = 421
+              Top = 2
+              Caption = 'CRC-7/MMC'
+              ImageIndex = 8
+              OnClick = btnCrc_CRC7_MMCClick
+            end
+            object btnCrc_CRC8: TToolButton
+              Left = 524
+              Top = 2
+              Caption = 'CRC-8'
+              OnClick = btnCrc_CRC8Click
+            end
+            object btnCrc_CRC8_ITU: TToolButton
+              Left = 3
+              Top = 24
+              Caption = 'CRC-8/ITU'
+              OnClick = btnCrc_CRC8_ITUClick
+            end
+            object btnCrc_CRC8_ROHC: TToolButton
+              Left = 83
+              Top = 24
+              Caption = 'CRC-8/ROHC'
+              OnClick = btnCrc_CRC8_ROHCClick
+            end
+            object btnCrc_CRC8_MAXIM: TToolButton
+              Left = 171
+              Top = 24
+              Caption = 'CRC-8/MAXIM'
+              OnClick = btnCrc_CRC8_MAXIMClick
+            end
+            object btnCrc_CRC16_IBM: TToolButton
+              Left = 272
+              Top = 24
+              Caption = 'CRC-16/IBM'
+              OnClick = btnCrc_CRC16_IBMClick
+            end
+            object btnCrc_CRC16_MAXIM: TToolButton
+              Left = 360
+              Top = 24
+              Caption = 'CRC-16/MAXIM'
+              OnClick = btnCrc_CRC16_MAXIMClick
+            end
+            object btnCrc_CRC16_USB: TToolButton
+              Left = 464
+              Top = 24
+              Caption = 'CRC-16/USB'
+              ImageIndex = 6
+              OnClick = btnCrc_CRC16_USBClick
+            end
+            object btnCrc_CRC16_MODBUS: TToolButton
+              Left = 3
+              Top = 46
+              Caption = 'CRC-16/MODBUS'
+              OnClick = btnCrc_CRC16_MODBUSClick
+            end
+            object btnCrc_CRC16_CCITT: TToolButton
+              Left = 120
+              Top = 46
+              Caption = 'CRC-16/CCITT'
+              OnClick = btnCrc_CRC16_CCITTClick
+            end
+            object btnCrc_CRC16_CCITT_FALSE: TToolButton
+              Left = 229
+              Top = 46
+              Caption = 'CRC-16/CCITT-FALSE'
+              OnClick = btnCrc_CRC16_CCITT_FALSEClick
+            end
+            object btnCrc_CRC16_X25: TToolButton
+              Left = 381
+              Top = 46
+              Caption = 'CRC-16/X25'
+              OnClick = btnCrc_CRC16_X25Click
+            end
+            object btnCrc_CRC16_XMODEM: TToolButton
+              Left = 474
+              Top = 46
+              Caption = 'CRC-16/XMODEM'
+              ImageIndex = 7
+              OnClick = btnCrc_CRC16_XMODEMClick
+            end
+            object btnCrc_CRC16_DNP: TToolButton
+              Left = 3
+              Top = 68
+              Caption = 'CRC-16/DNP'
+              OnClick = btnCrc_CRC16_DNPClick
+            end
+            object btnCrc_CRC32: TToolButton
+              Left = 96
+              Top = 68
+              Caption = 'CRC-32'
+              OnClick = btnCrc_CRC32Click
+            end
+            object btnCrc_CRC32_MPEG2: TToolButton
+              Left = 152
+              Top = 68
+              Caption = 'CRC-32/MPEG-2'
+              OnClick = btnCrc_CRC32_MPEG2Click
+            end
+            object ToolButton9: TToolButton
+              Left = 519
+              Height = 5
+              Top = 2
+              Caption = 'ToolButton9'
+              Style = tbsDivider
+            end
+            object ToolButton8: TToolButton
+              Left = 267
+              Height = 5
+              Top = 24
+              Caption = 'ToolButton8'
+              Style = tbsDivider
+            end
+            object ToolButton10: TToolButton
+              Left = 91
+              Height = 5
+              Top = 68
+              Caption = 'ToolButton10'
+              Style = tbsDivider
+            end
+            object ToolButton11: TToolButton
+              Left = 469
+              Height = 5
+              Top = 46
+              Caption = 'ToolButton11'
+              Style = tbsDivider
+            end
+            object ToolButton12: TToolButton
+              Left = 604
+              Height = 5
+              Top = 46
+              Caption = 'ToolButton12'
+              Style = tbsDivider
+            end
+            object ToolButton15: TToolButton
+              Left = 115
+              Height = 5
+              Top = 46
+              Caption = 'ToolButton15'
+              Style = tbsDivider
+            end
+            object ToolButton16: TToolButton
+              Left = 224
+              Height = 5
+              Top = 46
+              Caption = 'ToolButton16'
+              Style = tbsDivider
+            end
+          end
+          object ToolBar5: TToolBar
+            Left = 0
+            Height = 25
+            Top = 395
+            Width = 624
+            Align = alBottom
+            AutoSize = True
+            Caption = 'ToolBar5'
+            EdgeBorders = []
+            Images = ilMain
+            List = True
+            ShowCaptions = True
+            TabOrder = 4
+            object ToolButton13: TToolButton
+              Left = 1
+              Top = 0
+              Caption = ' Result  H/L (0x) '
+            end
+            object edtCrcResult: TEdit
+              Left = 153
+              Height = 25
+              Top = 0
+              Width = 157
+              OnClick = edtCrcResultClick
+              ReadOnly = True
+              TabOrder = 0
+            end
+            object btnCrcBufLen: TToolButton
+              Left = 310
+              Top = 0
+              Enabled = False
+            end
+            object btnCrcCalc: TToolButton
+              Left = 333
+              Top = 0
+              AutoSize = True
+              Caption = ' Calc '
+              ImageIndex = 11
+              OnClick = btnCrcCalcClick
+            end
+          end
         end
-        object btnCrc_CRC5_EPC: TToolButton
-          Left = 83
-          Top = 2
-          Caption = 'CRC-5/EPC'
-          OnClick = btnCrc_CRC5_EPCClick
-        end
-        object btnCrc_CRC5_ITU: TToolButton
-          Left = 163
-          Top = 2
-          Caption = 'CRC-5/ITU'
-          OnClick = btnCrc_CRC5_ITUClick
-        end
-        object btnCrc_CRC5_USB: TToolButton
-          Left = 243
-          Top = 2
-          Caption = 'CRC-5/USB'
-          ImageIndex = 5
-          OnClick = btnCrc_CRC5_USBClick
-        end
-        object btnCrc_CRC6_ITU: TToolButton
-          Left = 341
-          Top = 2
-          Caption = 'CRC-6/ITU'
-          OnClick = btnCrc_CRC6_ITUClick
-        end
-        object btnCrc_CRC7_MMC: TToolButton
-          Left = 421
-          Top = 2
-          Caption = 'CRC-7/MMC'
-          ImageIndex = 8
-          OnClick = btnCrc_CRC7_MMCClick
-        end
-        object btnCrc_CRC8: TToolButton
-          Left = 524
-          Top = 2
-          Caption = 'CRC-8'
-          OnClick = btnCrc_CRC8Click
-        end
-        object btnCrc_CRC8_ITU: TToolButton
-          Left = 3
-          Top = 24
-          Caption = 'CRC-8/ITU'
-          OnClick = btnCrc_CRC8_ITUClick
-        end
-        object btnCrc_CRC8_ROHC: TToolButton
-          Left = 83
-          Top = 24
-          Caption = 'CRC-8/ROHC'
-          OnClick = btnCrc_CRC8_ROHCClick
-        end
-        object btnCrc_CRC8_MAXIM: TToolButton
-          Left = 171
-          Top = 24
-          Caption = 'CRC-8/MAXIM'
-          OnClick = btnCrc_CRC8_MAXIMClick
-        end
-        object btnCrc_CRC16_IBM: TToolButton
-          Left = 272
-          Top = 24
-          Caption = 'CRC-16/IBM'
-          OnClick = btnCrc_CRC16_IBMClick
-        end
-        object btnCrc_CRC16_MAXIM: TToolButton
-          Left = 360
-          Top = 24
-          Caption = 'CRC-16/MAXIM'
-          OnClick = btnCrc_CRC16_MAXIMClick
-        end
-        object btnCrc_CRC16_USB: TToolButton
-          Left = 464
-          Top = 24
-          Caption = 'CRC-16/USB'
-          ImageIndex = 6
-          OnClick = btnCrc_CRC16_USBClick
-        end
-        object btnCrc_CRC16_MODBUS: TToolButton
-          Left = 3
-          Top = 46
-          Caption = 'CRC-16/MODBUS'
-          OnClick = btnCrc_CRC16_MODBUSClick
-        end
-        object btnCrc_CRC16_CCITT: TToolButton
-          Left = 120
-          Top = 46
-          Caption = 'CRC-16/CCITT'
-          OnClick = btnCrc_CRC16_CCITTClick
-        end
-        object btnCrc_CRC16_CCITT_FALSE: TToolButton
-          Left = 229
-          Top = 46
-          Caption = 'CRC-16/CCITT-FALSE'
-          OnClick = btnCrc_CRC16_CCITT_FALSEClick
-        end
-        object btnCrc_CRC16_X25: TToolButton
-          Left = 381
-          Top = 46
-          Caption = 'CRC-16/X25'
-          OnClick = btnCrc_CRC16_X25Click
-        end
-        object btnCrc_CRC16_XMODEM: TToolButton
-          Left = 474
-          Top = 46
-          Caption = 'CRC-16/XMODEM'
-          ImageIndex = 7
-          OnClick = btnCrc_CRC16_XMODEMClick
-        end
-        object btnCrc_CRC16_DNP: TToolButton
-          Left = 3
-          Top = 68
-          Caption = 'CRC-16/DNP'
-          OnClick = btnCrc_CRC16_DNPClick
-        end
-        object btnCrc_CRC32: TToolButton
-          Left = 96
-          Top = 68
-          Caption = 'CRC-32'
-          OnClick = btnCrc_CRC32Click
-        end
-        object btnCrc_CRC32_MPEG2: TToolButton
-          Left = 152
-          Top = 68
-          Caption = 'CRC-32/MPEG-2'
-          OnClick = btnCrc_CRC32_MPEG2Click
-        end
-        object ToolButton9: TToolButton
-          Left = 519
-          Height = 5
-          Top = 2
-          Caption = 'ToolButton9'
-          Style = tbsDivider
-        end
-        object ToolButton8: TToolButton
-          Left = 267
-          Height = 5
-          Top = 24
-          Caption = 'ToolButton8'
-          Style = tbsDivider
-        end
-        object ToolButton10: TToolButton
-          Left = 91
-          Height = 5
-          Top = 68
-          Caption = 'ToolButton10'
-          Style = tbsDivider
-        end
-        object ToolButton11: TToolButton
-          Left = 469
-          Height = 5
-          Top = 46
-          Caption = 'ToolButton11'
-          Style = tbsDivider
-        end
-        object ToolButton12: TToolButton
-          Left = 604
-          Height = 5
-          Top = 46
-          Caption = 'ToolButton12'
-          Style = tbsDivider
-        end
-        object ToolButton15: TToolButton
-          Left = 115
-          Height = 5
-          Top = 46
-          Caption = 'ToolButton15'
-          Style = tbsDivider
-        end
-        object ToolButton16: TToolButton
-          Left = 224
-          Height = 5
-          Top = 46
-          Caption = 'ToolButton16'
-          Style = tbsDivider
-        end
-      end
-      object ToolBar5: TToolBar
-        Left = 0
-        Height = 25
-        Top = 442
-        Width = 632
-        Align = alBottom
-        AutoSize = True
-        Caption = 'ToolBar5'
-        EdgeBorders = []
-        Images = ilMain
-        List = True
-        ShowCaptions = True
-        TabOrder = 4
-        object ToolButton13: TToolButton
-          Left = 1
-          Top = 0
-          Caption = ' Result  H/L (0x) '
-        end
-        object edtCrcResult: TEdit
-          Left = 153
-          Height = 25
-          Top = 0
-          Width = 157
-          OnClick = edtCrcResultClick
-          ReadOnly = True
-          TabOrder = 0
-        end
-        object btnCrcBufLen: TToolButton
-          Left = 310
-          Top = 0
-          Enabled = False
-        end
-        object btnCrcCalc: TToolButton
-          Left = 333
-          Top = 0
-          AutoSize = True
-          Caption = ' Calc '
-          ImageIndex = 11
-          OnClick = btnCrcCalcClick
+        object tsGNSS: TTabSheet
+          Caption = 'GNSS'
+          ClientHeight = 420
+          ClientWidth = 624
+          object mmoGNSS: TMemo
+            Left = 0
+            Height = 395
+            Top = 0
+            Width = 624
+            Align = alClient
+            ScrollBars = ssAutoVertical
+            TabOrder = 0
+          end
+          object ToolBar20: TToolBar
+            Left = 0
+            Height = 25
+            Top = 395
+            Width = 624
+            Align = alBottom
+            AutoSize = True
+            Caption = 'ToolBar20'
+            EdgeBorders = []
+            Images = ilMain
+            List = True
+            ShowCaptions = True
+            TabOrder = 1
+            object ToolButton48: TToolButton
+              Left = 1
+              Top = 0
+              Caption = ' Result  (0x) '
+            end
+            object edtGNSSResult: TEdit
+              Left = 121
+              Height = 25
+              Top = 0
+              Width = 111
+              OnClick = edtCrcResultClick
+              ReadOnly = True
+              TabOrder = 0
+            end
+            object btnCrcBufLen1: TToolButton
+              Left = 232
+              Top = 0
+              Enabled = False
+            end
+            object btnGNSSCalc: TToolButton
+              Left = 255
+              Top = 0
+              AutoSize = True
+              Caption = ' Calc '
+              ImageIndex = 11
+              OnClick = btnGNSSCalcClick
+            end
+          end
         end
       end
     end
     object tsDigit: TTabSheet
       Caption = 'Digit'
-      ClientHeight = 467
+      ClientHeight = 450
       ClientWidth = 632
       ImageIndex = 9
       object pcDigit: TPageControl
         Left = 0
-        Height = 467
+        Height = 450
         Top = 0
         Width = 632
-        ActivePage = tsBytes
+        ActivePage = tsBase
         Align = alClient
-        TabIndex = 0
+        TabIndex = 1
         TabOrder = 0
         object tsBytes: TTabSheet
           Caption = 'Bytes'
-          ClientHeight = 437
+          ClientHeight = 420
           ClientWidth = 624
           object ToolBar3: TToolBar
             Left = 0
@@ -950,7 +1030,7 @@ object FormMain: TFormMain
           end
           object sgBytes: TStringGrid
             Left = 0
-            Height = 412
+            Height = 395
             Top = 25
             Width = 624
             Align = alClient
@@ -1018,13 +1098,13 @@ object FormMain: TFormMain
         end
         object tsBase: TTabSheet
           Caption = 'Base'
-          ClientHeight = 458
-          ClientWidth = 676
+          ClientHeight = 420
+          ClientWidth = 624
           object sgBase: TStringGrid
             Left = 0
-            Height = 433
+            Height = 395
             Top = 25
-            Width = 676
+            Width = 624
             Align = alClient
             AutoFillColumns = True
             ColCount = 2
@@ -1041,7 +1121,7 @@ object FormMain: TFormMain
             OnEditingDone = sgBaseEditingDone
             ColWidths = (
               99
-              556
+              504
             )
             Cells = (
               6
@@ -1069,7 +1149,7 @@ object FormMain: TFormMain
             Left = 0
             Height = 25
             Top = 0
-            Width = 676
+            Width = 624
             AutoSize = True
             Caption = 'ToolBar6'
             EdgeBorders = []
@@ -1097,23 +1177,23 @@ object FormMain: TFormMain
         end
         object tsBigFloat: TTabSheet
           Caption = 'BigFloat'
-          ClientHeight = 458
-          ClientWidth = 676
+          ClientHeight = 420
+          ClientWidth = 624
           object pnlBigFloatA: TPanel
             Left = 0
             Height = 120
             Top = 0
-            Width = 676
+            Width = 624
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 120
-            ClientWidth = 676
+            ClientWidth = 624
             TabOrder = 0
             object mmoBigFloatA: TMemo
               Left = 32
               Height = 120
               Top = 0
-              Width = 644
+              Width = 592
               Align = alClient
               Lines.Strings = (
                 ''
@@ -1137,7 +1217,7 @@ object FormMain: TFormMain
             Left = 0
             Height = 5
             Top = 120
-            Width = 676
+            Width = 624
             Align = alTop
             AutoSnap = False
             ResizeAnchor = akTop
@@ -1147,17 +1227,17 @@ object FormMain: TFormMain
             Left = 0
             Height = 120
             Top = 125
-            Width = 676
+            Width = 624
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 120
-            ClientWidth = 676
+            ClientWidth = 624
             TabOrder = 2
             object mmoBigFloatB: TMemo
               Left = 32
               Height = 120
               Top = 0
-              Width = 644
+              Width = 592
               Align = alClient
               Lines.Strings = (
                 ''
@@ -1181,7 +1261,7 @@ object FormMain: TFormMain
             Left = 0
             Height = 5
             Top = 245
-            Width = 676
+            Width = 624
             Align = alTop
             AutoSnap = False
             ResizeAnchor = akTop
@@ -1189,20 +1269,20 @@ object FormMain: TFormMain
           end
           object pnlBigFloatC: TPanel
             Left = 0
-            Height = 208
+            Height = 170
             Top = 250
-            Width = 676
+            Width = 624
             Align = alClient
             BevelOuter = bvNone
-            ClientHeight = 208
-            ClientWidth = 676
+            ClientHeight = 170
+            ClientWidth = 624
             Constraints.MinHeight = 120
             TabOrder = 4
             object tbBigFloat: TToolBar
               Left = 0
               Height = 25
               Top = 0
-              Width = 676
+              Width = 624
               AutoSize = True
               EdgeBorders = []
               Images = ilDigit
@@ -1364,7 +1444,7 @@ object FormMain: TFormMain
             end
             object StaticText4: TStaticText
               Left = 0
-              Height = 183
+              Height = 145
               Top = 25
               Width = 32
               Align = alLeft
@@ -1374,9 +1454,9 @@ object FormMain: TFormMain
             end
             object mmoBigFloatC: TMemo
               Left = 32
-              Height = 183
+              Height = 145
               Top = 25
-              Width = 644
+              Width = 592
               Align = alClient
               OnMouseUp = mmoBigFloatCMouseUp
               ReadOnly = True
@@ -1387,24 +1467,24 @@ object FormMain: TFormMain
         end
         object tsBigInt: TTabSheet
           Caption = 'BigInt'
-          ClientHeight = 458
-          ClientWidth = 676
+          ClientHeight = 420
+          ClientWidth = 624
           object pnlBigIntA: TPanel
             Left = 0
             Height = 120
             Top = 0
-            Width = 676
+            Width = 624
             Align = alTop
             BevelOuter = bvNone
             Caption = 'pnlBigIntA'
             ClientHeight = 120
-            ClientWidth = 676
+            ClientWidth = 624
             TabOrder = 0
             object mmoBigIntA: TMemo
               Left = 32
               Height = 120
               Top = 0
-              Width = 644
+              Width = 592
               Align = alClient
               Lines.Strings = (
                 ''
@@ -1428,7 +1508,7 @@ object FormMain: TFormMain
             Left = 0
             Height = 5
             Top = 120
-            Width = 676
+            Width = 624
             Align = alTop
             AutoSnap = False
             ResizeAnchor = akTop
@@ -1438,17 +1518,17 @@ object FormMain: TFormMain
             Left = 0
             Height = 120
             Top = 125
-            Width = 676
+            Width = 624
             Align = alTop
             BevelOuter = bvNone
             ClientHeight = 120
-            ClientWidth = 676
+            ClientWidth = 624
             TabOrder = 2
             object mmoBigIntB: TMemo
               Left = 32
               Height = 120
               Top = 0
-              Width = 644
+              Width = 592
               Align = alClient
               Lines.Strings = (
                 ''
@@ -1469,20 +1549,20 @@ object FormMain: TFormMain
           end
           object pnlBigIntC: TPanel
             Left = 0
-            Height = 208
+            Height = 170
             Top = 250
-            Width = 676
+            Width = 624
             Align = alClient
             BevelOuter = bvNone
-            ClientHeight = 208
-            ClientWidth = 676
+            ClientHeight = 170
+            ClientWidth = 624
             Constraints.MinHeight = 120
             TabOrder = 3
             object tbBigInt: TToolBar
               Left = 0
               Height = 22
               Top = 0
-              Width = 676
+              Width = 624
               AutoSize = True
               EdgeBorders = []
               Images = ilDigit
@@ -1645,7 +1725,7 @@ object FormMain: TFormMain
             end
             object StaticText7: TStaticText
               Left = 0
-              Height = 186
+              Height = 148
               Top = 22
               Width = 32
               Align = alLeft
@@ -1655,9 +1735,9 @@ object FormMain: TFormMain
             end
             object mmoBigIntC: TMemo
               Left = 32
-              Height = 186
+              Height = 148
               Top = 22
-              Width = 644
+              Width = 592
               Align = alClient
               OnMouseUp = mmoBigIntCMouseUp
               ReadOnly = True
@@ -1670,7 +1750,7 @@ object FormMain: TFormMain
             Left = 0
             Height = 5
             Top = 245
-            Width = 676
+            Width = 624
             Align = alTop
             AutoSnap = False
             ResizeAnchor = akTop
@@ -1688,16 +1768,16 @@ object FormMain: TFormMain
         Height = 450
         Top = 0
         Width = 632
-        ActivePage = tsConvertVolume
+        ActivePage = tsConvertTemperature
         Align = alClient
         Images = ilMain
         MultiLine = True
-        TabIndex = 5
+        TabIndex = 1
         TabOrder = 0
         Options = [nboMultiLine]
         object tsConvertTime: TTabSheet
           Caption = 'Time'
-          ClientHeight = 569
+          ClientHeight = 398
           ClientWidth = 624
           ImageIndex = 49
           object sgConvertTime: TStringGrid
@@ -1721,7 +1801,7 @@ object FormMain: TFormMain
             OnEditingDone = sgConvertTimeEditingDone
             ColWidths = (
               267
-              353
+              336
             )
             Cells = (
               10
@@ -1854,12 +1934,12 @@ object FormMain: TFormMain
         end
         object tsConvertTemperature: TTabSheet
           Caption = 'Temperature'
-          ClientHeight = 569
+          ClientHeight = 398
           ClientWidth = 624
           ImageIndex = 51
           object sgConvertTemperature: TStringGrid
             Left = 0
-            Height = 435
+            Height = 264
             Top = 26
             Width = 624
             Align = alClient
@@ -1878,7 +1958,7 @@ object FormMain: TFormMain
             OnEditingDone = sgConvertTemperatureEditingDone
             ColWidths = (
               209
-              411
+              394
             )
             Cells = (
               8
@@ -1936,7 +2016,7 @@ object FormMain: TFormMain
           object mmoNoteConvertTemperature: TMemo
             Left = 0
             Height = 100
-            Top = 469
+            Top = 298
             Width = 624
             Align = alBottom
             BorderStyle = bsNone
@@ -1954,7 +2034,7 @@ object FormMain: TFormMain
           object btnNoteConvertTemperature: TSpeedButton
             Left = 0
             Height = 8
-            Top = 461
+            Top = 290
             Width = 624
             Align = alBottom
             Flat = True
@@ -1989,7 +2069,7 @@ object FormMain: TFormMain
             OnEditingDone = sgConvertPowerEditingDone
             ColWidths = (
               128
-              492
+              475
             )
             Cells = (
               4
@@ -2088,7 +2168,7 @@ object FormMain: TFormMain
             OnEditingDone = sgConvertDistanceEditingDone
             ColWidths = (
               195
-              425
+              408
             )
             Cells = (
               14
@@ -2762,23 +2842,23 @@ object FormMain: TFormMain
     end
     object tsCalc: TTabSheet
       Caption = 'Calc'
-      ClientHeight = 467
+      ClientHeight = 450
       ClientWidth = 632
       object Splitter11: TSplitter
         Left = 300
-        Height = 467
+        Height = 450
         Top = 0
         Width = 5
         ResizeStyle = rsLine
       end
       object pnlCalc: TPanel
         Left = 0
-        Height = 467
+        Height = 450
         Top = 0
         Width = 300
         Align = alLeft
         BevelOuter = bvNone
-        ClientHeight = 467
+        ClientHeight = 450
         ClientWidth = 300
         TabOrder = 1
         object ToolBar10: TToolBar
@@ -2844,7 +2924,7 @@ object FormMain: TFormMain
         end
         inline SynEditFunc_Calc: TSynEdit
           Left = 0
-          Height = 298
+          Height = 281
           Top = 169
           Width = 300
           Align = alClient
@@ -3418,7 +3498,7 @@ object FormMain: TFormMain
       end
       object pcCalcMode: TPageControl
         Left = 305
-        Height = 467
+        Height = 450
         Top = 0
         Width = 327
         ActivePage = TabSheet2
@@ -3428,12 +3508,12 @@ object FormMain: TFormMain
         OnChange = pcCalcModeChange
         object TabSheet1: TTabSheet
           Caption = 'Command'
-          ClientHeight = 437
+          ClientHeight = 420
           ClientWidth = 319
           object Shape2: TShape
             Left = 0
             Height = 5
-            Top = 407
+            Top = 390
             Width = 319
             Align = alBottom
             Brush.Style = bsClear
@@ -3443,7 +3523,7 @@ object FormMain: TFormMain
           object cbbCalc: TComboBox
             Left = 0
             Height = 25
-            Top = 412
+            Top = 395
             Width = 319
             Align = alBottom
             AutoSelect = False
@@ -3456,7 +3536,7 @@ object FormMain: TFormMain
           end
           object mmoOutCalc: TMemo
             Left = 0
-            Height = 407
+            Height = 390
             Top = 0
             Width = 319
             Align = alClient
@@ -3467,11 +3547,12 @@ object FormMain: TFormMain
         end
         object TabSheet2: TTabSheet
           Caption = 'Table'
-          ClientHeight = 437
+          ClientHeight = 420
           ClientWidth = 319
           object sgExpr_Calc: TStringGrid
             Left = 0
-            Height = 437
+            Height = 420
+            Hint = 'Ctrl-D:  copy above line'#13#10'Ctrl-W:  delete line'
             Top = 0
             Width = 319
             Align = alClient
@@ -3497,7 +3578,7 @@ object FormMain: TFormMain
             DefaultColWidth = 64
             DoubleBuffered = True
             ExtendedSelect = False
-            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goEditing, goAlwaysShowEditor, goSmoothScroll, goFixedRowNumbering, goSelectionActive]
+            Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goEditing, goAlwaysShowEditor, goSmoothScroll, goFixedRowNumbering, goSelectionActive, goRowHighlight]
             ParentDoubleBuffered = False
             RowCount = 2
             TabOrder = 0
@@ -3508,7 +3589,7 @@ object FormMain: TFormMain
             TitleFont.Pitch = fpFixed
             TitleFont.Quality = fqDraft
             OnEditingDone = sgExpr_CalcEditingDone
-            OnKeyPress = sgExpr_CalcKeyPress
+            OnKeyDown = sgExpr_CalcKeyDown
             ColWidths = (
               38
               167
@@ -3520,17 +3601,17 @@ object FormMain: TFormMain
     end
     object tsScript: TTabSheet
       Caption = 'Script'
-      ClientHeight = 467
+      ClientHeight = 450
       ClientWidth = 632
       object pcScript: TPageControl
         Left = 0
-        Height = 467
+        Height = 450
         Top = 0
         Width = 632
-        ActivePage = tsGraph
+        ActivePage = tsMicropython
         Align = alClient
         Images = ilMain
-        TabIndex = 4
+        TabIndex = 1
         TabOrder = 0
         object tsPascalScript: TTabSheet
           Caption = 'Pascal'
@@ -4160,7 +4241,7 @@ object FormMain: TFormMain
         end
         object tsMicropython: TTabSheet
           Caption = 'micropython'
-          ClientHeight = 437
+          ClientHeight = 420
           ClientWidth = 624
           ImageIndex = 39
           object ToolBar9: TToolBar
@@ -4787,7 +4868,7 @@ object FormMain: TFormMain
           end
           object mmoOutMPY: TMemo
             Left = 0
-            Height = 37
+            Height = 20
             Top = 400
             Width = 624
             Align = alClient
@@ -6061,7 +6142,7 @@ object FormMain: TFormMain
         end
         object tsGraph: TTabSheet
           Caption = 'Graph'
-          ClientHeight = 437
+          ClientHeight = 420
           ClientWidth = 624
           ImageIndex = 46
           object ToolBar16: TToolBar
@@ -6691,7 +6772,7 @@ object FormMain: TFormMain
           end
           object mmoOutGraph: TMemo
             Left = 0
-            Height = 117
+            Height = 100
             Top = 320
             Width = 624
             Align = alClient
@@ -6704,12 +6785,12 @@ object FormMain: TFormMain
     end
     object tsConstant: TTabSheet
       Caption = 'constant'
-      ClientHeight = 467
+      ClientHeight = 450
       ClientWidth = 632
       ImageIndex = 10
       object pcConstant: TPageControl
         Left = 0
-        Height = 467
+        Height = 450
         Top = 0
         Width = 632
         ActivePage = tsConstantPeriodicTable
@@ -7405,11 +7486,11 @@ object FormMain: TFormMain
         end
         object tsConstantPeriodicTable: TTabSheet
           Caption = 'Periodic Table'
-          ClientHeight = 437
+          ClientHeight = 420
           ClientWidth = 624
           object sgConstantPeriodicTable: TStringGrid
             Left = 0
-            Height = 437
+            Height = 420
             Top = 0
             Width = 624
             Align = alClient
@@ -8534,16 +8615,16 @@ object FormMain: TFormMain
     end
     object tsAbout: TTabSheet
       Caption = 'About'
-      ClientHeight = 467
+      ClientHeight = 450
       ClientWidth = 632
       object Panel5: TPanel
         Left = 148
-        Height = 467
+        Height = 450
         Top = 0
         Width = 484
         Align = alClient
         BevelOuter = bvNone
-        ClientHeight = 467
+        ClientHeight = 450
         ClientWidth = 484
         TabOrder = 0
         object Panel6: TPanel
@@ -8963,18 +9044,18 @@ object FormMain: TFormMain
         end
         object Panel7: TPanel
           Left = 0
-          Height = 387
+          Height = 370
           Top = 80
           Width = 484
           Align = alClient
           BevelOuter = bvNone
           BorderWidth = 10
-          ClientHeight = 387
+          ClientHeight = 370
           ClientWidth = 484
           TabOrder = 1
           object pcAbout: TPageControl
             Left = 10
-            Height = 367
+            Height = 350
             Top = 10
             Width = 464
             ActivePage = tsChangeLog
@@ -8983,16 +9064,26 @@ object FormMain: TFormMain
             TabOrder = 0
             object tsChangeLog: TTabSheet
               Caption = 'Change Log'
-              ClientHeight = 337
+              ClientHeight = 320
               ClientWidth = 456
               object rmoAboutChangeLog: TRichMemo
                 Left = 0
-                Height = 337
+                Height = 320
                 Top = 0
                 Width = 456
                 Align = alClient
                 HideSelection = False
                 Lines.Strings = (
+                  '2020.7 v1.8.0.0'
+                  '    + add checksum and move CRC to it'
+                  '    + add HEX/ASC mode in CRC'
+                  '    + add GNSS calculate'
+                  ''
+                  '2020.7 v1.6.0.0'
+                  '    + add Area/Volume convert'
+                  '    + merge Calc table and command'
+                  '    - bugs'
+                  ''
                   '2020.5 v1.5.0'
                   '    - fixed pascal script calculate bugs in Linux'
                   ''
@@ -9057,7 +9148,7 @@ object FormMain: TFormMain
                   '    + include CRC, base convert, digit bytes'
                 )
                 ReadOnly = True
-                Rtf = '{\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Courier New;}}'#13#10'{\colortbl ;\red0\green0\blue0;\red128\green0\blue255;\red128\green128\blue255;\red64\green0\blue64;\red0\green0\blue160;\red255\green0\blue0;\red0\green0\blue255;}'#13#10'{\*\generator Riched20 10.0.17763}\viewkind4\uc1 '#13#10'\pard\cf1\b\f0\fs22\lang2052 2020.\lang1033 5\lang2052  v1.\lang1033 5\lang2052 .0\par'#13#10'\b0     - \lang1033 fixed pascal script calculate \lang2052 bugs in Linux\par'#13#10'\par'#13#10'\b 2020.4 v1.4.0\par'#13#10'\b0     + \cf2\b Graph\cf1\b0 /\cf2\b Logo\cf3  \cf1\b0 Script\par'#13#10'    + Run count/Time\par'#13#10'    + Speed convert\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.4 v1.2.8\par'#13#10'\b0     + \cf4 Temperature convert\par'#13#10'\cf1     + \cf4\lang1033 Power \lang2052 convert\par'#13#10'\cf1     + \cf4 Distance convert\par'#13#10'\cf1     + \cf4 Mass convert\par'#13#10'\cf1     + Script editor \cf4 Hori/Vert mode\cf1\par'#13#10'\par'#13#10'\b 2020.4 v1.2.0\par'#13#10'\b0     + \cf5\b Tiny C\cf1\b0  interpreter\par'#13#10'\par'#13#10'\b 2020.4 v1.1.0\par'#13#10'\b0     + add Calc Mode: Command/Table\par'#13#10'    + \cf5\b Lua\cf1\b0  interpreter\par'#13#10'\par'#13#10'\b 2020.4 v1.0\par'#13#10'\b0     + add \b Constant Table\b0\par'#13#10'    * meger Buffer convert to Digit\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.4 v0.9\par'#13#10'\b0     * use PascalScript as Programmable Calculator interpreter\par'#13#10'    \lang1033 -\lang2052  remove \cf6 ArtFormula\cf1\par'#13#10'\b\par'#13#10'2020.4 v0.8\b0\par'#13#10'    + \cf7\b micropython\cf1\b0\par'#13#10'    * rewrite file open/save/history function\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.3  v0.7\b0\par'#13#10'    + \cf2\b Pascal Script\cf1\b0\par'#13#10'    * Adjust interface\par'#13#10'    * Optimize\par'#13#10'    - Fix bug\par'#13#10'\par'#13#10'\b 2020.3  v0.6\b0\par'#13#10'    + Time convert\par'#13#10'    + Programmable Calculator file history\par'#13#10'    + Hex <-> string\par'#13#10'\par'#13#10'\b 2020.3  v0.5\b0\par'#13#10'    + Programmable Calculator.\par'#13#10'    + Tray Icon\par'#13#10'    * more Option\par'#13#10'\par'#13#10'\b 2020.3  v0.4\b0\par'#13#10'    + add add Buffer convert.\par'#13#10'    + Option Dialog\par'#13#10'\par'#13#10'\b 2020.3  v0.3\b0\par'#13#10'    + add Big Int and Big float.\par'#13#10'\par'#13#10'\b 2020.3  v0.2, first version.\b0\par'#13#10'    \lang1033 +\lang2052  include CRC, base convert, digit bytes\par'#13#10'\par'#13#10'}'#13#10#0
+                Rtf = '{\rtf1\ansi\ansicpg936\deff0\nouicompat\deflang1033\deflangfe2052{\fonttbl{\f0\fnil\fcharset0 Courier New;}}'#13#10'{\colortbl ;\red0\green0\blue0;\red128\green0\blue255;\red128\green128\blue255;\red64\green0\blue64;\red0\green0\blue160;\red255\green0\blue0;\red0\green0\blue255;}'#13#10'{\*\generator Riched20 10.0.17763}\viewkind4\uc1 '#13#10'\pard\cf1\b\f0\fs22\lang2052 2020.7 v1.8.0.0\par'#13#10'\b0     + add checksum and move CRC to it\par'#13#10'    + add \cf2 HEX/ASC\cf1  mode in CRC\par'#13#10'    + add GNSS calculate\par'#13#10'\b\par'#13#10'2020.7 v1.6.0.0\par'#13#10'\b0     + add Area/Volume convert\par'#13#10'    + merge Calc table and command\par'#13#10'    - \lang1033 bugs\b\lang2052\par'#13#10'\par'#13#10'2020.\lang1033 5\lang2052  v1.\lang1033 5\lang2052 .0\par'#13#10'\b0     - \lang1033 fixed pascal script calculate \lang2052 bugs in Linux\par'#13#10'\par'#13#10'\b 2020.4 v1.4.0\par'#13#10'\b0     + \cf2\b Graph\cf1\b0 /\cf2\b Logo\cf3  \cf1\b0 Script\par'#13#10'    + Run count/Time\par'#13#10'    + Speed convert\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.4 v1.2.8\par'#13#10'\b0     + \cf4 Temperature convert\par'#13#10'\cf1     + \cf4\lang1033 Power \lang2052 convert\par'#13#10'\cf1     + \cf4 Distance convert\par'#13#10'\cf1     + \cf4 Mass convert\par'#13#10'\cf1     + Script editor \cf4 Hori/Vert mode\cf1\par'#13#10'\par'#13#10'\b 2020.4 v1.2.0\par'#13#10'\b0     + \cf5\b Tiny C\cf1\b0  interpreter\par'#13#10'\par'#13#10'\b 2020.4 v1.1.0\par'#13#10'\b0     + add Calc Mode: Command/Table\par'#13#10'    + \cf5\b Lua\cf1\b0  interpreter\par'#13#10'\par'#13#10'\b 2020.4 v1.0\par'#13#10'\b0     + add \b Constant Table\b0\par'#13#10'    * meger Buffer convert to Digit\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.4 v0.9\par'#13#10'\b0     * use PascalScript as Programmable Calculator interpreter\par'#13#10'    \lang1033 -\lang2052  remove \cf6 ArtFormula\cf1\par'#13#10'\b\par'#13#10'2020.4 v0.8\b0\par'#13#10'    + \cf7\b micropython\cf1\b0\par'#13#10'    * rewrite file open/save/history function\par'#13#10'    - bugs\par'#13#10'\par'#13#10'\b 2020.3  v0.7\b0\par'#13#10'    + \cf2\b Pascal Script\cf1\b0\par'#13#10'    * Adjust interface\par'#13#10'    * Optimize\par'#13#10'    - Fix bug\par'#13#10'\par'#13#10'\b 2020.3  v0.6\b0\par'#13#10'    + Time convert\par'#13#10'    + Programmable Calculator file history\par'#13#10'    + Hex <-> string\par'#13#10'\par'#13#10'\b 2020.3  v0.5\b0\par'#13#10'    + Programmable Calculator.\par'#13#10'    + Tray Icon\par'#13#10'    * more Option\par'#13#10'\par'#13#10'\b 2020.3  v0.4\b0\par'#13#10'    + add add Buffer convert.\par'#13#10'    + Option Dialog\par'#13#10'\par'#13#10'\b 2020.3  v0.3\b0\par'#13#10'    + add Big Int and Big float.\par'#13#10'\par'#13#10'\b 2020.3  v0.2, first version.\b0\par'#13#10'    \lang1033 +\lang2052  include CRC, base convert, digit bytes\par'#13#10'\par'#13#10'}'#13#10#0
                 ScrollBars = ssAutoVertical
                 TabOrder = 0
                 ZoomFactor = 1
@@ -9065,11 +9156,11 @@ object FormMain: TFormMain
             end
             object tsReadme: TTabSheet
               Caption = 'Readme'
-              ClientHeight = 337
+              ClientHeight = 320
               ClientWidth = 456
               object rmoAboutReadme: TRichMemo
                 Left = 0
-                Height = 337
+                Height = 320
                 Top = 0
                 Width = 456
                 Align = alClient
@@ -9106,11 +9197,11 @@ object FormMain: TFormMain
             end
             object tsLicense: TTabSheet
               Caption = 'License'
-              ClientHeight = 337
+              ClientHeight = 320
               ClientWidth = 456
               object mmoLicense: TMemo
                 Left = 0
-                Height = 337
+                Height = 320
                 Top = 0
                 Width = 456
                 Align = alClient
@@ -9136,14 +9227,14 @@ object FormMain: TFormMain
       end
       object Panel8: TPanel
         Left = 0
-        Height = 467
+        Height = 450
         Top = 0
         Width = 148
         Align = alLeft
         AutoSize = True
         BevelOuter = bvNone
         BorderWidth = 10
-        ClientHeight = 467
+        ClientHeight = 450
         ClientWidth = 148
         TabOrder = 1
         object imgLogo1: TImage
@@ -11277,7 +11368,7 @@ object FormMain: TFormMain
           Cursor = crHandPoint
           Left = 10
           Height = 57
-          Top = 400
+          Top = 383
           Width = 128
           Align = alBottom
           AutoSize = True

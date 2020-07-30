@@ -20,7 +20,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '1.5.2.4';
+  VERSION = '1.8.0.0';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -64,6 +64,8 @@ type
     btnClear_C: TToolButton;
     btnCmd_Lua: TToolButton;
     btnConvertTimeNow: TSpeedButton;
+    btnCrcBufLen1: TToolButton;
+    btnGNSSCalc: TToolButton;
     btnHelp_Graph: TToolButton;
     btnHelp_Calc: TToolButton;
     btnHelp_Lua: TToolButton;
@@ -113,6 +115,7 @@ type
     btnStop_MPY: TToolButton;
     btnStop_Lua: TToolButton;
     cbbCalc: TComboBox;
+    chkCrcHexMode: TCheckBox;
     chkBigIntComma: TCheckBox;
     chkCrcInvOut: TCheckBox;
     chkCrcInvIn: TCheckBox;
@@ -132,6 +135,7 @@ type
     edtConvertTimeYear: TLabeledEdit;
     edtBigFloatPrec: TEdit;
     edtBytesNum: TEdit;
+    edtGNSSResult: TEdit;
     edtCrcXOROUT: TEdit;
     edtCrcResult: TEdit;
     edtCrcPolygon: TEdit;
@@ -159,6 +163,7 @@ type
     Label2: TLabel;
     lbFont: TLabel;
     lbVer: TLabel;
+    mmoGNSS: TMemo;
     mmoLicense: TMemo;
     mmoNoteConvertSpeed: TMemo;
     mmoNoteConvertMass: TMemo;
@@ -184,6 +189,7 @@ type
     mmoOutLua: TMemo;
     mmoOut_Temp: TMemo;
     dlgOpen_MPY: TOpenDialog;
+    pcChecksum: TPageControl;
     pcCalcMode: TPageControl;
     pmHelp_Calc: TPopupMenu;
     pmHelp_Lua: TPopupMenu;
@@ -296,6 +302,10 @@ type
     btnCaret_PascalScript: TToolButton;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    tsGNSS: TTabSheet;
+    ToolBar20: TToolBar;
+    ToolButton48: TToolButton;
+    tsChecksum: TTabSheet;
     ToolBar18: TToolBar;
     ToolBar19: TToolBar;
     ToolButton46: TToolButton;
@@ -477,6 +487,7 @@ type
     procedure btnCrc_CRC8Click(Sender: TObject);
     procedure btnCrc_CRC8_MAXIMClick(Sender: TObject);
     procedure btnCrc_CRC8_ROHCClick(Sender: TObject);
+    procedure btnGNSSCalcClick(Sender: TObject);
     procedure btnNew_CalcClick(Sender: TObject);
     procedure btnNew_CClick(Sender: TObject);
     procedure btnNew_GraphClick(Sender: TObject);
@@ -563,7 +574,8 @@ type
     procedure sgConvertTimeEditingDone(Sender: TObject);
     procedure sgConvertVolumeEditingDone(Sender: TObject);
     procedure sgExpr_CalcEditingDone(Sender: TObject);
-    procedure sgExpr_CalcKeyPress(Sender: TObject; var Key: char);
+    procedure sgExpr_CalcKeyDown(Sender: TObject; var Key: word;
+      Shift: TShiftState);
     procedure sgVar_CalcEditingDone(Sender: TObject);
     procedure splPascalScriptMoved(Sender: TObject);
     procedure SynEditGraphChange(Sender: TObject);
@@ -599,6 +611,7 @@ type
 
   private
     CalcExpressionStr: string;
+    CalcRes: string;
     function CalcExpression(Sender: TObject; expr: string): integer;
 
   private
@@ -673,6 +686,8 @@ type
     function ChrToByte(ch: char): byte;
     function Chr2ToByte(c1: char; c2: char): byte;
     function StrBytesToChrs(s: string; Len: integer): string;
+    function RemoveSpace(s: string): string;
+
     procedure setCrcMode(bit: integer; poly: longword; v0: longword;
       XOROUT: longword; InvIn: boolean; InvOut: boolean);
 
@@ -963,7 +978,7 @@ begin
     if i < high(v) then
       s := s + sep;
   end;
-  FormMain.mmoOutAdd_Calc(s);
+  FormMain.CalcRes := s;
   Application.ProcessMessages;
 end;
 
@@ -1216,6 +1231,7 @@ begin
       errlog(E.Message);
   end;
 
+  // checksum
   try
     // crc
     edtCrcPolygon.Text   := ini.ReadString('CRC', 'poly', '1021');
@@ -1224,6 +1240,7 @@ begin
     chkCrcInvIn.Checked  := ini.ReadBool('CRC', 'InvIn', False);
     chkCrcInvOut.Checked := ini.ReadBool('CRC', 'InvOut', False);
     setCrcBit(ini.ReadInteger('CRC', 'bit', 16));
+    chkCrcHexMode.Checked := ini.ReadBool('CRC', 'HEXmode', True);
   except
     on E: Exception do
       errlog(E.Message);
@@ -1274,14 +1291,21 @@ begin
     sgVar_Calc.ColWidths[0] := ini.ReadInteger('calc', 'var_col0', 40);
     sgVar_Calc.ColWidths[2] := ini.ReadInteger('calc', 'var_col2', 80);
     cbbCalc.Items.CommaText := ini.ReadString('calc', 'exphis', '');
-    mmoOutCalc.Lines.CommaText := ini.ReadString('calc', 'cmdout', '');
 
     sgExpr_Calc.ColWidths[1]   := ini.ReadInteger('calc', 'tab_col1', 200);
     pcCalcMode.ActivePageIndex := ini.ReadInteger('calc', 'mode', 0);
 
     sgExpr_Calc.RowCount := ini.ReadInteger('calcTable', 'count', 1) + 1;
     for i := 1 to sgExpr_Calc.RowCount - 1 do
+    begin
       sgExpr_Calc.Rows[i].CommaText := ini.ReadString('calcTable', IntToStr(i), '');
+      if sgExpr_Calc.Cells[1, i] <> '' then
+      begin
+        mmoOutCalc.Lines.Add('> ' + sgExpr_Calc.Cells[1, i]);
+        mmoOutCalc.Lines.Add('= ' + sgExpr_Calc.Cells[2, i]);
+        mmoOutCalc.Lines.Add('');
+      end;
+    end;
 
   except
     on E: Exception do
@@ -1517,6 +1541,7 @@ begin
       ini.WriteBool('Digit', 'BigBytes', rbBigBytes.Checked);
       ini.WriteInteger('last', 'page_digit', pcDigit.ActivePageIndex);
 
+      // checksum
       // crc
       ini.WriteString('CRC', 'poly', edtCrcPolygon.Text);
       ini.WriteString('CRC', 'v0', edtCrcInitV.Text);
@@ -1524,6 +1549,7 @@ begin
       ini.WriteBool('CRC', 'InvIn', chkCrcInvIn.Checked);
       ini.WriteBool('CRC', 'InvOut', chkCrcInvOut.Checked);
       ini.WriteInteger('CRC', 'bit', getCrcBit);
+      ini.WriteBool('CRC', 'HEXmode', chkCrcHexMode.Checked);
 
       // BigFloat
       ini.WriteString('BigFloat', 'prec', edtBigFloatPrec.Text);
@@ -1549,7 +1575,6 @@ begin
       ini.WriteInteger('calc', 'var_col0', sgVar_Calc.ColWidths[0]);
       ini.WriteInteger('calc', 'var_col2', sgVar_Calc.ColWidths[2]);
       ini.WriteString('calc', 'exphis', cbbCalc.Items.CommaText);
-      ini.WriteString('calc', 'cmdout', mmoOutCalc.Lines.CommaText);
 
       ini.WriteInteger('calc', 'tab_col1', sgExpr_Calc.ColWidths[1]);
       ini.WriteInteger('calc', 'mode', pcCalcMode.ActivePageIndex);
@@ -2030,7 +2055,8 @@ procedure TFormMain.btnCmd_MPYClick(Sender: TObject);
 var
   AProcess: TProcess;
 begin
-  AProcess := TProcess.Create(nil);
+  Screen.Cursor := crHourGlass;
+  AProcess      := TProcess.Create(nil);
   if use_external_micropython then
     AProcess.Executable := external_micropython_bin_name
   else
@@ -2038,6 +2064,7 @@ begin
   AProcess.Options := AProcess.Options + [poNewConsole];
   AProcess.Execute;
   AProcess.Free;
+  Screen.Cursor := crDefault;
 end;
 
 procedure TFormMain.btnConvertTimeNowClick(Sender: TObject);
@@ -2047,11 +2074,11 @@ end;
 
 procedure TFormMain.btnCrcCalcClick(Sender: TObject);
 const
-  MaxLen = 4096;
+  MaxLen = 16;
 var
   poly, v0, xorout, len, bit: dword;
   _poly, _v0, _xorout: integer;
-  bufN, i: integer;
+  bufN, i, j: integer;
   buf: TByteArray;
   s: string;
 begin
@@ -2069,31 +2096,56 @@ begin
   v0     := _v0;
   xorout := _xorout;
 
-  if mmoCRC.Modified then
+  if chkCrcHexMode.Checked then
   begin
-    StrToByteBuf(mmoCRC.Text, s);
-    mmoCRC.Text     := s;
-    mmoCRC.Modified := False;
-  end;
 
-  s    := mmoCRC.Text;
-  bufN := (Length(s) + 2) div 3;
-  if bufN = 0 then
-    Exit;
+    if mmoCRC.Modified then
+    begin
+      StrToByteBuf(mmoCRC.Text, s);
+      mmoCRC.Text     := s;
+      mmoCRC.Modified := False;
+    end;
 
-  for i := 1 to (bufN div MaxLen) + 1 do
+    s    := mmoCRC.Text;
+    bufN := (Length(s) + 2) div 3;
+    if bufN = 0 then
+      Exit;
+
+    for i := 1 to (bufN div MaxLen) + 1 do
+    begin
+      if i * MaxLen < bufN then
+        len := MaxLen
+      else
+        len := bufN - (i - 1) * MaxLen;
+      StrToBytes(s, len, buf);
+      v0 := CalcCrc(buf, len, bit, poly, v0, xorout, chkCrcInvIn.Checked,
+        chkCrcInvOut.Checked);
+      Delete(s, 1, len * 3);
+    end;
+    btnCrcBufLen.Caption := Format('<%d>', [bufN]);
+    edtCrcResult.Text    := IntToByteStr(v0);
+  end
+  else
   begin
-    if i * MaxLen < bufN then
-      len := MaxLen
-    else
-      len := bufN - (i - 1) * MaxLen;
-    StrToBytes(s, len, buf);
-    v0 := CalcCrc(buf, len, bit, poly, v0, xorout, chkCrcInvIn.Checked,
-      chkCrcInvOut.Checked);
-    Delete(s, 1, len * 3);
+    s    := mmoCRC.Text;
+    bufN := Length(s);
+    for i := 1 to (bufN div MaxLen) + 1 do
+    begin
+      if i * MaxLen < bufN then
+        len := MaxLen
+      else
+        len := bufN - (i - 1) * MaxLen;
+
+      for j := 0 to len - 1 do
+        buf[j] := Ord(s[j + 1]);
+
+      v0 := CalcCrc(buf, len, bit, poly, v0, xorout, chkCrcInvIn.Checked,
+        chkCrcInvOut.Checked);
+      Delete(s, 1, len);
+    end;
+    btnCrcBufLen.Caption := Format('<%d>', [bufN]);
+    edtCrcResult.Text    := IntToByteStr(v0);
   end;
-  btnCrcBufLen.Caption := Format('<%d>', [bufN]);
-  edtCrcResult.Text    := IntToByteStr(v0);
 end;
 
 
@@ -2769,9 +2821,16 @@ begin
     sy := sgExpr_Calc.Row;
     if sy < 1 then
       Exit;
-    s := Trim(sgExpr_Calc.Cells[1, sy]);
-    if s = '' then
+    s := RemoveSpace(sgExpr_Calc.Cells[1, sy]);
+    sgExpr_Calc.Cells[1, sy] := s;
+    if (s = '') and (sy < sgExpr_Calc.RowCount - 1) then
+    begin
+      sgExpr_Calc.DeleteRow(sy);
+      mmoOutCalc.Lines.Delete(sy * 3 - 3);
+      mmoOutCalc.Lines.Delete(sy * 3 - 3);
+      mmoOutCalc.Lines.Delete(sy * 3 - 3);
       Exit;
+    end;
 
     CalcExpressionStr := '';
     n := CalcExpression(sgExpr_Calc, s);
@@ -2780,12 +2839,20 @@ begin
       sgExpr_Calc.Cells[2, sy] := CalcExpressionStr;
       if sy = sgExpr_Calc.RowCount - 1 then
       begin
+        mmoOutCalc.Lines.Add('> ' + sgExpr_Calc.Cells[1, sy]);
+        mmoOutCalc.Lines.Add('= ' + sgExpr_Calc.Cells[2, sy]);
+        mmoOutCalc.Lines.Add('');
         sgExpr_Calc.RowCount := sgExpr_Calc.RowCount + 1;
         if sgExpr_Calc.RowCount > 100 then
           sgExpr_Calc.DeleteRow(1);
         sgExpr_Calc.Col := 1;
         sgExpr_Calc.Row := sy + 1;
         sgExpr_Calc.SetFocus;
+      end
+      else
+      begin
+        mmoOutCalc.Lines[sy * 3 - 3] := '> ' + sgExpr_Calc.Cells[1, sy];
+        mmoOutCalc.Lines[sy * 3 - 2] := '= ' + sgExpr_Calc.Cells[2, sy];
       end;
     end
     else
@@ -2805,10 +2872,32 @@ begin
   end;
 end;
 
-procedure TFormMain.sgExpr_CalcKeyPress(Sender: TObject; var Key: char);
+procedure TFormMain.sgExpr_CalcKeyDown(Sender: TObject; var Key: word;
+  Shift: TShiftState);
+var
+  n: integer;
 begin
-  if Key = #13 then
-    Key := #0;
+  n := sgExpr_Calc.Row;
+  case Key of
+    VK_RETURN:
+      Key := 0;
+    VK_D:
+      if Shift = [ssCtrl] then
+      begin
+        if n > 1 then
+        begin
+          sgExpr_Calc.Cells[1, n] := sgExpr_Calc.Cells[1, n - 1];
+        end;
+      end;
+    VK_W:
+      if Shift = [ssCtrl] then
+      begin
+        sgExpr_Calc.DeleteRow(n);
+        mmoOutCalc.Lines.Delete(n * 3 - 3);
+        mmoOutCalc.Lines.Delete(n * 3 - 3);
+        mmoOutCalc.Lines.Delete(n * 3 - 3);
+      end;
+  end;
 end;
 
 procedure TFormMain.sgVar_CalcEditingDone(Sender: TObject);
@@ -3026,6 +3115,25 @@ end;
 procedure TFormMain.btnCrc_CRC8_ROHCClick(Sender: TObject);
 begin
   setCrcMode(8, 7, $FF, 0, True, True);
+end;
+
+procedure TFormMain.btnGNSSCalcClick(Sender: TObject);
+var
+  s: string;
+  i: integer;
+  check: byte;
+begin
+  s     := mmoGNSS.Text;
+  check := 0;
+  if s[1] = '$' then
+    Delete(s, 1, 1);
+  i := pos('*', s);
+  if i > 0 then
+    Delete(s, i, Length(s) - i + 1);
+  for i := 1 to Length(s) do
+    check := check xor Ord(s[i]);
+
+  edtGNSSResult.Text := Format('%02X', [check]);
 end;
 
 procedure TFormMain.btnNew_CalcClick(Sender: TObject);
@@ -3398,8 +3506,9 @@ var
   CharBuffer: array [0..511] of char;
   ReadCount: integer;
 begin
+  Screen.Cursor      := crHourGlass;
   btnStop_MPY.Enabled := True;
-  btnRun_MPY.Enabled  := False;
+  btnRun_MPY.Enabled := False;
   try
     try
       tmpfile := GetTempFileName + '.py';
@@ -3454,7 +3563,8 @@ begin
     end;
   finally
     btnStop_MPY.Enabled := False;
-    btnRun_MPY.Enabled  := True;
+    btnRun_MPY.Enabled := True;
+    Screen.Cursor := crDefault;
   end;
 end;
 
@@ -3748,10 +3858,25 @@ procedure TFormMain.cbbCalcDblClick(Sender: TObject);
 var
   n, i: integer;
 begin
+  cbbCalc.Text := RemoveSpace(cbbCalc.Text);
   n := CalcExpression(cbbCalc, cbbCalc.Text);
   if n = 0 then
   begin
+    mmoOutCalc.Lines.add('> ' + cbbCalc.Text);
+    mmoOutCalc.Lines.add('= ' + CalcRes);
     mmoOutCalc.Lines.add('');
+    i := sgExpr_Calc.RowCount - 1;
+    if sgExpr_Calc.Cells[2, i] <> '' then
+    begin
+      sgExpr_Calc.RowCount := sgExpr_Calc.RowCount + 1;
+      i := sgExpr_Calc.RowCount - 1;
+    end;
+    sgExpr_Calc.Cells[1, i] := cbbCalc.Text;
+    sgExpr_Calc.Cells[2, i] := CalcRes;
+    if sgExpr_Calc.Cells[2, i] <> '' then
+    begin
+      sgExpr_Calc.RowCount := sgExpr_Calc.RowCount + 1;
+    end;
     n := cbbCalc.Items.IndexOf(cbbCalc.Text);
     if n = -1 then
     begin
@@ -3771,7 +3896,7 @@ begin
   begin
     beep;
     if n = 1 then
-      mmoOutCalc.Lines.add('Run-time error:' + Script_Calc.ExecErrorToString);
+      ShowMessage('Run-time error:' + Script_Calc.ExecErrorToString);
   end;
 
 end;
@@ -4333,7 +4458,7 @@ begin
       begin
         if Sender = cbbCalc then
         begin
-          mmoOutCalc.Lines.Add('Express error!');
+          ShowMessage('Express error!');
           cbbCalc.SetFocus;
         end
         else
@@ -4347,11 +4472,11 @@ begin
       Application.ProcessMessages;
 
       // run
-      if Sender = cbbCalc then
-      begin
-        mmoOutCalc.Lines.Add('> ' + cbbCalc.Text);
-        mmoOutCalc.Lines.Add('= ');
-      end;
+      //if Sender = cbbCalc then
+      //begin
+      //  mmoOutCalc.Lines.Add('> ' + cbbCalc.Text);
+      //  mmoOutCalc.Lines.Add('= ');
+      //end;
 
       Script_Calc.Execute;
 
@@ -4361,7 +4486,7 @@ begin
       begin
         Result := 1;
         if Sender = cbbCalc then
-          mmoOutCalc.Lines.add(E.Message);
+          ShowMessage(E.Message);
       end;
     end;
   finally
@@ -4599,6 +4724,18 @@ begin
       Result := Result + Chr(b)
     else
       Result := Result + '.';
+  end;
+end;
+
+function TFormMain.RemoveSpace(s: string): string;
+var
+  i: integer;
+begin
+  Result := '';
+  for i := 1 to Length(s) do
+  begin
+    if s[i] <> ' ' then
+      Result := Result + s[i];
   end;
 end;
 
@@ -4907,7 +5044,10 @@ end;
 
 procedure TFormMain.updateTabVisible;
 begin
-  tsCRC.TabVisible := ini.ReadBool('Enabled', 'CRC', True);
+  tsChecksum.TabVisible:=ini.ReadBool('Enabled','Checksum',True);
+  tsCRC.TabVisible := ini.ReadBool('Enabled', 'Checksum_CRC', True);
+  tsGNSS.TabVisible:=ini.ReadBool('Enabled', 'Checksum_GNSS', True);
+  updateTSPC(tsChecksum, pcChecksum);
 
   tsBase.TabVisible     := ini.ReadBool('Enabled', 'Dital_Base', True);
   tsBigFloat.TabVisible := ini.ReadBool('Enabled', 'Dital_BigFloat', True);
