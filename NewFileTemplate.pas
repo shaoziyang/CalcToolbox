@@ -41,3 +41,24 @@ const
   '        printf("%d, ", i);' + #13#10 +
   '}'
     );
+
+  NewFileTemplate_Graph: string = (
+  'program newGraph;' + #13#10 +
+  'var' + #13#10 +
+  '  i:integer;' + #13#10 +
+  'begin' + #13#10 +
+  '  windows(100,100,600,600);' + #13#10 +
+  '  map(-400,-400,400,400);' + #13#10 +
+  '  Title(''demo'', True);' + #13#10 +
+  '  clean($FFFFFF);' + #13#10 +
+  '  home;' + #13#10#13#10 +
+  '  color(RandomRange(0,$FFFFFF));' + #13#10 +
+  '  for i:=1 to 100 do' + #13#10 +
+  '  begin' + #13#10 +
+  '    FD(i*5);' + #13#10 +
+  '    LT(90);' + #13#10 +
+  '    sleep(1);' + #13#10 +
+  '  end;' + #13#10 +
+  'end.'
+    );
+
