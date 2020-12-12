@@ -5,10 +5,10 @@ unit uCRC;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, crc;
 
-function CalcCrc(buf: TByteArray; len: integer; bit: integer;
-  poly: dword; v0: dword; XOROUT: dword; invIn: boolean; invOut: boolean): dword;
+function CalcCrc(buf: TByteArray; len: integer; bit: integer; poly: dword;
+  v0: dword; XOROUT: dword; invIn: boolean; invOut: boolean): dword;
 
 
 function CalcCrc8(buf: TByteArray; len: integer; poly: byte; v0: byte;
@@ -23,6 +23,7 @@ function CalcCrc32(buf: TByteArray; len: integer; poly: dword;
 function CalcCrc8L(buf: TByteArray; len: integer; N: integer; poly: byte;
   v0: byte; XOROUT: byte; invIn: boolean; invOut: boolean): byte;
 
+function Crc32File(FileName: string): dword;
 
 implementation
 
@@ -78,8 +79,8 @@ begin
   end;
 end;
 
-function CalcCrc(buf: TByteArray; len: integer; bit: integer;
-  poly: dword; v0: dword; XOROUT: dword; invIn: boolean; invOut: boolean): dword;
+function CalcCrc(buf: TByteArray; len: integer; bit: integer; poly: dword;
+  v0: dword; XOROUT: dword; invIn: boolean; invOut: boolean): dword;
 begin
   case bit of
     4, 5, 6, 7: Result :=
@@ -188,7 +189,7 @@ begin
   if invIn then
   begin
     mask := 1;
-    poly := invByte(poly) shr (8-N);
+    poly := invByte(poly) shr (8 - N);
   end
   else
   begin
@@ -231,6 +232,25 @@ begin
     Result := Result shr (8 - N);
 
   Result := Result xor XOROUT;
+end;
+
+function Crc32File(FileName: string): dword;
+var
+  i, len: integer;
+  f: file of byte;
+  buf: TByteArray;
+begin
+  Assign(f, FileName);
+  Reset(f);
+
+  Result := 0;
+  while not EOF(f) do
+  begin
+    BlockRead(f, buf, 4096, len);
+    Result:=crc32(Result, buf, len);
+  end;
+
+  Close(f);
 end;
 
 end.
