@@ -8,6 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
   LCLType, ExtCtrls, Buttons, Grids, lclintf, DateUtils, Math,
   Clipbrd, Menus, Spin, ExtDlgs, process,
+  MD5,
   IniFiles, Types,
   uPSComponent,
   UBigFloatV3,
@@ -20,7 +21,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '1.8.0.0';
+  VERSION = '1.8.4.0';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -74,6 +75,7 @@ type
     btnNew_Calc: TToolButton;
     btnNew_Lua: TToolButton;
     btnNew_C: TToolButton;
+    btnNoteConvertMorse: TSpeedButton;
     btnNoteConvertSpeed: TSpeedButton;
     btnNoteConvertMass: TSpeedButton;
     btnNoteConvertTemperature: TSpeedButton;
@@ -115,6 +117,8 @@ type
     btnStop_MPY: TToolButton;
     btnStop_Lua: TToolButton;
     cbbCalc: TComboBox;
+    chkFileChecksumSavetofile: TCheckBox;
+    chkFileChecksumAutoVerify: TCheckBox;
     chkCrcHexMode: TCheckBox;
     chkBigIntComma: TCheckBox;
     chkCrcInvOut: TCheckBox;
@@ -157,14 +161,20 @@ type
     imgLogo1: TImage;
     Label1: TLabel;
     Label3: TLabel;
+    Label4: TLabel;
+    lbConvertMorseMessage: TLabel;
+    lbConvertMorseMorseCode: TLabel;
     lbRunTime: TLabel;
     lbRunCnt: TLabel;
     lbName: TLabel;
     Label2: TLabel;
     lbFont: TLabel;
     lbVer: TLabel;
+    mmoMorseMessage: TMemo;
+    mmoMorseMorseCode: TMemo;
     mmoGNSS: TMemo;
     mmoLicense: TMemo;
+    mmoNoteConvertMorse: TMemo;
     mmoNoteConvertSpeed: TMemo;
     mmoNoteConvertMass: TMemo;
     mmoNoteConvertTemperature: TMemo;
@@ -189,6 +199,7 @@ type
     mmoOutLua: TMemo;
     mmoOut_Temp: TMemo;
     dlgOpen_MPY: TOpenDialog;
+    Panel1: TPanel;
     pcChecksum: TPageControl;
     pcCalcMode: TPageControl;
     pmHelp_Calc: TPopupMenu;
@@ -274,6 +285,7 @@ type
     btnNoteConvertDistance: TSpeedButton;
     splGraph: TSplitter;
     Splitter1: TSplitter;
+    Splitter4: TSplitter;
     splMPY: TSplitter;
     Splitter11: TSplitter;
     Splitter12: TSplitter;
@@ -290,6 +302,7 @@ type
     StaticText5: TStaticText;
     StaticText6: TStaticText;
     StaticText7: TStaticText;
+    sgFileChecksum: TStringGrid;
     SynCppSyn: TSynCppSyn;
     SynEditGraph: TSynEdit;
     SynEditFunc_Calc: TSynEdit;
@@ -302,6 +315,14 @@ type
     btnCaret_PascalScript: TToolButton;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
+    tsFileChecksum: TTabSheet;
+    ToolBar21: TToolBar;
+    btnConvertMorseMessage: TToolButton;
+    btnConvertMorseMorseCode: TToolButton;
+    ToolButton49: TToolButton;
+    btnConvertMorseInfo: TToolButton;
+    ToolButton51: TToolButton;
+    tsConvertMorse: TTabSheet;
     tsGNSS: TTabSheet;
     ToolBar20: TToolBar;
     ToolButton48: TToolButton;
@@ -468,6 +489,7 @@ type
     procedure btnClear_PascalScriptClick(Sender: TObject);
     procedure btnCmd_LuaClick(Sender: TObject);
     procedure btnCmd_MPYClick(Sender: TObject);
+    procedure btnConvertMorseMorseCodeClick(Sender: TObject);
     procedure btnConvertTimeNowClick(Sender: TObject);
     procedure btnCrcCalcClick(Sender: TObject);
     procedure btnCrc_CRC16_CCITTClick(Sender: TObject);
@@ -547,6 +569,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormDropFiles(Sender: TObject; const FileNames: array of String);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -558,6 +581,8 @@ type
       Shift: TShiftState; X, Y: integer);
     procedure mmoBigIntCMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
+    procedure mmoMorseMessageChange(Sender: TObject);
+    procedure mmoMorseMorseCodeKeyPress(Sender: TObject; var Key: char);
     procedure pcCalcModeChange(Sender: TObject);
     procedure Script_PascalCompile(Sender: TPSScript);
     procedure rbBigBytesChange(Sender: TObject);
@@ -720,7 +745,7 @@ var
 implementation
 
 uses
-  uCRC, uBase, unit2, unit3;
+  uCRC, uBase, uMorse, unit2, unit3;
 
 
 {$R *.lfm}
@@ -1668,6 +1693,42 @@ begin
   end;
 end;
 
+procedure TFormMain.FormDropFiles(Sender: TObject;
+  const FileNames: array of String);
+var
+  i, num:integer;
+  fs:TextFile;
+  s:string;
+begin
+  if  tsFileChecksum.Showing then
+  begin
+    sgFileChecksum.Clean([gzNormal]);
+    num:=Length(FileNames);
+    sgFileChecksum.RowCount:=num+1;
+    caption:=inttostr(num);
+    for i:=1 to num do
+    begin
+      sgFileChecksum.Cells[1,i]:=FileNames[i-1];
+      sgFileChecksum.Cells[2,i]:=IntToHex(Crc32File(FileNames[i-1]), 8);
+      sgFileChecksum.Cells[3,i]:=MDPrint(MDFile(FileNames[i-1],MD_VERSION_5));
+
+      if chkFileChecksumAutoVerify.Checked then
+      begin
+
+      end;
+
+      if chkFileChecksumSavetofile.Checked then
+      begin
+
+      end;
+
+    end;
+
+  end;
+
+  FormMain.BringToFront;
+end;
+
 procedure TFormMain.FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
   case Key of
@@ -1809,11 +1870,40 @@ begin
   end;
 end;
 
+procedure TFormMain.mmoMorseMessageChange(Sender: TObject);
+var
+  s: string;
+  caret: TPoint;
+begin
+  if not mmoMorseMessage.Focused then
+    Exit;
+  caret := mmoMorseMessage.CaretPos;
+  s     := mmoMorseMessage.Text;
+  mmoMorseMorseCode.Text := StrToMorse(s);
+  mmoMorseMorseCode.Modified := False;
+  mmoMorseMessage.Text := s;
+  mmoMorseMessage.CaretPos := caret;
+end;
+
+procedure TFormMain.mmoMorseMorseCodeKeyPress(Sender: TObject; var Key: char);
+begin
+  if Key = #13 then
+    btnConvertMorseMorseCodeClick(Sender);
+end;
+
 procedure TFormMain.pcCalcModeChange(Sender: TObject);
 begin
   case pcCalcMode.ActivePageIndex of
-    0: cbbCalc.SetFocus;
-    1: sgExpr_Calc.SetFocus;
+    0:
+    begin
+      mmoOutCalc.CaretPos := Point(1, sgExpr_Calc.Row * 3 -3);
+      cbbCalc.SetFocus;
+    end;
+    1:
+    begin
+      sgExpr_Calc.Row:=1+mmoOutCalc.CaretPos.y div 3;
+      sgExpr_Calc.SetFocus;
+    end;
   end;
 end;
 
@@ -2065,6 +2155,30 @@ begin
   AProcess.Execute;
   AProcess.Free;
   Screen.Cursor := crDefault;
+end;
+
+procedure TFormMain.btnConvertMorseMorseCodeClick(Sender: TObject);
+var
+  s, rs: string;
+  caret: TPoint;
+  n: integer;
+begin
+  caret := mmoMorseMorseCode.CaretPos;
+  s     := mmoMorseMorseCode.Text;
+  if MorseToStr(s, rs, n) then
+  begin
+    mmoMorseMorseCode.Text := s;
+    mmoMorseMorseCode.CaretPos := caret;
+    mmoMorseMessage.Text := rs;
+    btnConvertMorseInfo.Caption := '';
+  end
+  else
+  begin
+    beep;
+    btnConvertMorseInfo.Caption := 'Error';
+    mmoMorseMorseCode.SelStart  := n - 1;
+    mmoMorseMorseCode.SelLength := 1;
+  end;
 end;
 
 procedure TFormMain.btnConvertTimeNowClick(Sender: TObject);
@@ -2522,7 +2636,7 @@ begin
       updateMass(M / 35.2739619495804);
     8: // ounce (troy)
       updateMass(M / 32.150746568628);
-    9: // pound (lb)
+    9: // pound (lbConvertMorseMessage)
       updateMass(M / 2.20462262184878);
     10: // pound (troy)
       updateMass(M / 2.679228880719);
@@ -4047,6 +4161,7 @@ begin
           btnShowOption.Tag := ilOption.Count - 1;
     end;
   end;
+
 end;
 
 procedure TFormMain.TrayIconClick(Sender: TObject);
@@ -5044,9 +5159,9 @@ end;
 
 procedure TFormMain.updateTabVisible;
 begin
-  tsChecksum.TabVisible:=ini.ReadBool('Enabled','Checksum',True);
-  tsCRC.TabVisible := ini.ReadBool('Enabled', 'Checksum_CRC', True);
-  tsGNSS.TabVisible:=ini.ReadBool('Enabled', 'Checksum_GNSS', True);
+  tsChecksum.TabVisible := ini.ReadBool('Enabled', 'Checksum', True);
+  tsCRC.TabVisible      := ini.ReadBool('Enabled', 'Checksum_CRC', True);
+  tsGNSS.TabVisible     := ini.ReadBool('Enabled', 'Checksum_GNSS', True);
   updateTSPC(tsChecksum, pcChecksum);
 
   tsBase.TabVisible     := ini.ReadBool('Enabled', 'Dital_Base', True);
@@ -5065,6 +5180,7 @@ begin
   tsConvertVolume.TabVisible := ini.ReadBool('Enabled', 'Convert_Volume', True);
   tsConvertSpeed.TabVisible := ini.ReadBool('Enabled', 'Convert_Speed', True);
   tsConvertMass.TabVisible := ini.ReadBool('Enabled', 'Convert_Mass', True);
+  tsConvertMorse.TabVisible := ini.ReadBool('Enabled', 'Convert_Morse', True);
   tsConvert.TabVisible := ini.ReadBool('Enabled', 'Convert', True);
   updateTSPC(tsConvert, pcConvert);
 
