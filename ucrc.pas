@@ -25,6 +25,10 @@ function CalcCrc8L(buf: TByteArray; len: integer; N: integer; poly: byte;
 
 function Crc32File(FileName: string): dword;
 
+function invByte(b: byte): byte;
+function invWord(w: word): word;
+function invDWord(w: dword): dword;
+
 implementation
 
 function invByte(b: byte): byte;
@@ -116,10 +120,10 @@ begin
         Result := Result * 2;
     end;
   end;
-  if invOut then
-    Result := invByte(Result);
-
-  Result := Result xor XOROUT;
+  //if invOut then
+  //  Result := invByte(Result);
+  //
+  //Result := Result xor XOROUT;
 end;
 
 function CalcCrc16(buf: TByteArray; len: integer; poly: word; v0: word;
@@ -145,10 +149,10 @@ begin
         Result := Result * 2;
     end;
   end;
-  if invOut then
-    Result := invWord(Result);
-
-  Result := Result xor XOROUT;
+  //if invOut then
+  //  Result := invWord(Result);
+  //
+  //Result := Result xor XOROUT;
 end;
 
 function CalcCrc32(buf: TByteArray; len: integer; poly: dword; v0: dword;
@@ -174,10 +178,10 @@ begin
         Result := Result * 2;
     end;
   end;
-  if invOut then
-    Result := invDWord(Result);
+  //if invOut then
+    //Result := invDWord(Result);
 
-  Result := Result xor XOROUT;
+  //Result := Result xor XOROUT;
 end;
 
 function CalcCrc8L(buf: TByteArray; len: integer; N: integer; poly: byte;

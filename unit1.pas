@@ -21,7 +21,7 @@ uses
 const
   GITHUB_URL = 'https://github.com/shaoziyang/CalcToolbox';
   GITEE_URL = 'https://gitee.com/shaoziyang/CalcToolbox';
-  VERSION = '1.8.4.0';
+  VERSION = '1.8.6.0';
   OUTPUT_MAX_LINES = 4096;
 
 {$ifdef Windows}
@@ -569,7 +569,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure FormDropFiles(Sender: TObject; const FileNames: array of String);
+    procedure FormDropFiles(Sender: TObject; const FileNames: array of string);
     procedure FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -1693,24 +1693,23 @@ begin
   end;
 end;
 
-procedure TFormMain.FormDropFiles(Sender: TObject;
-  const FileNames: array of String);
+procedure TFormMain.FormDropFiles(Sender: TObject; const FileNames: array of string);
 var
-  i, num:integer;
-  fs:TextFile;
-  s:string;
+  i, num: integer;
+  fs: TextFile;
+  s: string;
 begin
-  if  tsFileChecksum.Showing then
+  if tsFileChecksum.Showing then
   begin
     sgFileChecksum.Clean([gzNormal]);
-    num:=Length(FileNames);
-    sgFileChecksum.RowCount:=num+1;
-    caption:=inttostr(num);
-    for i:=1 to num do
+    num     := Length(FileNames);
+    sgFileChecksum.RowCount := num + 1;
+    Caption := IntToStr(num);
+    for i := 1 to num do
     begin
-      sgFileChecksum.Cells[1,i]:=FileNames[i-1];
-      sgFileChecksum.Cells[2,i]:=IntToHex(Crc32File(FileNames[i-1]), 8);
-      sgFileChecksum.Cells[3,i]:=MDPrint(MDFile(FileNames[i-1],MD_VERSION_5));
+      sgFileChecksum.Cells[1, i] := FileNames[i - 1];
+      sgFileChecksum.Cells[2, i] := IntToHex(Crc32File(FileNames[i - 1]), 8);
+      sgFileChecksum.Cells[3, i] := MDPrint(MDFile(FileNames[i - 1], MD_VERSION_5));
 
       if chkFileChecksumAutoVerify.Checked then
       begin
@@ -1896,12 +1895,12 @@ begin
   case pcCalcMode.ActivePageIndex of
     0:
     begin
-      mmoOutCalc.CaretPos := Point(1, sgExpr_Calc.Row * 3 -3);
+      mmoOutCalc.CaretPos := Point(1, sgExpr_Calc.Row * 3 - 3);
       cbbCalc.SetFocus;
     end;
     1:
     begin
-      sgExpr_Calc.Row:=1+mmoOutCalc.CaretPos.y div 3;
+      sgExpr_Calc.Row := 1 + mmoOutCalc.CaretPos.y div 3;
       sgExpr_Calc.SetFocus;
     end;
   end;
@@ -2225,7 +2224,7 @@ begin
     if bufN = 0 then
       Exit;
 
-    for i := 1 to (bufN div MaxLen) + 1 do
+    for i := 1 to ((bufN + MaxLen - 1) div MaxLen) do
     begin
       if i * MaxLen < bufN then
         len := MaxLen
@@ -2236,19 +2235,29 @@ begin
         chkCrcInvOut.Checked);
       Delete(s, 1, len * 3);
     end;
+    if chkCrcInvOut.Checked then
+    begin
+      case bit of
+        8: v0  := invByte(v0);
+        12,
+        16: v0 := invWord(v0);
+        32: v0 := invDWord(v0);
+      end;
+    end;
+    v0 := v0 xor xorout;
     btnCrcBufLen.Caption := Format('<%d>', [bufN]);
-    edtCrcResult.Text    := IntToByteStr(v0);
+    edtCrcResult.Text := IntToByteStr(v0);
   end
   else
   begin
     s    := mmoCRC.Text;
     bufN := Length(s);
-    for i := 1 to (bufN div MaxLen) + 1 do
+    for i := 1 to ((bufN + MaxLen - 1) div MaxLen) do
     begin
-      if i * MaxLen < bufN then
+      if i * MaxLen <= bufN then
         len := MaxLen
       else
-        len := bufN - (i - 1) * MaxLen;
+        len := bufN mod MaxLen;
 
       for j := 0 to len - 1 do
         buf[j] := Ord(s[j + 1]);
@@ -2257,8 +2266,19 @@ begin
         chkCrcInvOut.Checked);
       Delete(s, 1, len);
     end;
+    if chkCrcInvOut.Checked then
+    begin
+      case bit of
+        8: v0  := invByte(v0);
+        12,
+        16: v0 := invWord(v0);
+        32: v0 := invDWord(v0);
+      end;
+    end;
+    v0 := v0 xor xorout;
     btnCrcBufLen.Caption := Format('<%d>', [bufN]);
-    edtCrcResult.Text    := IntToByteStr(v0);
+    edtCrcResult.Text := IntToByteStr(v0);
+
   end;
 end;
 
